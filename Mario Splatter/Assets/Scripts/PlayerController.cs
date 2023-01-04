@@ -1,19 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Runtime.CompilerServices;
 
 public class PlayerController : MonoBehaviour
 {
+    public Rigidbody rb;
     public CharacterController controller;
-    public float vspeed = 0;
     private float speed = 20f;
     private Vector3 velocity;
     private float gravity = -9.81f;
     public float mouseSens = 100f;
-    public float jumpSpeed = 10;
     public Transform cameraTransform;
     float rotation = 0;
+    public float jumpspeed = 5;
 
 
     // Start is called before the first frame update
@@ -33,24 +32,13 @@ public class PlayerController : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * mouseSens * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSens * Time.deltaTime;
 
+        //Vector3 move = new Vector3(hzMove, 0f, vtMove);
         Vector3 move = cameraTransform.right * hzMove + cameraTransform.forward * vtMove;
 
-        if (!controller.isGrounded)
+        if (controller.isGrounded && velocity.y < 0)
         {
-            float jump = Input.GetAxis("Jump") * jumpSpeed;
-            vspeed = jump;
+            velocity.y = -2f;
         }
-        vspeed -= gravity * Time.deltaTime;
-        
-        //Vector3 move = new Vector3(hzMove, 0f, vtMove);
-        
-        move.y = vspeed;
-        controller.Move(move * Time.deltaTime);
-
-        //if (controller.isGrounded && velocity.y < 0)
-        //{
-        //    velocity.y = -2f;
-       // }
 
 
         controller.Move(move);
@@ -59,6 +47,11 @@ public class PlayerController : MonoBehaviour
 
         rotation -= mouseY;
         rotation = Mathf.Clamp(rotation, -90f, 90f);
+
+        if (Input.GetButtonDown("jump") && controller.isGrounded )
+        {
+            rb.AddForce(new Vector3(0,jumpspeed, 0), ForceMode.Impulse);
+        }
 
         cameraTransform.localRotation = Quaternion.Euler(rotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
