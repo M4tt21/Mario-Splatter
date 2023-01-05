@@ -239,7 +239,7 @@ Terrain:
   m_GameObject: {fileID: 38993645}
   m_Enabled: 1
   serializedVersion: 6
-  m_TerrainData: {fileID: 15600000, guid: f29dbc2c78d41c7459621c4ca265e583, type: 2}
+  m_TerrainData: {fileID: 0}
   m_TreeDistance: 5000
   m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
@@ -272,7 +272,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 38993645}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -506, y: -42, z: -240}
+  m_LocalPosition: {x: -1013, y: -42, z: -170}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -382,7 +382,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 308220143}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 450, y: 10, z: 450}
+  m_LocalPosition: {x: 454.04, y: 10.46, z: 578.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1714,15 +1714,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2538113783225411563, guid: 73cfb6a11a0061149b95f747b83e055e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 82.51
       objectReference: {fileID: 0}
     - target: {fileID: 2538113783225411563, guid: 73cfb6a11a0061149b95f747b83e055e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -13.8
       objectReference: {fileID: 0}
     - target: {fileID: 2538113783225411563, guid: 73cfb6a11a0061149b95f747b83e055e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.11
       objectReference: {fileID: 0}
     - target: {fileID: 2538113783225411563, guid: 73cfb6a11a0061149b95f747b83e055e, type: 3}
       propertyPath: m_LocalRotation.w
