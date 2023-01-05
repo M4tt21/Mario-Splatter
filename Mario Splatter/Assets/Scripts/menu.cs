@@ -23,6 +23,7 @@ public class menu : MonoBehaviour
     }
     public void exit()
     {
+        
 
     }
 }
