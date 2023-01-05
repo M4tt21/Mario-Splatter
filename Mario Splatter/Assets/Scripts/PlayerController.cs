@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public Rigidbody rb;
     public CharacterController controller;
-    private float speed = 20f;
+    private Animator animator;
+    private static float wSpeed = 10f;
+    private static float rSpeed = 20f;
+    private float currentSpeed = wSpeed;
     private Vector3 velocity;
     private float gravity = -9.81f;
     public float mouseSens = 100f;
@@ -16,9 +18,12 @@ public class PlayerController : MonoBehaviour
     public float jumpspeed = 5;
 
 
+
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -26,8 +31,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float hzMove = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-        float vtMove = Input.GetAxis("Vertical") * speed * Time.deltaTime;
+        float hzMove = Input.GetAxis("Horizontal") * currentSpeed * Time.deltaTime;
+        float vtMove = Input.GetAxis("Vertical") * currentSpeed * Time.deltaTime;
 
         float mouseX = Input.GetAxis("Mouse X") * mouseSens * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSens * Time.deltaTime;
@@ -52,6 +57,20 @@ public class PlayerController : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+
+        //sprint
+        if(Input.GetButtonDown("Fire3"))
+        {
+            currentSpeed = rSpeed;
+
+        }
+        if (Input.GetButtonUp("Fire3"))
+        {
+            currentSpeed = wSpeed;
+
+        }
+        animator.SetVector("Velocity", velocity);
+
 
 
         //Movimento Telecamera
