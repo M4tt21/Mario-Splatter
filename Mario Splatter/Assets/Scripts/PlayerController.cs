@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,7 +7,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public CharacterController controller;
-    private Animator animator;
+    public Animator animator;
     private static float wSpeed = 10f;
     private static float rSpeed = 20f;
     private float currentSpeed = wSpeed;
@@ -15,14 +16,13 @@ public class PlayerController : MonoBehaviour
     public float mouseSens = 100f;
     public Transform cameraTransform;
     float rotation = 0;
-    public float jumpspeed = 5;
+    public float jumpspeed = 2;
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-        animator = GetComponent<Animator>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -41,13 +41,13 @@ public class PlayerController : MonoBehaviour
 
         if (controller.isGrounded && velocity.y < 0)
         {
-            velocity.y = -2f;
+            velocity.y = gravity/3;
         }
 
 
-        controller.Move(move);
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+        //controller.Move(move);
+        //velocity.y += gravity * Time.deltaTime;
+        //controller.Move(velocity * Time.deltaTime);
 
         // Changes the height position of the player..
         if (Input.GetButtonDown("Jump") && controller.isGrounded)
@@ -55,8 +55,8 @@ public class PlayerController : MonoBehaviour
             velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
         }
 
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
+        velocity.y += gravity*2 * Time.deltaTime;
+        controller.Move((velocity * Time.deltaTime) + move);
 
         //sprint
         if(Input.GetButtonDown("Fire3"))
@@ -69,7 +69,13 @@ public class PlayerController : MonoBehaviour
             currentSpeed = wSpeed;
 
         }
-        animator.SetVector("Velocity", velocity);
+
+        double dotPF = Vector3.Dot(transform.forward, controller.velocity);
+        float dotPH = Vector3.Dot(transform.right, controller.velocity);
+
+        animator.SetFloat("fVelocity", (float)Math.Round(dotPF, 2));
+        animator.SetFloat("hVelocity", (float)Math.Round(dotPH,2));
+        animator.SetFloat("turn", mouseX);
 
 
 
