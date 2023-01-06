@@ -8,8 +8,9 @@ public class PlayerController : MonoBehaviour
 {
     public CharacterController controller;
     public Animator animator;
-    private static float wSpeed = 10f;
-    private static float rSpeed = 20f;
+    private static float wSpeed = 5f;
+    private static float rSpeed = 10f;
+    private static int rScale = 5;
     private float currentSpeed = wSpeed;
     private Vector3 velocity;
     private float gravity = -9.81f;
@@ -20,9 +21,15 @@ public class PlayerController : MonoBehaviour
 
 
 
+    private GameObject guns;
+
+
+
+
     // Start is called before the first frame update
     void Start()
     {
+        guns = GameObject.FindGameObjectWithTag("Guns");
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -44,38 +51,43 @@ public class PlayerController : MonoBehaviour
             velocity.y = gravity/3;
         }
 
-
-        //controller.Move(move);
-        //velocity.y += gravity * Time.deltaTime;
-        //controller.Move(velocity * Time.deltaTime);
-
         // Changes the height position of the player..
         if (Input.GetButtonDown("Jump") && controller.isGrounded)
         {
             velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
+            animator.SetBool("isJumping", true);
         }
+        else animator.SetBool("isJumping", false);
 
         velocity.y += gravity*2 * Time.deltaTime;
         controller.Move((velocity * Time.deltaTime) + move);
 
         //sprint
-        if(Input.GetButtonDown("Fire3"))
+        if(Input.GetButton("Fire3") && (Input.GetAxis("Vertical")>0) && !Input.GetButton("Horizontal"))
         {
-            currentSpeed = rSpeed;
-
+            if(currentSpeed<rSpeed)currentSpeed += rSpeed * Time.deltaTime;
+            //Se corre disabilito l'arma che ha in mano
+            guns.gameObject.SetActive(false);
         }
-        if (Input.GetButtonUp("Fire3"))
+        else if(!Input.GetButton("Fire3"))
         {
-            currentSpeed = wSpeed;
-
+            if (currentSpeed >wSpeed) currentSpeed -= wSpeed * Time.deltaTime;
+            guns.gameObject.SetActive(true);
         }
 
-        double dotPF = Vector3.Dot(transform.forward, controller.velocity);
+        //if ((Input.GetButtonUp("Fire3") || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0)) && currentSpeed>wSpeed){currentSpeed -= wSpeed * Time.deltaTime;}
+
+        float dotPF = Vector3.Dot(transform.forward, controller.velocity);
         float dotPH = Vector3.Dot(transform.right, controller.velocity);
+        float dotPV = Vector3.Dot(transform.up, controller.velocity);
 
         animator.SetFloat("fVelocity", (float)Math.Round(dotPF, 2));
         animator.SetFloat("hVelocity", (float)Math.Round(dotPH,2));
-        animator.SetFloat("turn", mouseX);
+        animator.SetFloat("vVelocity", (float)Math.Round(dotPV, 2));
+        
+        animator.SetFloat("turn", mouseX*10);
+
+        if (dotPF == 0 && dotPH == 0 && dotPV == 0) animator.SetBool("isStill", true);
 
 
 
@@ -85,5 +97,12 @@ public class PlayerController : MonoBehaviour
 
         cameraTransform.localRotation = Quaternion.Euler(rotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+
+    private int turnDirection(float Axis){  //1=Right -1=Left
+        if (Axis < 0) return -1;
+        else if (Axis > 0) return 1;
+        return 0;
     }
 }
