@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
-    private int playerLayerMask;
+    private int ignoreLayerMask;
     private GameObject gun;
     private GameObject camera;
     private GameObject rifle;
@@ -13,8 +13,8 @@ public class Gun : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerLayerMask = 2 << LayerMask.NameToLayer("Ignore Raycast");
-        playerLayerMask = ~playerLayerMask;
+        ignoreLayerMask = 2 << LayerMask.NameToLayer("Ignore Raycast");
+        ignoreLayerMask = ~ignoreLayerMask;
 
         gun = GameObject.FindGameObjectWithTag("Guns");
         camera= GameObject.FindGameObjectWithTag("MainCamera");
@@ -23,34 +23,32 @@ public class Gun : MonoBehaviour
         pistol=GameObject.FindGameObjectWithTag("pistol");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     private void FixedUpdate()
     {
 
         
         Debug.DrawRay(camera.transform.position, camera.transform.forward * 1000, Color.red); // traiettoria proiettile visibile
         RaycastHit hitPoint;
-
+        RaycastHit hitLine;
         if (Input.GetButton("Fire1"))//tasto sinistro mouse
         {
             bool raycastResCamera = Physics.Raycast(camera.transform.position, camera.transform.forward, out (hitPoint), Mathf.Infinity);
-            bool isNotValid = Physics.Linecast(rifle.transform.position,hitPoint.transform.position,playerLayerMask);
-            Debug.DrawLine(rifle.transform.GetChild(0).transform.position, hitPoint.transform.position) ;
-            Debug.Log("Collision: " + isNotValid); //traiettoria proiettile debug
-            if (raycastResCamera && isNotValid)
+            
+            
+             //traiettoria proiettile debug
+            if (raycastResCamera && hitPoint.transform.CompareTag("Enemy"))
             {
-
+                bool isNotValid = Physics.Linecast(rifle.transform.GetChild(0).transform.position,hitPoint.transform.position,out (hitLine),ignoreLayerMask);
                 //Debug.Log("Collision at: " + hitPoint.distance); //traiettoria proiettile debug
-               
-               
+                
+                Debug.DrawLine(rifle.transform.GetChild(0).transform.position, hitPoint.transform.position) ;
+                //Debug.Log("Qualcosa in mezzo? " + isNotValid);
+                //Debug.DrawRay(new Vector3(0,0,0), hitLine.transform.position);
                 //Alternativa per distruggere i cloni
-                if (hitPoint.transform.CompareTag("Blooper"))
+                if (isNotValid && hitLine.transform.CompareTag("Enemy"))
                 {
-                    Destroy(hitPoint.transform.gameObject);
+                    //Destroy(hitPoint.transform.gameObject);
+                    Debug.Log("Colpito il nemico");
                 }
             }
         }
