@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour
             //Se corre disabilito l'arma che ha in mano
             guns.gameObject.SetActive(false);
         }
-        else if(!Input.GetButton("Fire3"))
+        else if(!Input.GetButton("Fire3") || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0))
         {
             if (currentSpeed >wSpeed) currentSpeed -= wSpeed * Time.deltaTime;
             guns.gameObject.SetActive(true);
