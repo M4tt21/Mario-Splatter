@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     public Transform cameraTransform;
     float rotation = 0;
     public float jumpspeed = 2;
+    
 
 
 
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         guns = GameObject.FindGameObjectWithTag("Guns");
+        
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -99,7 +101,7 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
     }
 
-
+    
     private int turnDirection(float Axis){  //1=Right -1=Left
         if (Axis < 0) return -1;
         else if (Axis > 0) return 1;

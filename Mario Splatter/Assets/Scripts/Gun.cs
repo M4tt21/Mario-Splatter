@@ -47,7 +47,7 @@ public class Gun : MonoBehaviour
                 //Alternativa per distruggere i cloni
                 if (isNotValid && hitLine.transform.CompareTag("Enemy"))
                 {
-                    //Destroy(hitPoint.transform.gameObject);
+                    Destroy(hitPoint.transform.gameObject);
                     Debug.Log("Colpito il nemico");
                 }
             }
