@@ -14,9 +14,9 @@ public class GenerateEnemies : MonoBehaviour
     }
     IEnumerator EnemyDrop()
     {
-        while (enemyCount < 30)
+        while (enemyCount < 10)
         {
-            Instantiate(theEnemy, pipe.transform.position, Quaternion.identity);
+            Instantiate(theEnemy, new Vector3(pipe.transform.position.x, pipe.transform.position.y+5, pipe.transform.position.z), Quaternion.identity);
             yield return new WaitForSecondsRealtime(3);
             enemyCount += 1;
         }

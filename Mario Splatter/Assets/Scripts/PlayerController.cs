@@ -1,8 +1,34 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+[System.Serializable]
+public class GameData
+{
+    public SerializableVector3 position;
+}
+
+[System.Serializable]
+public struct SerializableVector3
+{
+    float x, y, z;
+
+    public SerializableVector3(Vector3 v)
+    {
+        x = v.x;
+        y = v.y;
+        z = v.z;
+    }
+    public Vector3 toVector3()
+    {
+        return new Vector3(x, y, z);
+    }
+}
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,7 +49,7 @@ public class PlayerController : MonoBehaviour
 
 
     private GameObject guns;
-
+    
 
 
 
@@ -100,11 +126,56 @@ public class PlayerController : MonoBehaviour
         cameraTransform.localRotation = Quaternion.Euler(rotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
     }
-
     
     private int turnDirection(float Axis){  //1=Right -1=Left
         if (Axis < 0) return -1;
         else if (Axis > 0) return 1;
         return 0;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("NextLevel"))
+        {
+            PlayerPrefs.SetInt("CurrentLevel", (SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
+            if (PlayerPrefs.GetInt("CurrentLevel") == 0)
+                Destroy(this.gameObject);
+            Debug.Log("ciao");
+            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+            Debug.Log("coglione");
+        }
+
+        if (collision.gameObject.CompareTag("PrevLevel"))
+        {
+            PlayerPrefs.SetInt("CurrentLevel", (SceneManager.GetActiveScene().buildIndex - 1) % SceneManager.sceneCountInBuildSettings);
+            if (PlayerPrefs.GetInt("CurrentLevel") == 0)
+                Destroy(this.gameObject);
+            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+
+        }
+
+        if (collision.gameObject.CompareTag("Level1"))
+        {
+            PlayerPrefs.SetInt("CurrentLevel", 3);
+            if (PlayerPrefs.GetInt("CurrentLevel") == 0)
+                Destroy(this.gameObject);
+            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+        }
+
+        if (collision.gameObject.CompareTag("Level2"))
+        {
+            PlayerPrefs.SetInt("CurrentLevel", 4);
+            if (PlayerPrefs.GetInt("CurrentLevel") == 0)
+                Destroy(this.gameObject);
+            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+        }
+
+        if (collision.gameObject.CompareTag("Level3"))
+        {
+            PlayerPrefs.SetInt("CurrentLevel", 5);
+            if (PlayerPrefs.GetInt("CurrentLevel") == 0)
+                Destroy(this.gameObject);
+            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+        }
     }
 }

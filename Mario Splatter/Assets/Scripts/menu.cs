@@ -3,25 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class menu : MonoBehaviour
+public class Menu : MonoBehaviour
 {
-   public void newgame()
+    public GameObject player;
+    public void NewGame()
     {
-        SceneManager.LoadScene(2);
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetInt("CurrentLevel", 3);
+        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
     }
-    public void loadgame()
+    public void LoadGame()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
     }
-    public void loadlevel()
+    public void LoadLevel()
     {
-        SceneManager.LoadScene(1);
+        PlayerPrefs.SetInt("CurrentLevel", 2);
+        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
     }
-    public void options()
+    public void Options()
     {
-
+        PlayerPrefs.SetInt("CurrentLevel", 1);
+        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
     }
-    public void exit()
+    public void Exit()
     {
         
 
