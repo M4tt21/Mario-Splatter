@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class koopaFollow : MonoBehaviour
+public class enemiesFollow : MonoBehaviour
 {
-    public NavMeshAgent Cube;
+    public NavMeshAgent enemies;
     public Transform player;
     // Start is called before the first frame update
     void Start()
@@ -16,6 +16,6 @@ public class koopaFollow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Cube.SetDestination(player.position);
+       enemies.SetDestination(player.position);
     }
 }
