@@ -10,7 +10,8 @@ public class Gun : MonoBehaviour
     private GameObject rifle;
     private GameObject shotgun;
     private GameObject pistol;
-    // Start is called before the first frame update
+    KoopaHit kh;
+    
     void Start()
     {
         ignoreLayerMask = 2 << LayerMask.NameToLayer("Ignore Raycast");
@@ -32,24 +33,38 @@ public class Gun : MonoBehaviour
         RaycastHit hitLine;
         if (Input.GetButton("Fire1"))//tasto sinistro mouse
         {
+            kh=null;
             bool raycastResCamera = Physics.Raycast(camera.transform.position, camera.transform.forward, out (hitPoint), Mathf.Infinity);
             
             
              //traiettoria proiettile debug
-            if (raycastResCamera && hitPoint.transform.CompareTag("Enemy"))
+            if (raycastResCamera && hitPoint.transform.CompareTag("EnemyHitBox"))
             {
+                Debug.Log("Colpito il nemico");
                 bool isNotValid = Physics.Linecast(rifle.transform.GetChild(0).transform.position,hitPoint.transform.position,out (hitLine),ignoreLayerMask);
-                //Debug.Log("Collision at: " + hitPoint.distance); //traiettoria proiettile debug
                 
                 Debug.DrawLine(rifle.transform.GetChild(0).transform.position, hitPoint.transform.position) ;
-                //Debug.Log("Qualcosa in mezzo? " + isNotValid);
-                //Debug.DrawRay(new Vector3(0,0,0), hitLine.transform.position);
+
                 //Alternativa per distruggere i cloni
-                if (isNotValid && hitLine.transform.CompareTag("Enemy"))
+                if (isNotValid && hitLine.transform.CompareTag("EnemyHitBox"))
                 {
-                    Destroy(hitPoint.transform.gameObject);
-                    Debug.Log("Colpito il nemico");
-                    CanvasScript.scoreValue += 1;
+                    //Destroy(hitPoint.transform.gameObject);
+                    KoopaHit kh = hitPoint.transform.GetComponent<KoopaHit>();
+                    kh.porcodio();
+
+                    Debug.Log("Colpito il nemico"+hitPoint.transform.name);
+                    //CanvasScript.scoreValue += 1;
+                    /*switch (kh.ht)
+                    {
+                        case KoopaHit.hitType.head:
+                            kh.Hit(20);
+                            break;
+                        case KoopaHit.hitType.body:
+                            kh.Hit(10);
+                            break;
+
+                    }*/
+                    
                 }
             }
         }

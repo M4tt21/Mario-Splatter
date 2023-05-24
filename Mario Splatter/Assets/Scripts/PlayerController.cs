@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour
 
 
 
+
+
     private GameObject guns;
     
 
@@ -133,9 +135,9 @@ public class PlayerController : MonoBehaviour
         return 0;
     }
 
-    void OnTriggherEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
-        Debug.Log("ciao");
+        /*
         if (collision.gameObject.CompareTag("NextLevel"))
         {
             PlayerPrefs.SetInt("CurrentLevel", (SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
@@ -143,7 +145,7 @@ public class PlayerController : MonoBehaviour
                 Destroy(this.gameObject);
             Debug.Log("ciao");
             SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
-           
+
         }
 
         if (collision.gameObject.CompareTag("PrevLevel"))
@@ -179,5 +181,12 @@ public class PlayerController : MonoBehaviour
                 Destroy(this.gameObject);
             SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
         }
+        */
+        if (collision.gameObject.CompareTag( "Enemy"))
+        {
+            MarioHealth.Instance.TakeDamage(1);
+            
+        }
+
     }
 }
