@@ -38,7 +38,7 @@ public class Gun : MonoBehaviour
             
             
              //traiettoria proiettile debug
-            if (raycastResCamera && hitPoint.transform.CompareTag("EnemyHitBox"))
+            if (raycastResCamera && hitPoint.transform.CompareTag("Enemy"))
             {
                 Debug.Log("Colpito il nemico");
                 bool isNotValid = Physics.Linecast(rifle.transform.GetChild(0).transform.position,hitPoint.transform.position,out (hitLine),ignoreLayerMask);
@@ -46,24 +46,25 @@ public class Gun : MonoBehaviour
                 Debug.DrawLine(rifle.transform.GetChild(0).transform.position, hitPoint.transform.position) ;
 
                 //Alternativa per distruggere i cloni
-                if (isNotValid && hitLine.transform.CompareTag("EnemyHitBox"))
+                if (isNotValid && hitLine.transform.CompareTag("Enemy"))
                 {
                     //Destroy(hitPoint.transform.gameObject);
-                    KoopaHit kh = hitPoint.transform.GetComponent<KoopaHit>();
-                    kh.porcodio();
+                    KoopaHit kh = hitPoint.collider.gameObject.GetComponent<KoopaHit>();
+                    //kh.porcodio();
 
-                    Debug.Log("Colpito il nemico"+hitPoint.transform.name);
-                    //CanvasScript.scoreValue += 1;
-                    /*switch (kh.ht)
+                    //Debug.Log("Colpito il nemico"+hitPoint.collider +""+ hitPoint.collider.gameObject.GetComponent<KoopaHit>());
+                    switch (kh.ht)
                     {
                         case KoopaHit.hitType.head:
+                            Debug.Log("Colpita TESTA");
                             kh.Hit(20);
                             break;
                         case KoopaHit.hitType.body:
+                            Debug.Log("Colpita CORPO");
                             kh.Hit(10);
                             break;
 
-                    }*/
+                    }
                     
                 }
             }

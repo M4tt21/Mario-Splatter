@@ -44,7 +44,8 @@ public class PlayerController : MonoBehaviour
     public Transform cameraTransform;
     float rotation = 0;
     public float jumpspeed = 2;
-    
+
+    private bool isImmune;
 
 
 
@@ -184,9 +185,21 @@ public class PlayerController : MonoBehaviour
         */
         if (collision.gameObject.CompareTag( "Enemy"))
         {
+            if (isImmune)
+                return;    
+            
             MarioHealth.Instance.TakeDamage(1);
+
+            StartCoroutine(immunityTime(3));
             
         }
 
+    }
+
+    private IEnumerator immunityTime(float time)
+    {
+        isImmune = true;
+        yield return new WaitForSeconds(time);
+        isImmune = false;
     }
 }
