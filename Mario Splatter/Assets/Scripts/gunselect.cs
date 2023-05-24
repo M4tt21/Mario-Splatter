@@ -14,15 +14,20 @@ public class GunSelect : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int previousSelecterGun = selectedGun;
+        int previousSelectedGun = selectedGun;
         if (Input.GetKeyDown(KeyCode.Alpha1))
             selectedGun = 0;
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
             selectedGun = 1;
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
             selectedGun = 2;
-        if (previousSelecterGun != selectedGun)
+        if (previousSelectedGun != selectedGun)
+        { 
             SelectGun();
+            CanvasScript.gunUpdate = true;
+            CanvasScript.currentGun = selectedGun;
+        }
+            
     }
     void SelectGun()
     {

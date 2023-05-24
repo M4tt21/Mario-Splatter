@@ -49,6 +49,7 @@ public class Gun : MonoBehaviour
                 {
                     Destroy(hitPoint.transform.gameObject);
                     Debug.Log("Colpito il nemico");
+                    CanvasScript.scoreValue += 1;
                 }
             }
         }

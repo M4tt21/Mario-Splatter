@@ -133,8 +133,9 @@ public class PlayerController : MonoBehaviour
         return 0;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnTriggherEnter(Collision collision)
     {
+        Debug.Log("ciao");
         if (collision.gameObject.CompareTag("NextLevel"))
         {
             PlayerPrefs.SetInt("CurrentLevel", (SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
@@ -142,7 +143,7 @@ public class PlayerController : MonoBehaviour
                 Destroy(this.gameObject);
             Debug.Log("ciao");
             SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
-            Debug.Log("coglione");
+           
         }
 
         if (collision.gameObject.CompareTag("PrevLevel"))
@@ -156,6 +157,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Level1"))
         {
+            Debug.Log("ciaodiomerda");
             PlayerPrefs.SetInt("CurrentLevel", 3);
             if (PlayerPrefs.GetInt("CurrentLevel") == 0)
                 Destroy(this.gameObject);
