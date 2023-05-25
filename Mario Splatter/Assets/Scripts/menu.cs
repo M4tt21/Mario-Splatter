@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Menu : MonoBehaviour
 {
     public GameObject player;
+    //public GameObject guns;
     public void NewGame()
     {
         PlayerPrefs.DeleteAll();
@@ -20,6 +21,7 @@ public class Menu : MonoBehaviour
     {
         PlayerPrefs.SetInt("CurrentLevel", 2);
         SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+        //guns.gameObject.SetActive(true);
     }
     public void Options()
     {
@@ -28,7 +30,7 @@ public class Menu : MonoBehaviour
     }
     public void Exit()
     {
-        
+        Application.Quit();
 
     }
 }

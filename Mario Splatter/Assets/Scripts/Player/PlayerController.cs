@@ -44,13 +44,7 @@ public class PlayerController : MonoBehaviour
     public Transform cameraTransform;
     float rotation = 0;
     public float jumpspeed = 2;
-
     private bool isImmune;
-
-
-
-
-
     private GameObject guns;
     
 
@@ -138,13 +132,12 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        /*
+        
         if (collision.gameObject.CompareTag("NextLevel"))
         {
             PlayerPrefs.SetInt("CurrentLevel", (SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
             if (PlayerPrefs.GetInt("CurrentLevel") == 0)
                 Destroy(this.gameObject);
-            Debug.Log("ciao");
             SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
 
         }
@@ -160,7 +153,6 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Level1"))
         {
-            Debug.Log("ciaodiomerda");
             PlayerPrefs.SetInt("CurrentLevel", 3);
             if (PlayerPrefs.GetInt("CurrentLevel") == 0)
                 Destroy(this.gameObject);
@@ -182,7 +174,7 @@ public class PlayerController : MonoBehaviour
                 Destroy(this.gameObject);
             SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
         }
-        */
+        
         if (collision.gameObject.CompareTag( "Enemy"))
         {
             if (isImmune)
