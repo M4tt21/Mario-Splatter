@@ -15,8 +15,9 @@ public class PauseMenu : MonoBehaviour
     }
     void Update()
     {
+
         if (Input.GetKeyDown(KeyCode.Escape))
-        {
+         {
             Debug.Log("ciao");
             if (isPaused)
             {
