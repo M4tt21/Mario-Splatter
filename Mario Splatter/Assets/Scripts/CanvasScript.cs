@@ -8,15 +8,24 @@ public class CanvasScript : MonoBehaviour
     public static bool gunUpdate = true;
     public static int currentGun = 0;
     public static int scoreValue = 0;
-    TextMeshProUGUI score;
+    [SerializeField]
+    public TextMeshProUGUI score;
     Transform[] crossAires;
+    [SerializeField]
+    public Transform AssaultRifleAim;
+    [SerializeField]
+    public Transform ShotgunAim;
+    [SerializeField]
+    public Transform PistolAim;
     // Start is called before the first frame update
     void Start()
     {
-        score = transform.Find("Score").GetComponent<TextMeshProUGUI>();
-        Transform[] ca= {transform.Find("AssaultRifleAim"),
-            transform.Find("ShotgunAim"),
-            transform.Find("PistolAim") };
+        Transform[] ca= 
+        {
+            AssaultRifleAim,
+            ShotgunAim,
+            PistolAim
+        };
         crossAires = ca;
     }
 
