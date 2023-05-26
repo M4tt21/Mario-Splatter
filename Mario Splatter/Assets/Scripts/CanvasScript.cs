@@ -5,19 +5,23 @@ using TMPro;
 
 public class CanvasScript : MonoBehaviour
 {
-    public static bool gunUpdate = true;
-    public static int currentGun = 0;
     public static int scoreValue = 0;
     private bool isPaused;
+
+
     [SerializeField]
     public TextMeshProUGUI score;
-    Transform[] crossAires;
+
+
     [SerializeField]
     public Transform AssaultRifleAim;
     [SerializeField]
     public Transform ShotgunAim;
     [SerializeField]
     public Transform PistolAim;
+
+    private Dictionary<Guns.gunType, Transform> GunsCrossair;
+    private Guns.gunType currentCrossair;
 
     [SerializeField]
     public GameObject UI;
@@ -26,13 +30,15 @@ public class CanvasScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Transform[] ca= 
-         {
-            AssaultRifleAim,
-            ShotgunAim,
-            PistolAim
-        };
-        crossAires = ca;
+
+        //Start Crossairs
+        currentCrossair = Guns.startingGun;
+        GunsCrossair = new Dictionary<Guns.gunType, Transform>();
+        GunsCrossair.Add(Guns.gunType.AR, AssaultRifleAim);
+        GunsCrossair.Add(Guns.gunType.SG, ShotgunAim);
+        GunsCrossair.Add(Guns.gunType.P, PistolAim);
+
+
     }
 
 
@@ -55,22 +61,21 @@ public class CanvasScript : MonoBehaviour
     void FixedUpdate()
     {
        score.SetText("" + scoreValue);
-       if (gunUpdate)
-        {
-            updateCrossAir(crossAires, currentGun);
-            gunUpdate = false;
-        }
     }
-    void updateCrossAir(Transform[] crossAires, int gun)
+
+    public void updateCrossAir(Guns.gunType gun)
     {
-        int i = 0;
-        foreach (Transform ca in crossAires)
+        if (currentCrossair != gun)
         {
-            if (i == gun)
-                ca.gameObject.SetActive(true);
-            else
-                ca.gameObject.SetActive(false);
-            i++;
+            if (GunsCrossair.TryGetValue(gun, out Transform newCrossair) && GunsCrossair.TryGetValue(currentCrossair, out Transform oldCrossair))
+            {
+                oldCrossair.gameObject.SetActive(false);
+                newCrossair.gameObject.SetActive(true);
+
+                //Cambio Mirino
+
+            }
+            currentCrossair = gun;
         }
     }
 
