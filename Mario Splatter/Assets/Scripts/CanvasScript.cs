@@ -20,8 +20,8 @@ public class CanvasScript : MonoBehaviour
     [SerializeField]
     public Transform PistolAim;
 
-    private Dictionary<Guns.gunType, Transform> GunsCrossair;
-    private Guns.gunType currentCrossair;
+    private Dictionary<GunsController.gunType, Transform> GunsCrossair;
+    private GunsController.gunType currentCrossair;
 
     [SerializeField]
     public GameObject UI;
@@ -32,11 +32,11 @@ public class CanvasScript : MonoBehaviour
     {
 
         //Start Crossairs
-        currentCrossair = Guns.startingGun;
-        GunsCrossair = new Dictionary<Guns.gunType, Transform>();
-        GunsCrossair.Add(Guns.gunType.AR, AssaultRifleAim);
-        GunsCrossair.Add(Guns.gunType.SG, ShotgunAim);
-        GunsCrossair.Add(Guns.gunType.P, PistolAim);
+        currentCrossair = GunsController.startingGun;
+        GunsCrossair = new Dictionary<GunsController.gunType, Transform>();
+        GunsCrossair.Add(GunsController.gunType.AR, AssaultRifleAim);
+        GunsCrossair.Add(GunsController.gunType.SG, ShotgunAim);
+        GunsCrossair.Add(GunsController.gunType.P, PistolAim);
 
 
     }
@@ -63,7 +63,7 @@ public class CanvasScript : MonoBehaviour
        score.SetText("" + scoreValue);
     }
 
-    public void updateCrossAir(Guns.gunType gun)
+    public void updateCrossAir(GunsController.gunType gun)
     {
         if (currentCrossair != gun)
         {

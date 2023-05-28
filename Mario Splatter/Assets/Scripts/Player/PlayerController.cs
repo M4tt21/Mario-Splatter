@@ -45,7 +45,9 @@ public class PlayerController : MonoBehaviour
     float rotation = 0;
     public float jumpspeed = 2;
     private bool isImmune;
-    private GameObject guns;
+
+    [SerializeField]
+    private GunsController guns;
     
 
 
@@ -53,7 +55,6 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        guns = GameObject.FindGameObjectWithTag("Guns");
         
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -92,12 +93,12 @@ public class PlayerController : MonoBehaviour
         {
             if(currentSpeed<rSpeed)currentSpeed += rSpeed * Time.deltaTime;
             //Se corre disabilito l'arma che ha in mano
-            guns.gameObject.SetActive(false);
+            guns.disableCurrentGun();
         }
         else if(!Input.GetButton("Fire3") || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0))
         {
             if (currentSpeed >wSpeed) currentSpeed -= wSpeed * Time.deltaTime;
-            guns.gameObject.SetActive(true);
+            guns.enableCurrentGun();
         }
 
         //if ((Input.GetButtonUp("Fire3") || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0)) && currentSpeed>wSpeed){currentSpeed -= wSpeed * Time.deltaTime;}

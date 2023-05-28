@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class EnemyHit : MonoBehaviour
 {
+    
     public enum hitType { head, body, leg, arm }
-    public hitType ht;
+    [SerializeField]
+    public hitType ht = hitType.body;
+
+    [SerializeField]
+    public float damage = 10f; //Default
     public EnemyController controller;
 
-    public void Hit(int amount)
+    public virtual void Hit()
     {
-        controller.damage(amount);
+        controller.damage(damage); //Default
     }
 }
