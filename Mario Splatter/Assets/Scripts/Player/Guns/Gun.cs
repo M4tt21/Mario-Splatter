@@ -9,6 +9,10 @@ public class Gun : MonoBehaviour
     public float shotCD { protected set; get; } = 0.1f;
     public int magazineSize { protected set; get; } = 24;
 
+    public int currentAmmo;
+
+    public bool isOutOfAmmo;
+
     //CD states
     public bool isOnCooldown { protected set; get; } = false;
     public bool isReloading { protected set; get; } = false;
@@ -32,5 +36,11 @@ public class Gun : MonoBehaviour
     public void setVisible(bool value)
     {
         gameObject.GetComponent<MeshRenderer>().enabled = value;
+    }
+
+    public void reload()
+    {
+        currentAmmo = magazineSize;
+        isOutOfAmmo = false;
     }
 }

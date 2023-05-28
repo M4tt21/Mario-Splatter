@@ -11,8 +11,8 @@ public class ARScript : Gun
         reloadTime = 1f;
         shotCD = 0.1f;
         magazineSize = 24;
-
-
+        currentAmmo = magazineSize;
+        isOutOfAmmo = false;
     }
 
     // Update is called once per frame
@@ -25,6 +25,13 @@ public class ARScript : Gun
     {
         if (isOnCooldown)
             return false;
+
+        if (currentAmmo == 0) { 
+            isOutOfAmmo = true;
+            return false;
+        }
+
+        currentAmmo--;
 
         //Find what the player is shooting at
         RaycastHit hitPoint;
@@ -55,7 +62,7 @@ public class ARScript : Gun
                 enemyPartHit.Hit();
 
                 result = true;
-                
+
                 //Debug.Log("Colpito il nemico"+hitPoint.collider +""+ hitPoint.collider.gameObject.GetComponent<KoopaHit>());
 
             }

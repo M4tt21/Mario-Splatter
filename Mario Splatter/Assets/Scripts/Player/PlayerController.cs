@@ -32,6 +32,7 @@ public struct SerializableVector3
 
 public class PlayerController : MonoBehaviour
 {
+    private SettingsScript settings;
     public CharacterController controller;
     public Animator animator;
     private static float wSpeed = 5f;
@@ -55,8 +56,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
 
+        settings = gameObject.GetComponent<SettingsScript>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -88,19 +89,6 @@ public class PlayerController : MonoBehaviour
         velocity.y += gravity*2 * Time.deltaTime;
         controller.Move((velocity * Time.deltaTime) + move);
 
-        //sprint
-        if(Input.GetButton("Fire3") && (Input.GetAxis("Vertical")>0) && !Input.GetButton("Horizontal"))
-        {
-            if(currentSpeed<rSpeed)currentSpeed += rSpeed * Time.deltaTime;
-            //Se corre disabilito l'arma che ha in mano
-            guns.disableCurrentGun();
-        }
-        else if(!Input.GetButton("Fire3") || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0))
-        {
-            if (currentSpeed >wSpeed) currentSpeed -= wSpeed * Time.deltaTime;
-            guns.enableCurrentGun();
-        }
-
         //if ((Input.GetButtonUp("Fire3") || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0)) && currentSpeed>wSpeed){currentSpeed -= wSpeed * Time.deltaTime;}
 
         float dotPF = Vector3.Dot(transform.forward, controller.velocity);
@@ -123,6 +111,45 @@ public class PlayerController : MonoBehaviour
 
         cameraTransform.localRotation = Quaternion.Euler(rotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+
+
+        /*All Actions Below are unaccessible while reloading*/
+        if (guns.isReloading)
+            return;
+
+        if (Input.GetButton("Fire1"))
+        {
+            guns.fireCurrentGun();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1)) //Rifle
+            guns.selectGun(GunsController.gunType.AR);
+        else if (Input.GetKeyDown(KeyCode.Alpha2)) //Shotgun
+            guns.selectGun(GunsController.gunType.SG);
+        else if (Input.GetKeyDown(KeyCode.Alpha3)) //Pistol
+            guns.selectGun(GunsController.gunType.P);
+
+        //Can only reload if hes not running !guns.isReEquipping && (guns.isCurrentGunOutOfAmmo || 
+        Debug.Log(guns.isReEquipping);
+        if (!guns.isReEquipping && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(settings.reloadKey)))
+        {
+            guns.reloadCurrentGun();
+        }
+
+
+        //sprint
+        if (Input.GetButton("Fire3") && (Input.GetAxis("Vertical") > 0) && !Input.GetButton("Horizontal"))
+        {
+            if (currentSpeed < rSpeed) currentSpeed += rSpeed * Time.deltaTime;
+            //Se corre disabilito l'arma che ha in mano
+            guns.disableCurrentGun();
+        }
+        else if (!Input.GetButton("Fire3") || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0))
+        {
+            if (currentSpeed > wSpeed) currentSpeed -= wSpeed * Time.deltaTime;
+        }
+
+        if(Input.GetButtonUp("Fire3")) guns.enableCurrentGun();
     }
     
     private int turnDirection(float Axis){  //1=Right -1=Left

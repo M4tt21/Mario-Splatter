@@ -5,7 +5,9 @@ using UnityEngine;
 public class GunsController : MonoBehaviour
 {
     private bool isFireEnabled = true;
-    private bool isReEquipping = false;
+    public bool isReEquipping { private set; get; } = false;
+    public bool isReloading = false;
+    public bool isCurrentGunOutOfAmmo = false;
     private float ReEquipCD = 0.5f;
     [SerializeField]
     private CanvasScript cs;
@@ -60,18 +62,20 @@ public class GunsController : MonoBehaviour
     private void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.Alpha1)) //Rifle
-            selectGun(gunType.AR);
-        else if (Input.GetKeyDown(KeyCode.Alpha2)) //Shotgun
-            selectGun(gunType.SG);
-        else if (Input.GetKeyDown(KeyCode.Alpha3)) //Pistol
-            selectGun(gunType.P);
+
+        
 
 
+        
+    }
+
+    public void fireCurrentGun()
+    {
         Debug.DrawRay(camera.transform.position, camera.transform.forward * 1000, Color.red); // traiettoria proiettile visibile
-        if (Input.GetButton("Fire1") && isFireEnabled)//tasto sinistro mouse
+        if (isFireEnabled)//tasto sinistro mouse
         {
             tryGetGunObjFromType(currentGun).GetComponent<Gun>().fire(camera);
+            isCurrentGunOutOfAmmo = tryGetGunObjFromType(currentGun).GetComponent<Gun>().isOutOfAmmo;
         }
     }
 
@@ -129,8 +133,33 @@ public class GunsController : MonoBehaviour
         tryGetGunObjFromType(currentGun).GetComponent<Gun>().setVisible(false);
         isFireEnabled = false;
     }
-    
-    
+
+    public IEnumerator reloadTime()
+    {
+        isReloading = true;
+
+        yield return new WaitForSeconds(tryGetGunObjFromType(currentGun).GetComponent<Gun>().reloadTime);
+
+        tryGetGunObjFromType(currentGun).GetComponent<Gun>().reload();
+        isCurrentGunOutOfAmmo = false;
+        isReloading = false;
+    }
+
+    public void reloadCurrentGun()
+    {
+        if (isReloading)
+            return;
+        StartCoroutine(reloadTime());
+    }
+
+    public int getAmmoOfCurrentGun()
+    {
+        return tryGetGunObjFromType(currentGun).GetComponent<Gun>().currentAmmo;
+    }
+    public int getMaxAmmoOfCurrentGun()
+    {
+        return tryGetGunObjFromType(currentGun).GetComponent<Gun>().magazineSize;
+    }
 }
 
 

@@ -11,6 +11,8 @@ public class CanvasScript : MonoBehaviour
 
     [SerializeField]
     public TextMeshProUGUI score;
+    [SerializeField]
+    public TextMeshProUGUI ammoCounter;
 
 
     [SerializeField]
@@ -27,6 +29,8 @@ public class CanvasScript : MonoBehaviour
     public GameObject UI;
     [SerializeField]
     public GameObject PauseMenu;
+    [SerializeField]
+    public GunsController guns;
     // Start is called before the first frame update
     void Start()
     {
@@ -60,7 +64,8 @@ public class CanvasScript : MonoBehaviour
 
     void FixedUpdate()
     {
-       score.SetText("" + scoreValue);
+        ammoCounter.SetText(guns.getAmmoOfCurrentGun() + "|" + guns.getMaxAmmoOfCurrentGun());
+        score.SetText("" + scoreValue);
     }
 
     public void updateCrossAir(GunsController.gunType gun)
