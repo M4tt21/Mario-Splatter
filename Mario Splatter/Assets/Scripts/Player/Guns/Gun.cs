@@ -5,9 +5,12 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
     //Default Stats gun
-    public virtual float reloadTime { protected set; get; } = 1f ;
-    public float shotCD { protected set; get; } = 0.1f;
-    public int magazineSize { protected set; get; } = 24;
+    [Header("General Stats")]
+    [SerializeField]public float reloadTime = 1f ;
+    [SerializeField]public float range = Mathf.Infinity;
+    [SerializeField]public float shotCD = 0.1f;
+    [SerializeField]public int magazineSize = 24;
+    [SerializeField]public int bulletDMG = 50;
 
     public int currentAmmo;
 
@@ -19,10 +22,9 @@ public class Gun : MonoBehaviour
 
 
     
-    public virtual bool fire(GameObject camera)
+    public virtual void fire(GameObject camera)
     {
         Debug.Log("This gun is WiP.");
-        return false;
     }
     protected IEnumerator gunCooldownTime()
     {

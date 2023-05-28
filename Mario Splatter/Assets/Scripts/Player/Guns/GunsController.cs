@@ -61,11 +61,6 @@ public class GunsController : MonoBehaviour
 
     private void Update()
     {
-
-
-        
-
-
         
     }
 

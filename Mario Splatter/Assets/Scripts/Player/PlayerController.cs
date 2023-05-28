@@ -45,13 +45,17 @@ public class PlayerController : MonoBehaviour
     public Transform cameraTransform;
     float rotation = 0;
     public float jumpspeed = 2;
+
     private bool isImmune;
     private Vector3 startingPos;
+    private int startingLives=3;
     public int lives;
 
     [SerializeField]
     private GunsController guns;
-    
+    [SerializeField]
+    private CanvasScript canvasScript;
+
 
 
 
@@ -63,6 +67,7 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         startingPos = transform.position;
+        lives = startingLives;
     }
 
     // Update is called once per frame
@@ -133,7 +138,6 @@ public class PlayerController : MonoBehaviour
             guns.selectGun(GunsController.gunType.P);
 
         //Can only reload if hes not running !guns.isReEquipping && (guns.isCurrentGunOutOfAmmo || 
-        Debug.Log(guns.isReEquipping);
         if (!guns.isReEquipping && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(settings.reloadKey)))
         {
             guns.reloadCurrentGun();
@@ -208,9 +212,7 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("DeathZone"))
         {
-            if (isImmune) return;
-            lives--;
-            backToSpawn();
+            death();
         }
 
         if (collision.gameObject.CompareTag( "Enemy"))
@@ -233,9 +235,17 @@ public class PlayerController : MonoBehaviour
         isImmune = false;
     }
 
-    public void backToSpawn()
+    public void death()
     {
+        lives--;
+        if (lives <= 0)
+            Debug.Log("HAI PERSO IDIOTA");//CAMBIAREEEEEEE RESET LIVELLO
+
+        canvasScript.showLoseLifeScreen();
+
+        
         transform.position = startingPos;
+
     }
 
 

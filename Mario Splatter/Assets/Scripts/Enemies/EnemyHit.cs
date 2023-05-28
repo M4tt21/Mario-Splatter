@@ -13,8 +13,8 @@ public class EnemyHit : MonoBehaviour
     public float damage = 10f; //Default
     public EnemyController controller;
 
-    public virtual void Hit()
+    public virtual void Hit(float damage)
     {
-        controller.damage(damage); //Default
+        controller.damage(damage, ht); //Default
     }
 }

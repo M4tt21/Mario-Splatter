@@ -13,6 +13,8 @@ public class CanvasScript : MonoBehaviour
     public TextMeshProUGUI score;
     [SerializeField]
     public TextMeshProUGUI ammoCounter;
+    [SerializeField]
+    public TextMeshProUGUI livesCounter;
 
 
     [SerializeField]
@@ -30,7 +32,11 @@ public class CanvasScript : MonoBehaviour
     [SerializeField]
     public GameObject PauseMenu;
     [SerializeField]
+    public GameObject LoseLifeScreen;
+    [SerializeField]
     public GunsController guns;
+    [SerializeField]
+    public PlayerController player;
     // Start is called before the first frame update
     void Start()
     {
@@ -66,6 +72,7 @@ public class CanvasScript : MonoBehaviour
     {
         ammoCounter.SetText(guns.getAmmoOfCurrentGun() + "|" + guns.getMaxAmmoOfCurrentGun());
         score.SetText("" + scoreValue);
+        livesCounter.SetText("" + player.lives);
     }
 
     public void updateCrossAir(GunsController.gunType gun)
@@ -103,5 +110,20 @@ public class CanvasScript : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
     }
+
+    private IEnumerator loseLifeScreenTime()
+    {
+        LoseLifeScreen.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        LoseLifeScreen.SetActive(false);
+
+    }
+
+    public void showLoseLifeScreen()
+    {
+        StartCoroutine(loseLifeScreenTime());
+    }
+
+
 }
 
