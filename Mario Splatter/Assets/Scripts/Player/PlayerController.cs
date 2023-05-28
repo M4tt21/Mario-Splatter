@@ -46,6 +46,8 @@ public class PlayerController : MonoBehaviour
     float rotation = 0;
     public float jumpspeed = 2;
     private bool isImmune;
+    private Vector3 startingPos;
+    public int lives;
 
     [SerializeField]
     private GunsController guns;
@@ -60,6 +62,7 @@ public class PlayerController : MonoBehaviour
         settings = gameObject.GetComponent<SettingsScript>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        startingPos = transform.position;
     }
 
     // Update is called once per frame
@@ -202,7 +205,14 @@ public class PlayerController : MonoBehaviour
                 Destroy(this.gameObject);
             SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
         }
-        
+
+        if (collision.gameObject.CompareTag("DeathZone"))
+        {
+            if (isImmune) return;
+            lives--;
+            backToSpawn();
+        }
+
         if (collision.gameObject.CompareTag( "Enemy"))
         {
             if (isImmune)
@@ -221,6 +231,11 @@ public class PlayerController : MonoBehaviour
         isImmune = true;
         yield return new WaitForSeconds(time);
         isImmune = false;
+    }
+
+    public void backToSpawn()
+    {
+        transform.position = startingPos;
     }
 
 
