@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class KoopaController : EnemyController
 {
-    private float KoopaHealth = 200;
     // Start is called before the first frame update
     void Start()
     {
-        initHealth(KoopaHealth);
+        initHealth(health);
+
+        navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -19,5 +21,13 @@ public class KoopaController : EnemyController
             death(); 
             CanvasScript.scoreValue += 1;
         }
+    }
+
+    void Update()
+    {
+        if (navMeshAgent.isOnNavMesh)
+            navMeshAgent.SetDestination(player.position);
+
+        Debug.Log("1");
     }
 }

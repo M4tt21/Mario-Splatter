@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
@@ -11,6 +12,26 @@ public class EnemyController : MonoBehaviour
     [SerializeField]public float bodyHitMul = 1.2f;
     [SerializeField]public float legHitMul = 1f;
     [SerializeField] public float armHitMul = 1f;
+
+    
+    protected NavMeshAgent navMeshAgent;
+    [Header("NavMeshData")]
+    public Transform player;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
+
+    }
+
+    void Update()
+    {
+        if (navMeshAgent.isOnNavMesh)
+            navMeshAgent.SetDestination(player.position);
+        Debug.Log("2");
+    }
+    
 
     public void initHealth(float health)
     {
