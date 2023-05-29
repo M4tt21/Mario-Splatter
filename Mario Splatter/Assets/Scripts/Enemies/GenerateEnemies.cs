@@ -5,7 +5,6 @@ using UnityEngine;
 public class GenerateEnemies : MonoBehaviour
 {
     public GameObject theEnemy;
-    public GameObject pipe;
     public int enemyCount;
     // Start is called before the first frame update
     void Start()
@@ -14,18 +13,11 @@ public class GenerateEnemies : MonoBehaviour
     }
     IEnumerator EnemyDrop()
     {
-        while (enemyCount < 20)
+        for (int i = 0; i < enemyCount; i++)
         {
-            Instantiate(theEnemy, new Vector3(pipe.transform.position.x, pipe.transform.position.y+5, pipe.transform.position.z), Quaternion.identity);
+            Instantiate(theEnemy, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity).SetActive(true);
             yield return new WaitForSecondsRealtime(3);
             enemyCount += 1;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-
     }
 }

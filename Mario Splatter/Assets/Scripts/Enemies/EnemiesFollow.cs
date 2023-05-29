@@ -5,17 +5,19 @@ using UnityEngine.AI;
 
 public class EnemiesFollow : MonoBehaviour
 {
-    public NavMeshAgent enemies;
+    private NavMeshAgent navMeshAgent;
     public Transform player;
     // Start is called before the first frame update
     void Start()
     {
-        
+        navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
+            
     }
 
     // Update is called once per frame
     void Update()
     {
-       enemies.SetDestination(player.position);
+        if(navMeshAgent.isOnNavMesh)
+            navMeshAgent.SetDestination(player.position);
     }
 }
