@@ -3,30 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class KoopaController : EnemyController
+public class GoombaController : EnemyController
 {
     // Start is called before the first frame update
     void Start()
     {
         initHealth(health);
         navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
+        animator = gameObject.GetComponent<Animator>();
+        animator.enabled = false;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(health<=0)
+        if (health <= 0)
         {
-            death(); 
+            death();
             CanvasScript.scoreValue += 1;
         }
+
     }
 
     void Update()
     {
         if (navMeshAgent.isOnNavMesh)
+        {
+            animator.enabled = true;
             navMeshAgent.SetDestination(player.position);
-
-        Debug.Log("1");
+        }
+        animator.SetFloat("Speed", navMeshAgent.velocity.magnitude/navMeshAgent.speed);
     }
 }

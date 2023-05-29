@@ -13,7 +13,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField]public float legHitMul = 1f;
     [SerializeField] public float armHitMul = 1f;
 
-    
+    protected Animator animator;
     protected NavMeshAgent navMeshAgent;
     [Header("NavMeshData")]
     public Transform player;
