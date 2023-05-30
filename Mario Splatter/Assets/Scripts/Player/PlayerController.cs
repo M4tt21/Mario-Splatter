@@ -32,29 +32,34 @@ public struct SerializableVector3
 
 public class PlayerController : MonoBehaviour
 {
+
     private SettingsScript settings;
-    public CharacterController controller;
-    public Animator animator;
     private static float wSpeed = 5f;
     private static float rSpeed = 10f;
-    private static int rScale = 5;
     private float currentSpeed = wSpeed;
     private Vector3 velocity;
     private float gravity = -9.81f;
-    public float mouseSens = 100f;
+    [Header("Player Data")]
+    public CharacterController controller;
+    public Animator animator;
     public Transform cameraTransform;
-    float rotation = 0;
+    public GunsController guns;
+    public CanvasScript canvasScript;
+    public MarioHealth marioHealth;
+
+    [Header("Player Stats")]
     public float jumpspeed = 2;
+    public float mouseSens = 100f;
+    private float rotation = 0;
+    public int lives;
+    public float immunitySec = 3f;
 
     private bool isImmune;
     private Vector3 startingPos;
     private int startingLives=3;
-    public int lives;
+    
 
-    [SerializeField]
-    private GunsController guns;
-    [SerializeField]
-    private CanvasScript canvasScript;
+    
 
 
 
@@ -87,12 +92,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Changes the height position of the player..
-        if (Input.GetButtonDown("Jump") && controller.isGrounded)
-        {
-            velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
-            animator.SetBool("isJumping", true);
-        }
-        else animator.SetBool("isJumping", false);
+        
 
         velocity.y += gravity*2 * Time.deltaTime;
         controller.Move((velocity * Time.deltaTime) + move);
@@ -127,6 +127,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButton("Fire1"))
         {
+
             guns.fireCurrentGun();
         }
 
@@ -157,6 +158,14 @@ public class PlayerController : MonoBehaviour
         }
 
         if(Input.GetButtonUp("Fire3")) guns.enableCurrentGun();
+
+        if (Input.GetButtonDown("Jump") && controller.isGrounded)
+        {
+            velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
+            animator.SetBool("isJumping", true);
+        }
+        else animator.SetBool("isJumping", false);
+
     }
     
     private int turnDirection(float Axis){  //1=Right -1=Left
@@ -220,9 +229,9 @@ public class PlayerController : MonoBehaviour
             if (isImmune)
                 return;    
             
-            MarioHealth.Instance.TakeDamage(1);
-
-            StartCoroutine(immunityTime(3));
+            if(marioHealth.TakeDamage(1)<=0)
+                death();
+            giveImmunity(immunitySec);
             
         }
 
@@ -235,19 +244,27 @@ public class PlayerController : MonoBehaviour
         isImmune = false;
     }
 
+    private void giveImmunity(float time)
+    {
+        StartCoroutine(immunityTime(time));
+    }
+
     public void death()
     {
         lives--;
         if (lives <= 0)
-            Debug.Log("HAI PERSO IDIOTA");//CAMBIAREEEEEEE RESET LIVELLO
+            Debug.Log("HAI PERSO");//CAMBIAREEEEEEE RESET LIVELLO
+
+        marioHealth.fullHealth();
 
         canvasScript.showLoseLifeScreen();
-
-        
         transform.position = startingPos;
 
     }
 
+    public void unlockGun(GunsController.gunType gun)
+    {
 
+    }
 
 }

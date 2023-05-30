@@ -77,18 +77,15 @@ public class CanvasScript : MonoBehaviour
 
     public void updateCrossAir(GunsController.gunType gun)
     {
-        if (currentCrossair != gun)
+        if (GunsCrossair.TryGetValue(gun, out Transform newCrossair) && GunsCrossair.TryGetValue(currentCrossair, out Transform oldCrossair))
         {
-            if (GunsCrossair.TryGetValue(gun, out Transform newCrossair) && GunsCrossair.TryGetValue(currentCrossair, out Transform oldCrossair))
-            {
-                oldCrossair.gameObject.SetActive(false);
-                newCrossair.gameObject.SetActive(true);
+            oldCrossair.gameObject.SetActive(false);
+            newCrossair.gameObject.SetActive(true);
 
-                //Cambio Mirino
+            //Cambio Mirino
 
-            }
-            currentCrossair = gun;
         }
+        currentCrossair = gun;
     }
 
     public void PauseGame()
