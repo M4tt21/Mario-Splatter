@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GunsController : MonoBehaviour
 {
-    private bool isFireEnabled = true;
-    public bool isReEquipping { private set; get; } = false;
+    public bool isCurrentGunEnabled = true;
+    public bool isReEquipping = false;
     public bool isReloading = false;
     public bool isCurrentGunOutOfAmmo = false;
     private float ReEquipCD = 0.5f;
@@ -106,7 +106,7 @@ public class GunsController : MonoBehaviour
     public void fireCurrentGun()
     {
         Debug.DrawRay(camera.transform.position, camera.transform.forward * 1000, Color.red); // traiettoria proiettile visibile
-        if (isFireEnabled && isGunUnlocked(currentGun))//tasto sinistro mouse
+        if (isCurrentGunEnabled && isGunUnlocked(currentGun))//tasto sinistro mouse
         {
             tryGetGunObjFromType(currentGun).GetComponent<Gun>().fire(camera);
             isCurrentGunOutOfAmmo = tryGetGunObjFromType(currentGun).GetComponent<Gun>().isOutOfAmmo;
@@ -151,7 +151,7 @@ public class GunsController : MonoBehaviour
         yield return new WaitForSeconds(ReEquipCD);
 
         tryGetGunObjFromType(currentGun).GetComponent<Gun>().setVisible(true);
-        isFireEnabled = true;
+        isCurrentGunEnabled = true;
         isReEquipping = false;
     }
 
@@ -165,7 +165,7 @@ public class GunsController : MonoBehaviour
     public void disableCurrentGun()
     {
         tryGetGunObjFromType(currentGun).GetComponent<Gun>().setVisible(false);
-        isFireEnabled = false;
+        isCurrentGunEnabled = false;
     }
 
     public IEnumerator reloadTime()
@@ -193,6 +193,16 @@ public class GunsController : MonoBehaviour
     public int getMaxAmmoOfCurrentGun()
     {
         return tryGetGunObjFromType(currentGun).GetComponent<Gun>().magazineSize;
+    }
+
+    public int getAmmoHeldOfCurrentGun()
+    {
+        return tryGetGunObjFromType(currentGun).GetComponent<Gun>().ammoHeld;
+    }
+
+    public void addAmmoToGun(gunType gun, int amount)
+    {
+        tryGetGunObjFromType(gun).GetComponent<Gun>().addAmmo(amount);
     }
 
 }

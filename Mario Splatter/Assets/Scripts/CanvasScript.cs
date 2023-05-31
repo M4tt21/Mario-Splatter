@@ -70,7 +70,7 @@ public class CanvasScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        ammoCounter.SetText(guns.getAmmoOfCurrentGun() + "|" + guns.getMaxAmmoOfCurrentGun());
+        ammoCounter.SetText(guns.getAmmoOfCurrentGun() + "|" + guns.getAmmoHeldOfCurrentGun());
         score.SetText("" + scoreValue);
         livesCounter.SetText("" + player.lives);
     }

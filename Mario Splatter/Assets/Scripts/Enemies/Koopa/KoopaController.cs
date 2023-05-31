@@ -26,7 +26,5 @@ public class KoopaController : EnemyController
     {
         if (navMeshAgent.isOnNavMesh)
             navMeshAgent.SetDestination(player.position);
-
-        Debug.Log("1");
     }
 }

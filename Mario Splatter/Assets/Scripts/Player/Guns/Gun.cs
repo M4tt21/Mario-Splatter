@@ -5,11 +5,12 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
     //Default Stats gun
-    [Header("General Stats")]
+    [Header("General Gun Stats")]
     [SerializeField]public float reloadTime = 1f ;
     [SerializeField]public float range = Mathf.Infinity;
     [SerializeField]public float shotCD = 0.1f;
     [SerializeField]public int magazineSize = 24;
+    [SerializeField]public int ammoHeld=24;
     [SerializeField]public int bulletDMG = 50;
 
     public int currentAmmo;
@@ -17,11 +18,9 @@ public class Gun : MonoBehaviour
     public bool isOutOfAmmo;
 
     //CD states
-    public bool isOnCooldown { protected set; get; } = false;
-    public bool isReloading { protected set; get; } = false;
+    public bool isOnCooldown = false;
+    public bool isReloading = false;
 
-
-    
     public virtual void fire(GameObject camera)
     {
         Debug.Log("This gun is WiP.");
@@ -42,7 +41,23 @@ public class Gun : MonoBehaviour
 
     public void reload()
     {
-        currentAmmo = magazineSize;
+        int ammoRequested = magazineSize - currentAmmo;
+        if (ammoRequested > ammoHeld) 
+        {
+            currentAmmo += ammoHeld;
+            ammoHeld = 0;
+        }
+        else
+        {
+            currentAmmo += ammoRequested;
+            ammoHeld -= ammoRequested;
+        }
+            
         isOutOfAmmo = false;
+    }
+
+    public void addAmmo(int amount)
+    {
+        ammoHeld += amount;
     }
 }

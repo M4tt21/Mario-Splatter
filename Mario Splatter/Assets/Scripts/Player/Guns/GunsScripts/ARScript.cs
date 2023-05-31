@@ -37,7 +37,14 @@ public class ARScript : Gun
         if (raycastResCamera && hitPoint.transform.CompareTag("Enemy"))
         {
 
-            bool isValid = Physics.Linecast(transform.Find("muzzle").transform.position, hitPoint.transform.position, out (hitLine));
+            Vector3 origin = transform.Find("muzzle").transform.position;
+            Vector3 target = hitPoint.collider.transform.position;
+
+            Debug.DrawLine(origin, target, Color.green);
+
+            Vector3 direction = (target - origin).normalized;
+
+            bool isValid = Physics.Raycast(origin, direction, out (hitLine));
             
 
             if (isValid && hitLine.transform.CompareTag("Enemy"))

@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour
             guns.selectGun(GunsController.gunType.P);
 
         //Can only reload if hes not running !guns.isReEquipping && (guns.isCurrentGunOutOfAmmo || 
-        if (!guns.isReEquipping && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(settings.reloadKey)))
+        if (guns.isCurrentGunEnabled && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(settings.reloadKey)))
         {
             guns.reloadCurrentGun();
         }
