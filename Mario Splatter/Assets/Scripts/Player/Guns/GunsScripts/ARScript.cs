@@ -38,7 +38,7 @@ public class ARScript : Gun
         {
 
             Vector3 origin = transform.Find("muzzle").transform.position;
-            Vector3 target = hitPoint.collider.transform.position;
+            Vector3 target = hitPoint.point;
 
             Debug.DrawLine(origin, target, Color.green);
 

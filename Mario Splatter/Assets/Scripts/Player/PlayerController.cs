@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 [System.Serializable]
 public class GameData
@@ -57,9 +59,9 @@ public class PlayerController : MonoBehaviour
     private bool isImmune;
     private Vector3 startingPos;
     private int startingLives=3;
-    
+    private Vector3 desiredCameraPos;
 
-    
+
 
 
 
@@ -67,12 +69,13 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        
         settings = gameObject.GetComponent<SettingsScript>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         startingPos = transform.position;
         lives = startingLives;
+        desiredCameraPos = cameraTransform.localPosition;
     }
 
     // Update is called once per frame
@@ -117,8 +120,26 @@ public class PlayerController : MonoBehaviour
         rotation -= mouseY;
         rotation = Mathf.Clamp(rotation, -90f, 90f);
 
+
+
         cameraTransform.localRotation = Quaternion.Euler(rotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+
+        Vector3 moveTo;
+        //Collisione Telecamera
+        Debug.DrawLine(transform.Find("Head").position, transform.Find("CameraPivot").position);
+        if (Physics.Linecast(transform.Find("Head").position, transform.Find("CameraPivot").position, out RaycastHit cameraHit) && !cameraHit.transform.CompareTag("Enemy"))
+        {
+            float distance = Vector3.Distance(transform.Find("CameraPivot").position, cameraHit.point);
+            Debug.Log(distance);
+            //moveTo = Mathf.Clamp((hit.distance * 0.87f), minDistance, maxDistance);
+            cameraTransform.localPosition = Vector3.MoveTowards(desiredCameraPos, transform.Find("Head").localPosition, distance*1.15f);
+
+        }
+        else
+        {
+            cameraTransform.localPosition = desiredCameraPos;
+        }
 
 
         /*All Actions Below are unaccessible while reloading*/
