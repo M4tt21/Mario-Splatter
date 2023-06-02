@@ -40,6 +40,21 @@ public class CanvasScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+       
+
+        //se trova un canvas duplicato lo distrugge, sì può accadere
+        GameObject[] oldCanvases = GameObject.FindGameObjectsWithTag("Canvas");
+        foreach (GameObject oldCanvas in oldCanvases)
+        {
+            if (oldCanvases != null && oldCanvas != gameObject)
+            {
+                Debug.Log("Sono dentro");
+                oldCanvas.transform.position = transform.position;
+                Destroy(gameObject);
+            }
+        }
+        Debug.Log("Non ho distrutto il canvas");
+        GameObject.DontDestroyOnLoad(gameObject);// impedisce la distruzione immediata dell'oggetto
 
         //Start Crossairs
         currentCrossair = GunsController.startingGun;

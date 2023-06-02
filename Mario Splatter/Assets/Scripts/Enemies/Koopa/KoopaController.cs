@@ -10,6 +10,7 @@ public class KoopaController : EnemyController
     {
         initHealth(health);
         navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
@@ -25,6 +26,6 @@ public class KoopaController : EnemyController
     void Update()
     {
         if (navMeshAgent.isOnNavMesh)
-            navMeshAgent.SetDestination(player.position);
+            navMeshAgent.SetDestination(player.transform.position);
     }
 }
