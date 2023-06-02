@@ -146,11 +146,10 @@ public class PlayerController : MonoBehaviour
         if (guns.isReloading)
             return;
 
-        if (Input.GetButton("Fire1"))
-        {
-
+        if(guns.GetCurrentGun()==GunsController.gunType.P && Input.GetButtonDown("Fire1"))
             guns.fireCurrentGun();
-        }
+        else if (guns.GetCurrentGun() != GunsController.gunType.P && Input.GetButton("Fire1"))
+            guns.fireCurrentGun();
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) //Rifle
             guns.selectGun(GunsController.gunType.AR);

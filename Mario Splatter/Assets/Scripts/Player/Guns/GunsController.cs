@@ -19,8 +19,6 @@ public class GunsController : MonoBehaviour
     public gunType GetCurrentGun() => currentGun;
     private void SetCurrentGun(gunType value){currentGun = value;}
 
-    private int ignoreLayerMask;
-
     /*Guns Cooldowns*/
     public static float ARCooldown = 0.08f;
     public static float SGCooldown = 0.01f;
@@ -46,7 +44,6 @@ public class GunsController : MonoBehaviour
     private bool isPUnlocked = false;
 
     private GameObject DefaultGun;
-    KoopaHit kh;
 
     //Gun data
     private Dictionary<gunType, GameObject> GunsData;
@@ -130,10 +127,11 @@ public class GunsController : MonoBehaviour
                 newGunObj.GetComponent<Gun>().setVisible(true);
 
                 //Cambio Mirino
-                cs.updateCrossAir(gun);
+                
             }
             currentGun = gun;
         }
+        cs.updateCrossAir(currentGun);
     }
 
     public void hideAll(bool value)
