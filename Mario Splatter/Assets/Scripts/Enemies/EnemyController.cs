@@ -16,7 +16,7 @@ public class EnemyController : MonoBehaviour
     protected Animator animator;
     protected NavMeshAgent navMeshAgent;
     [Header("NavMeshData")]
-    public Transform player;
+    public GameObject player;
 
     // Start is called before the first frame update
     void Start()
@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         if (navMeshAgent.isOnNavMesh)
-            navMeshAgent.SetDestination(player.position);
+            navMeshAgent.SetDestination(player.transform.position);
         Debug.Log("2");
     }
     

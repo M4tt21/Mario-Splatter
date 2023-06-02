@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
     public float immunitySec = 3f;
 
     private bool isImmune;
-    private Vector3 startingPos;
+    public Vector3 startingPos;
     private int startingLives=3;
     private Vector3 desiredCameraPos;
 
