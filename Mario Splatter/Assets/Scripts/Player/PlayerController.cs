@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 [System.Serializable]
 public class GameData
@@ -32,29 +34,34 @@ public struct SerializableVector3
 
 public class PlayerController : MonoBehaviour
 {
+
     private SettingsScript settings;
-    public CharacterController controller;
-    public Animator animator;
     private static float wSpeed = 5f;
     private static float rSpeed = 10f;
-    private static int rScale = 5;
     private float currentSpeed = wSpeed;
     private Vector3 velocity;
     private float gravity = -9.81f;
-    public float mouseSens = 100f;
+    [Header("Player Data")]
+    public CharacterController controller;
+    public Animator animator;
     public Transform cameraTransform;
-    float rotation = 0;
+    public GunsController guns;
+    public CanvasScript canvasScript;
+    public MarioHealth marioHealth;
+
+    [Header("Player Stats")]
     public float jumpspeed = 2;
+    public float mouseSens = 100f;
+    private float rotation = 0;
+    public int lives;
+    public float immunitySec = 3f;
 
     private bool isImmune;
-    private Vector3 startingPos;
+    public Vector3 startingPos;
     private int startingLives=3;
-    public int lives;
+    private Vector3 desiredCameraPos;
 
-    [SerializeField]
-    private GunsController guns;
-    [SerializeField]
-    private CanvasScript canvasScript;
+
 
 
 
@@ -62,12 +69,13 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        
         settings = gameObject.GetComponent<SettingsScript>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         startingPos = transform.position;
         lives = startingLives;
+        desiredCameraPos = cameraTransform.localPosition;
     }
 
     // Update is called once per frame
@@ -87,12 +95,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Changes the height position of the player..
-        if (Input.GetButtonDown("Jump") && controller.isGrounded)
-        {
-            velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
-            animator.SetBool("isJumping", true);
-        }
-        else animator.SetBool("isJumping", false);
+        
 
         velocity.y += gravity*2 * Time.deltaTime;
         controller.Move((velocity * Time.deltaTime) + move);
@@ -117,18 +120,36 @@ public class PlayerController : MonoBehaviour
         rotation -= mouseY;
         rotation = Mathf.Clamp(rotation, -90f, 90f);
 
+
+
         cameraTransform.localRotation = Quaternion.Euler(rotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+
+        Vector3 moveTo;
+        //Collisione Telecamera
+        Debug.DrawLine(transform.Find("Head").position, transform.Find("CameraPivot").position);
+        if (Physics.Linecast(transform.Find("Head").position, transform.Find("CameraPivot").position, out RaycastHit cameraHit) && !cameraHit.transform.CompareTag("Enemy"))
+        {
+            float distance = Vector3.Distance(transform.Find("CameraPivot").position, cameraHit.point);
+            Debug.Log(distance);
+            //moveTo = Mathf.Clamp((hit.distance * 0.87f), minDistance, maxDistance);
+            cameraTransform.localPosition = Vector3.MoveTowards(desiredCameraPos, transform.Find("Head").localPosition, distance*1.15f);
+
+        }
+        else
+        {
+            cameraTransform.localPosition = desiredCameraPos;
+        }
 
 
         /*All Actions Below are unaccessible while reloading*/
         if (guns.isReloading)
             return;
 
-        if (Input.GetButton("Fire1"))
-        {
+        if(guns.GetCurrentGun()==GunsController.gunType.P && Input.GetButtonDown("Fire1"))
             guns.fireCurrentGun();
-        }
+        else if (guns.GetCurrentGun() != GunsController.gunType.P && Input.GetButton("Fire1"))
+            guns.fireCurrentGun();
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) //Rifle
             guns.selectGun(GunsController.gunType.AR);
@@ -138,7 +159,7 @@ public class PlayerController : MonoBehaviour
             guns.selectGun(GunsController.gunType.P);
 
         //Can only reload if hes not running !guns.isReEquipping && (guns.isCurrentGunOutOfAmmo || 
-        if (!guns.isReEquipping && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(settings.reloadKey)))
+        if (guns.isCurrentGunEnabled && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(settings.reloadKey)))
         {
             guns.reloadCurrentGun();
         }
@@ -157,6 +178,14 @@ public class PlayerController : MonoBehaviour
         }
 
         if(Input.GetButtonUp("Fire3")) guns.enableCurrentGun();
+
+        if (Input.GetButtonDown("Jump") && controller.isGrounded)
+        {
+            velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
+            animator.SetBool("isJumping", true);
+        }
+        else animator.SetBool("isJumping", false);
+
     }
     
     private int turnDirection(float Axis){  //1=Right -1=Left
@@ -220,9 +249,9 @@ public class PlayerController : MonoBehaviour
             if (isImmune)
                 return;    
             
-            MarioHealth.Instance.TakeDamage(1);
-
-            StartCoroutine(immunityTime(3));
+            if(marioHealth.TakeDamage(1)<=0)
+                death();
+            giveImmunity(immunitySec);
             
         }
 
@@ -235,19 +264,27 @@ public class PlayerController : MonoBehaviour
         isImmune = false;
     }
 
+    private void giveImmunity(float time)
+    {
+        StartCoroutine(immunityTime(time));
+    }
+
     public void death()
     {
         lives--;
         if (lives <= 0)
-            Debug.Log("HAI PERSO IDIOTA");//CAMBIAREEEEEEE RESET LIVELLO
+            Debug.Log("HAI PERSO");//CAMBIAREEEEEEE RESET LIVELLO
+
+        marioHealth.fullHealth();
 
         canvasScript.showLoseLifeScreen();
-
-        
         transform.position = startingPos;
 
     }
 
+    public void unlockGun(GunsController.gunType gun)
+    {
 
+    }
 
 }

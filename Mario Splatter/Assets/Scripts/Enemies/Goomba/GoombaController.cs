@@ -12,6 +12,7 @@ public class GoombaController : EnemyController
         navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         animator = gameObject.GetComponent<Animator>();
         animator.enabled = false;
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
@@ -30,7 +31,7 @@ public class GoombaController : EnemyController
         if (navMeshAgent.isOnNavMesh)
         {
             animator.enabled = true;
-            navMeshAgent.SetDestination(player.position);
+            navMeshAgent.SetDestination(player.transform.position);
         }
         animator.SetFloat("Speed", navMeshAgent.velocity.magnitude/navMeshAgent.speed);
     }

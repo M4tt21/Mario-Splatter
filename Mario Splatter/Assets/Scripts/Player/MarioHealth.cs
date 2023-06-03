@@ -4,27 +4,35 @@ using UnityEngine;
 
 public class MarioHealth : MonoBehaviour
 {
-    public float maxHealth { get; private set; } = 10;
-    public float currentHealth { get; private set; } = 0;
-    public static MarioHealth Instance;
-    private void Awake() => Instance = this;
+    [Header("Mario Health Stats")]
+    public float maxHealth = 10f;
+    [Range(0f, 10f)]
+    public float currentHealth = 0;
+    public float maxShield = 5f;
+    [Range(0f, 5f)]
+    public float currentShield = 0;
     void Start()
     {
-        currentHealth = maxHealth;
+        fullHealth();
     }
 
     void Update()
     {
         
     }
-    public void TakeDamage(float amount)
+    public float TakeDamage(float amount)
     {
-        currentHealth -= amount;
-        if(currentHealth <=0)
+        currentShield -= amount;
+        if (currentShield < 0)
         {
-            // siamo morti
-            //animazione morte
+            currentHealth += currentShield;
+            currentShield = 0;
         }
+        return currentHealth;
     }
 
+    public void fullHealth()
+    {
+        currentHealth = maxHealth;
+    }
 }
