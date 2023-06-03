@@ -17,6 +17,7 @@ public class StatusBarsScript : MonoBehaviour
 
     void FixedUpdate()
     {
+        Debug.Log(marioHealth.currentHealth + " " + marioHealth.maxHealth);
         float fillHealthValue = marioHealth.currentHealth / marioHealth.maxHealth;
         sliderHealth.value = fillHealthValue;
         float fillShieldValue = marioHealth.currentShield / marioHealth.maxShield;
