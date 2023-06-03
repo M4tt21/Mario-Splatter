@@ -193,7 +193,13 @@ public class PlayerController : MonoBehaviour
         else if (Axis > 0) return 1;
         return 0;
     }
-
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("DeathZone"))
+        {
+            death();
+        }
+    }
     void OnTriggerEnter(Collider collision)
     {
         
