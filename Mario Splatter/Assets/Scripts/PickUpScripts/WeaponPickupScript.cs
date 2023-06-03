@@ -26,6 +26,7 @@ public class WeaponPickupScript : MonoBehaviour
         {
             other.GetComponent<GunsController>().unlockGun(gun);
             Debug.Log(gun + " Unlocked");
+            Destroy(gameObject);
         }
     }
 }
