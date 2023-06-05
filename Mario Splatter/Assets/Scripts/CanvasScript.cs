@@ -107,7 +107,7 @@ public class CanvasScript : MonoBehaviour
     {
         PauseMenu.SetActive(true);
         UI.SetActive(false);
-        Time.timeScale = 0f;
+        Time.timeScale = 0;
         isPaused = true;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;

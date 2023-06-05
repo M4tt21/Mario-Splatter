@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AmmoPickupScript : MonoBehaviour
+public class AmmoPickupScript : PickupScript
 {
 
     [Header("Weapon Type")]
@@ -12,11 +12,8 @@ public class AmmoPickupScript : MonoBehaviour
     [SerializeField]
     public int amount;
 
-    private void OnTriggerEnter(Collider other)
+    protected override void pickUpAction(GameObject player)
     {
-        if (other.CompareTag("Player"))
-        {
-            other.GetComponent<GunsController>().addAmmoToGun(gun, amount);
-        }
+        player.GetComponent<GunsController>().addAmmoToGun(gun, amount);
     }
 }

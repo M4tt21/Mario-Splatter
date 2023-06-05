@@ -16,6 +16,7 @@ public class Gun : MonoBehaviour
     public int currentAmmo;
 
     public bool isOutOfAmmo;
+    protected ParticleSystem ps;
 
     //CD states
     public bool isOnCooldown = false;

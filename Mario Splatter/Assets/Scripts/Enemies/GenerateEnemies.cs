@@ -12,24 +12,39 @@ public class GenerateEnemies : MonoBehaviour
     [Header("NavMesh drop-off Info")]
     public float navMeshVerDistance;
     public float speed;
+
+    private Transform spawnLocation;
+    private AudioSource audio;
+    private bool isTriggered = false;
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(EnemyDrop());
+        spawnLocation = transform.Find("Generator");
+        audio = GetComponent<AudioSource>();
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player") && !isTriggered)
+        {
+            StartCoroutine(EnemyDrop());
+            isTriggered = true;
+        }
+    }
+
     IEnumerator EnemyDrop()
     {
         for (int i = 0; i < enemyCount; i++)
         {
-            GameObject currentEnemy = Instantiate(theEnemy, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
+            GameObject currentEnemy = Instantiate(theEnemy, new Vector3(spawnLocation.position.x, spawnLocation.position.y, spawnLocation.position.z), Quaternion.identity);
             currentEnemy.SetActive(true);
 
             if(navMeshVerDistance<=0)
-                StartCoroutine(moveDown(currentEnemy, new Vector3(transform.position.x, transform.position.y + navMeshVerDistance, transform.position.z)));
+                StartCoroutine(moveDown(currentEnemy, new Vector3(spawnLocation.position.x, spawnLocation.position.y + navMeshVerDistance, spawnLocation.position.z)));
             else
-                StartCoroutine(moveUp(currentEnemy, new Vector3(transform.position.x, transform.position.y + navMeshVerDistance, transform.position.z)));
-
-            yield return new WaitForSecondsRealtime(3);
+                StartCoroutine(moveUp(currentEnemy, new Vector3(spawnLocation.position.x, spawnLocation.position.y + navMeshVerDistance, spawnLocation.position.z)));
+            audio.Play();
+            yield return new WaitForSeconds(3);
         }
     }
 
