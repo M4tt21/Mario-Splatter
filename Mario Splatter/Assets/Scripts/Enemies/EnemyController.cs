@@ -69,12 +69,17 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+
     public void activateRagdoll()
     {
-        navMeshAgent.enabled = false;
-        Debug.Log("animator");
-        animator.enabled = false;
-        Debug.Log("animator OFFFFF?????");
+        foreach (Rigidbody rigidbody in transform.GetComponentsInChildren<Rigidbody>())
+        {
+            if (rigidbody != null)
+            {
+                rigidbody.velocity=Vector3.zero;
+            }
+        }
+
         foreach (Collider collider in transform.GetComponentsInChildren<Collider>())
         {
             if(collider!=null)
@@ -85,5 +90,9 @@ public class EnemyController : MonoBehaviour
                 Debug.Log(collider.gameObject + " disattivato trigger | Status trigger : " + collider.isTrigger);
             }
         }
+        navMeshAgent.enabled = false;
+        Debug.Log("animator");
+        animator.enabled = false;
+        Debug.Log("animator OFFFFF?????");
     }
 }
