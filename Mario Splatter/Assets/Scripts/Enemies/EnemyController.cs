@@ -12,17 +12,21 @@ public class EnemyController : MonoBehaviour
     [SerializeField]public float bodyHitMul = 1.2f;
     [SerializeField]public float legHitMul = 1f;
     [SerializeField] public float armHitMul = 1f;
-
-    protected Animator animator;
-    protected NavMeshAgent navMeshAgent;
+    public bool isDead=false;
+    public Animator animator;
+    public NavMeshAgent navMeshAgent;
     [Header("NavMeshData")]
     public GameObject player;
+
+    
 
     // Start is called before the first frame update
     void Start()
     {
+        initHealth(health);
         navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-
+        animator = gameObject.GetComponent<Animator>();
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     void Update()
@@ -41,7 +45,10 @@ public class EnemyController : MonoBehaviour
     public void death()
     {
         //morte
-        Destroy(gameObject);
+        activateRagdoll();
+        isDead = true;
+        enabled=false;
+        //Destroy(gameObject);
     }
 
     public void damage(float ammount, EnemyHit.hitType ht)
@@ -59,6 +66,24 @@ public class EnemyController : MonoBehaviour
             case EnemyHit.hitType.arm:
                 health -= ammount * armHitMul;
                 break;
+        }
+    }
+
+    public void activateRagdoll()
+    {
+        navMeshAgent.enabled = false;
+        Debug.Log("animator");
+        animator.enabled = false;
+        Debug.Log("animator OFFFFF?????");
+        foreach (Collider collider in transform.GetComponentsInChildren<Collider>())
+        {
+            if(collider!=null)
+            {
+                collider.enabled = true;
+                Debug.Log(collider.gameObject + " disattivato trigger | Status trigger : " + collider.isTrigger);
+                collider.isTrigger = false;
+                Debug.Log(collider.gameObject + " disattivato trigger | Status trigger : " + collider.isTrigger);
+            }
         }
     }
 }

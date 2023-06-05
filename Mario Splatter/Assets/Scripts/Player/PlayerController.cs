@@ -119,7 +119,6 @@ public class PlayerController : MonoBehaviour
         rotation = Mathf.Clamp(rotation, -80f, 80f);
 
 
-        Debug.Log(""+ rotation);
         cameraTransform.localRotation = Quaternion.Euler(rotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
 
@@ -129,7 +128,6 @@ public class PlayerController : MonoBehaviour
         if (Physics.Linecast(transform.Find("Head").position, transform.Find("CameraPivot").position, out RaycastHit cameraHit) && !cameraHit.transform.CompareTag("Enemy"))
         {
             float distance = Vector3.Distance(transform.Find("CameraPivot").position, cameraHit.point);
-            Debug.Log(distance);
             //moveTo = Mathf.Clamp((hit.distance * 0.87f), minDistance, maxDistance);
             cameraTransform.localPosition = Vector3.MoveTowards(desiredCameraPos, transform.Find("Head").localPosition, distance*1.15f);
 

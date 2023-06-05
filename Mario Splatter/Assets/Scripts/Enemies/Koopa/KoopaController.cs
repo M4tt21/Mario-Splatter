@@ -5,27 +5,18 @@ using UnityEngine.AI;
 
 public class KoopaController : EnemyController
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        initHealth(health);
-        navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-        player = GameObject.FindGameObjectWithTag("Player");
-    }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(health<=0)
+        if(health<=0 && !isDead)
         {
             death(); 
             CanvasScript.scoreValue += 1;
         }
-    }
-
-    void Update()
-    {
-        if (navMeshAgent.isOnNavMesh)
+        else if (navMeshAgent.isOnNavMesh && navMeshAgent.isActiveAndEnabled)
             navMeshAgent.SetDestination(player.transform.position);
     }
+
+    
 }
