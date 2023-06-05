@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class PScript : Gun
 {
+
     void Start()
     {
         currentAmmo = magazineSize;
         isOutOfAmmo = false;
+        ps = transform.Find("muzzle").Find("Particle System").GetComponent<ParticleSystem>();
     }
 
 
@@ -32,6 +34,8 @@ public class PScript : Gun
 
         AudioSource a = gameObject.GetComponent<AudioSource>();
         a.Play();
+        ps.Play();
+
 
         bool raycastResCamera = Physics.Raycast(camera.transform.position, camera.transform.forward, out (hitPoint), Mathf.Infinity);
 

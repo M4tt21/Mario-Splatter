@@ -99,7 +99,6 @@ public class PlayerController : MonoBehaviour
         velocity.y += gravity*2 * Time.deltaTime;
         controller.Move((velocity * Time.deltaTime) + move);
 
-        //if ((Input.GetButtonUp("Fire3") || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0)) && currentSpeed>wSpeed){currentSpeed -= wSpeed * Time.deltaTime;}
 
         float dotPF = Vector3.Dot(transform.forward, controller.velocity);
         float dotPH = Vector3.Dot(transform.right, controller.velocity);
