@@ -55,16 +55,12 @@ public class PlayerController : MonoBehaviour
     private float rotation = 0;
     public int lives;
     public float immunitySec = 3f;
+    public int starCount = 0;
 
     private bool isImmune;
     public Vector3 startingPos;
     private int startingLives=3;
     private Vector3 desiredCameraPos;
-
-
-
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -76,11 +72,14 @@ public class PlayerController : MonoBehaviour
         startingPos = transform.position;
         lives = startingLives;
         desiredCameraPos = cameraTransform.localPosition;
+        Input.ResetInputAxes();
+        rotation = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         float hzMove = Input.GetAxis("Horizontal") * currentSpeed * Time.deltaTime;
         float vtMove = Input.GetAxis("Vertical") * currentSpeed * Time.deltaTime;
 
@@ -114,14 +113,14 @@ public class PlayerController : MonoBehaviour
 
         if (dotPF == 0 && dotPH == 0 && dotPV == 0) animator.SetBool("isStill", true);
 
-
+        //Set iniziale Telecamera
 
         //Movimento Telecamera
         rotation -= mouseY;
-        rotation = Mathf.Clamp(rotation, -90f, 90f);
+        rotation = Mathf.Clamp(rotation, -80f, 80f);
 
 
-
+        Debug.Log(""+ rotation);
         cameraTransform.localRotation = Quaternion.Euler(rotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
 
@@ -288,9 +287,26 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void unlockGun(GunsController.gunType gun)
+    public void nextLevelTeleport()
     {
-
+        PlayerPrefs.SetInt("CurrentLevel", (SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
+        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
     }
+
+    public IEnumerator starEvent()
+    {
+        Debug.Log("L'evento stella e` in esecuzione, teletrasporto al prossimo livello in qualche secondo.");
+
+        yield return new WaitForSeconds(4);
+        nextLevelTeleport();
+    }
+    
+    public void starNextlevel()
+    {
+        starCount++;
+        StartCoroutine(starEvent());
+    }
+
+
 
 }

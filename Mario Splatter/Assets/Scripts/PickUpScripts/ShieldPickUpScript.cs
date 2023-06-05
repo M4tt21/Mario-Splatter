@@ -2,15 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponPickupScript : PickupScript
+public class ShieldPickUpScript : PickupScript
 {
-
-    [Header("Weapon Type Unlock")]
-    [SerializeField]
-    public GunsController.gunType gun;
+    [Header("Amount of Shield in Percentage")]
+    [Range(0,1f)]
+    public float amount;
     // Start is called before the first frame update
     protected override void pickUpAction(GameObject player)
     {
-        player.GetComponent<GunsController>().unlockGun(gun);
+        player.GetComponent<MarioHealth>().addShield(amount);
     }
 }
