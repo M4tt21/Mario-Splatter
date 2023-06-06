@@ -43,7 +43,7 @@ public class GenerateEnemies : MonoBehaviour
                 StartCoroutine(moveDown(currentEnemy, new Vector3(spawnLocation.position.x, spawnLocation.position.y + navMeshVerDistance, spawnLocation.position.z)));
             else
                 StartCoroutine(moveUp(currentEnemy, new Vector3(spawnLocation.position.x, spawnLocation.position.y + navMeshVerDistance, spawnLocation.position.z)));
-            audio.Play();
+            if (audio!= null) audio.Play();
             yield return new WaitForSeconds(3);
         }
     }
