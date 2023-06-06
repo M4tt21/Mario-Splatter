@@ -10,19 +10,18 @@ public class DragoneelController : EnemyController
     public float jumpDistance = 10f;
     private bool isOnCD = false;
     private bool forward = true;
-    void Start()
-    {
-        animator = gameObject.GetComponent<Animator>();
-    }
 
     // Update is called once per frame
     void Update()
     {
+        if (health<=0 && !isDead)
+        {
+            death();
+        }
         if (isOnCD)
             return;
         animator.Play("Long Jump", 0);
         StartCoroutine(jumpCDTime());
-        
     }
 
     IEnumerator jumpCDTime()

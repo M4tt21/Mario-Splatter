@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField]public float bodyHitMul = 1.2f;
     [SerializeField]public float legHitMul = 1f;
     [SerializeField] public float armHitMul = 1f;
+    [SerializeField] public float ragdollTime = 60f;
     public bool isDead=false;
     public Animator animator;
     public NavMeshAgent navMeshAgent;
@@ -28,13 +29,6 @@ public class EnemyController : MonoBehaviour
         animator = gameObject.GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
     }
-
-    void Update()
-    {
-        if (navMeshAgent.isOnNavMesh)
-            navMeshAgent.SetDestination(player.transform.position);
-        Debug.Log("2");
-    }
     
 
     public void initHealth(float health)
@@ -49,6 +43,7 @@ public class EnemyController : MonoBehaviour
         isDead = true;
         enabled=false;
         //Destroy(gameObject);
+
     }
 
     public void damage(float ammount, EnemyHit.hitType ht)
@@ -69,6 +64,12 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public IEnumerator ragdollTimer()
+    {
+        yield return new WaitForSeconds(ragdollTime);
+        Destroy(gameObject);
+    }
+
 
     public void activateRagdoll()
     {
@@ -84,6 +85,7 @@ public class EnemyController : MonoBehaviour
         {
             if(collider!=null)
             {
+                collider.gameObject.layer = 2; //Set Layer to ignore raycast
                 collider.enabled = true;
                 Debug.Log(collider.gameObject + " disattivato trigger | Status trigger : " + collider.isTrigger);
                 collider.isTrigger = false;
@@ -94,5 +96,12 @@ public class EnemyController : MonoBehaviour
         Debug.Log("animator");
         animator.enabled = false;
         Debug.Log("animator OFFFFF?????");
+        StartCoroutine(ragdollTimer());
+        
+    }
+
+    public void updateAnimator()
+    {
+        animator.SetFloat("Speed", navMeshAgent.velocity.magnitude / navMeshAgent.speed);
     }
 }
