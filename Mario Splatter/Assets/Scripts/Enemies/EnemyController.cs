@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] public float armHitMul = 1f;
     [SerializeField] public float ragdollTime = 60f;
     [SerializeField] public float damageToPlayer = 10f;
+    [SerializeField] public int enemyScore = 1;
     public bool isDead=false;
     public Animator animator;
     public NavMeshAgent navMeshAgent;
@@ -95,9 +96,7 @@ public class EnemyController : MonoBehaviour
             }
         }
         if (navMeshAgent != null) navMeshAgent.enabled = false;
-        Debug.Log("animator");
         if (animator != null) animator.enabled = false;
-        Debug.Log("animator OFFFFF?????");
         StartCoroutine(ragdollTimer());
         
     }
