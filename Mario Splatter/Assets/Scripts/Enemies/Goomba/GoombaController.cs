@@ -18,21 +18,13 @@ public class GoombaController : EnemyController
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (health <= 0)
+        if (health <= 0 && !isDead)
         {
             death();
             CanvasScript.scoreValue += 1;
         }
-
-    }
-
-    void Update()
-    {
-        if (navMeshAgent.isOnNavMesh)
-        {
-            animator.enabled = true;
+        if (navMeshAgent.isOnNavMesh && navMeshAgent.isActiveAndEnabled)
             navMeshAgent.SetDestination(player.transform.position);
-        }
-        animator.SetFloat("Speed", navMeshAgent.velocity.magnitude/navMeshAgent.speed);
+        updateAnimator();
     }
 }

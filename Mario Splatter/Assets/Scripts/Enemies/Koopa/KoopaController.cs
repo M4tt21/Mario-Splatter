@@ -14,9 +14,8 @@ public class KoopaController : EnemyController
             death(); 
             CanvasScript.scoreValue += 1;
         }
-        else if (navMeshAgent.isOnNavMesh && navMeshAgent.isActiveAndEnabled)
+        if (navMeshAgent.isOnNavMesh && navMeshAgent.isActiveAndEnabled)
             navMeshAgent.SetDestination(player.transform.position);
+        updateAnimator();
     }
-
-    
 }

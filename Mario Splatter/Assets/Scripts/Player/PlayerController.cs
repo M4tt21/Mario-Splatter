@@ -244,16 +244,22 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("DeathZone"))
         {
             death();
+            giveImmunity(immunitySec);
         }
 
         if (collision.gameObject.CompareTag( "Enemy"))
         {
             if (isImmune)
                 return;    
+
+            if(collision.TryGetComponent<EnemyController>(out EnemyController enemyController))
+            {
+                if(marioHealth.TakeDamage(enemyController.damageToPlayer)<=0)
+                    death();
+                giveImmunity(immunitySec);
+            }
             
-            if(marioHealth.TakeDamage(1)<=0)
-                death();
-            giveImmunity(immunitySec);
+            
             
         }
 
