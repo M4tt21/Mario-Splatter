@@ -37,7 +37,7 @@ public class DryBonesController : EnemyController
     public void activateColliderRaycast(bool value)
     {
         int layer;
-        if (value) { 
+        if (!value) { 
             layer = 2;
         }
         else
@@ -67,7 +67,7 @@ public class DryBonesController : EnemyController
         yield return new WaitForSeconds(resTime);//Wait for the resurrect timer then ressurect and communicate with animator
         isDead = false;
         animator.SetBool("isDead", isDead);
-        yield return new WaitForSeconds(0.5f);//Wait for the animation to finish
+        yield return new WaitForSeconds(2f);//Wait for the animation to finish
         activateColliderRaycast(true);
         navMeshAgent.isStopped = false;
     }
