@@ -15,7 +15,6 @@ public class DryBonesController : EnemyController
         initHealth(health);
         navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         animator = gameObject.GetComponent<Animator>();
-        animator.enabled = false;
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
@@ -70,6 +69,6 @@ public class DryBonesController : EnemyController
         animator.SetBool("isDead", isDead);
         yield return new WaitForSeconds(0.5f);//Wait for the animation to finish
         activateColliderRaycast(true);
-        navMeshAgent.isStopped = true;
+        navMeshAgent.isStopped = false;
     }
 }
