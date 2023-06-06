@@ -13,6 +13,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField]public float legHitMul = 1f;
     [SerializeField] public float armHitMul = 1f;
     [SerializeField] public float ragdollTime = 60f;
+    [SerializeField] public float damageToPlayer = 10f;
     public bool isDead=false;
     public Animator animator;
     public NavMeshAgent navMeshAgent;
@@ -92,9 +93,9 @@ public class EnemyController : MonoBehaviour
                 Debug.Log(collider.gameObject + " disattivato trigger | Status trigger : " + collider.isTrigger);
             }
         }
-        navMeshAgent.enabled = false;
+        if (navMeshAgent != null) navMeshAgent.enabled = false;
         Debug.Log("animator");
-        animator.enabled = false;
+        if (animator != null) animator.enabled = false;
         Debug.Log("animator OFFFFF?????");
         StartCoroutine(ragdollTimer());
         
