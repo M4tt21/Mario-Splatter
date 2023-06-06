@@ -28,7 +28,7 @@ public class BooController : EnemyController
         if (health <= 0 && !isDead)
         {
             death();
-            CanvasScript.scoreValue += enemyScore;
+            player.GetComponent<PlayerController>().score += enemyScore;
         }
         if (!isVisible)
         {

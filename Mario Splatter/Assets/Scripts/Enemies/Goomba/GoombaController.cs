@@ -21,7 +21,7 @@ public class GoombaController : EnemyController
         if (health <= 0 && !isDead)
         {
             death();
-            CanvasScript.scoreValue += 1;
+            player.GetComponent<PlayerController>().score += enemyScore;
         }
         if (navMeshAgent.isOnNavMesh && navMeshAgent.isActiveAndEnabled)
             navMeshAgent.SetDestination(player.transform.position);

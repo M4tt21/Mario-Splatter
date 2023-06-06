@@ -5,17 +5,15 @@ using UnityEngine.UI;
 
 public class StatusBarsScript : MonoBehaviour
 {
-    [Header("References Needed")]
-    public MarioHealth marioHealth;
     private Slider sliderHealth;
     private Slider sliderShield;
     void Start()
     {
         sliderHealth = transform.Find("SliderHealth").GetComponent<Slider>();
         sliderShield = transform.Find("SliderShield").GetComponent<Slider>();
+        
     }
-
-    void FixedUpdate()
+    public void updateStatus(MarioHealth marioHealth)
     {
         float fillHealthValue = marioHealth.currentHealth / marioHealth.maxHealth;
         sliderHealth.value = fillHealthValue;

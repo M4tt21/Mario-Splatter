@@ -11,6 +11,6 @@ public class EnemyHit : MonoBehaviour
 
     public virtual void Hit(float damage)
     {
-        controller.damage(damage, ht); //Default
+        if (controller != null) controller.damage(damage, ht); //Default
     }
 }

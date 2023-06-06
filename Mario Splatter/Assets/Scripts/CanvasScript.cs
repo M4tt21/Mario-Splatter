@@ -5,8 +5,7 @@ using TMPro;
 
 public class CanvasScript : MonoBehaviour
 {
-    public static int scoreValue = 0;
-    private bool isPaused;
+    public bool isPaused { private set; get; }
 
 
     [SerializeField]
@@ -30,6 +29,8 @@ public class CanvasScript : MonoBehaviour
     [SerializeField]
     public GameObject UI;
     [SerializeField]
+    public StatusBarsScript statusBarsScript;
+    [SerializeField]
     public GameObject PauseMenu;
     [SerializeField]
     public GameObject LoseLifeScreen;
@@ -37,32 +38,26 @@ public class CanvasScript : MonoBehaviour
     public GunsController guns;
     [SerializeField]
     public PlayerController player;
+    [SerializeField]
+    public MarioHealth marioHealth;
     // Start is called before the first frame update
     void Start()
     {
-       
-
-        //se trova un canvas duplicato lo distrugge, sì può accadere
-        GameObject[] oldCanvases = GameObject.FindGameObjectsWithTag("Canvas");
-        foreach (GameObject oldCanvas in oldCanvases)
-        {
-            if (oldCanvases != null && oldCanvas != gameObject)
-            {
-                Debug.Log("Sono dentro");
-                oldCanvas.transform.position = transform.position;
-                Destroy(gameObject);
-            }
-        }
-        Debug.Log("Non ho distrutto il canvas");
-        GameObject.DontDestroyOnLoad(gameObject);// impedisce la distruzione immediata dell'oggetto
-
         //Start Crossairs
         currentCrossair = GunsController.startingGun;
-        GunsCrossair = new Dictionary<GunsController.gunType, Transform>();
-        GunsCrossair.Add(GunsController.gunType.AR, AssaultRifleAim);
-        GunsCrossair.Add(GunsController.gunType.SG, ShotgunAim);
-        GunsCrossair.Add(GunsController.gunType.P, PistolAim);
+        GunsCrossair = new Dictionary<GunsController.gunType, Transform>
+        {
+            { GunsController.gunType.AR, AssaultRifleAim },
+            { GunsController.gunType.SG, ShotgunAim },
+            { GunsController.gunType.P, PistolAim }
+        };
 
+        if (!GameObject.FindGameObjectWithTag("Player").TryGetComponent<PlayerController>(out player))
+            Debug.Log("Player Controller Not attached to Canvas");
+        if (!GameObject.FindGameObjectWithTag("Player").TryGetComponent<GunsController>(out guns))
+            Debug.Log("Guns Controller Not attached to Canvas");
+        if (!GameObject.FindGameObjectWithTag("Player").TryGetComponent<MarioHealth>(out marioHealth))
+            Debug.Log("Mario Health Not attached to Canvas");
 
     }
 
@@ -86,17 +81,19 @@ public class CanvasScript : MonoBehaviour
     void FixedUpdate()
     {
         ammoCounter.SetText(guns.getAmmoOfCurrentGun() + "|" + guns.getAmmoHeldOfCurrentGun());
-        score.SetText("" + scoreValue);
+        score.SetText("" + player.score);
         livesCounter.SetText("" + player.lives);
+        updateCrossAir(guns.GetCurrentGun());
+        statusBarsScript.updateStatus(marioHealth);
     }
 
     public void updateCrossAir(GunsController.gunType gun)
     {
-        if (GunsCrossair.TryGetValue(gun, out Transform newCrossair) && GunsCrossair.TryGetValue(currentCrossair, out Transform oldCrossair))
+
+        if (GunsCrossair != null && GunsCrossair.TryGetValue(gun, out Transform newCrossair) && GunsCrossair.TryGetValue(currentCrossair, out Transform oldCrossair))
         {
             oldCrossair.gameObject.SetActive(false);
             newCrossair.gameObject.SetActive(true);
-
             //Cambio Mirino
 
         }
@@ -107,16 +104,16 @@ public class CanvasScript : MonoBehaviour
     {
         PauseMenu.SetActive(true);
         UI.SetActive(false);
-        Time.timeScale = 0;
         isPaused = true;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 0;
     }
     public void ResumeGame()
     {
+        Time.timeScale = 1f;
         PauseMenu.SetActive(false);
         UI.SetActive(true);
-        Time.timeScale = 1f;
         isPaused = false;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

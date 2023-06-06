@@ -29,6 +29,7 @@ public class GenerateEnemies : MonoBehaviour
         {
             StartCoroutine(EnemyDrop());
             isTriggered = true;
+            transform.GetComponent<Collider>().enabled = false;
         }
     }
 

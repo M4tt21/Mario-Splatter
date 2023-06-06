@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour
     public int lives;
     public float immunitySec = 3f;
     public int starCount = 0;
+    public int score = 0;
 
     private bool isImmune;
     public Vector3 startingPos;
@@ -249,12 +250,13 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag( "Enemy"))
         {
+            
             if (isImmune)
                 return;    
 
-            if(collision.TryGetComponent<EnemyController>(out EnemyController enemyController))
+            if(collision.TryGetComponent(out EnemyHit enemyHit))
             {
-                if(marioHealth.TakeDamage(enemyController.damageToPlayer)<=0)
+                if (marioHealth.TakeDamage(enemyHit.controller.damageToPlayer)<=0)
                     death();
                 giveImmunity(immunitySec);
             }

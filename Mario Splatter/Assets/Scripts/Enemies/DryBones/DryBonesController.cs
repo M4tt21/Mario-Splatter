@@ -25,7 +25,7 @@ public class DryBonesController : EnemyController
         {
             death();
             health = maxHealth;
-            CanvasScript.scoreValue += 1;
+            player.GetComponent<PlayerController>().score += enemyScore;
         }
         if (navMeshAgent.isOnNavMesh && !isDead)
         {
