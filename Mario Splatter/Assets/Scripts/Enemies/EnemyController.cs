@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
 {
     [Header("Enemy Stats")]
 
+    [SerializeField] public float maxHealth = 300;
     [SerializeField]public float health = 300;
     [SerializeField]public float headHitMul = 2f;
     [SerializeField]public float bodyHitMul = 1.2f;
@@ -37,7 +38,7 @@ public class EnemyController : MonoBehaviour
         this.health = health;
     }
 
-    public void death()
+    public virtual void death()
     {
         //morte
         activateRagdoll();
