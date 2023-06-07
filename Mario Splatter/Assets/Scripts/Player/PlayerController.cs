@@ -58,6 +58,8 @@ public class PlayerController : MonoBehaviour
     public int starCount = 0;
     public int score = 0;
 
+
+
     private bool isImmune;
     public Vector3 startingPos;
     private int startingLives=3;
@@ -146,7 +148,10 @@ public class PlayerController : MonoBehaviour
 
         /*All Actions Below are unaccessible while reloading*/
         if (guns.isReloading && guns.isReEquipping)
+        {
+            marioHealth.isStaminaConsuming=false;
             return;
+        }
 
         if(guns.GetCurrentGun()==GunsController.gunType.P && Input.GetButtonDown("Fire1") && Time.timeScale!=0)
             guns.fireCurrentGun();
@@ -168,18 +173,23 @@ public class PlayerController : MonoBehaviour
 
 
         //sprint
-        if (Input.GetButton("Fire3") && (Input.GetAxis("Vertical") > 0) && !Input.GetButton("Horizontal"))
+        if (marioHealth.currentStamina>0 && Input.GetButton("Fire3") && (Input.GetAxis("Vertical") > 0) && !Input.GetButton("Horizontal"))
         {
+            marioHealth.isStaminaConsuming = true;
             if (currentSpeed < rSpeed) currentSpeed += rSpeed * Time.deltaTime;
             //Se corre disabilito l'arma che ha in mano
             guns.disableCurrentGun();
         }
-        else if (!Input.GetButton("Fire3") || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0))
+        else if (!(marioHealth.currentStamina > 0) || !Input.GetButton("Fire3") || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0))
         {
             if (currentSpeed > wSpeed) currentSpeed -= wSpeed * Time.deltaTime;
         }
 
-        if(Input.GetButtonUp("Fire3")) guns.enableCurrentGun();
+        if (Input.GetButtonUp("Fire3"))
+        {
+            marioHealth.isStaminaConsuming = false;
+            guns.enableCurrentGun();
+        }
 
         if (Input.GetButtonDown("Jump") && controller.isGrounded)
         {
