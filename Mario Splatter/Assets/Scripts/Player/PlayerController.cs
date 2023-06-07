@@ -62,6 +62,8 @@ public class PlayerController : MonoBehaviour
     public Vector3 startingPos;
     private int startingLives=3;
     private Vector3 desiredCameraPos;
+    private GameObject marioSkinDefault;
+    private GameObject marioSkinShield;
 
     // Start is called before the first frame update
     void Start()
@@ -73,6 +75,8 @@ public class PlayerController : MonoBehaviour
         startingPos = transform.position;
         lives = startingLives;
         desiredCameraPos = cameraTransform.localPosition;
+        marioSkinDefault = transform.Find("MarioDefault").gameObject;
+        marioSkinShield = transform.Find("MarioShield").gameObject;
         Input.ResetInputAxes();
         rotation = 0;
     }
@@ -113,10 +117,11 @@ public class PlayerController : MonoBehaviour
 
         if (dotPF == 0 && dotPH == 0 && dotPV == 0) animator.SetBool("isStill", true);
 
-        //Set iniziale Telecamera
+        //Change Mario Skin if he has shield
+        activateSkinShield(marioHealth.currentShield > 0);
 
-        //Movimento Telecamera
-        rotation -= mouseY;
+            //Movimento Telecamera
+            rotation -= mouseY;
         rotation = Mathf.Clamp(rotation, -80f, 80f);
 
 
@@ -140,12 +145,12 @@ public class PlayerController : MonoBehaviour
 
 
         /*All Actions Below are unaccessible while reloading*/
-        if (guns.isReloading)
+        if (guns.isReloading && guns.isReEquipping)
             return;
 
-        if(guns.GetCurrentGun()==GunsController.gunType.P && Input.GetButtonDown("Fire1"))
+        if(guns.GetCurrentGun()==GunsController.gunType.P && Input.GetButtonDown("Fire1") && Time.timeScale!=0)
             guns.fireCurrentGun();
-        else if (guns.GetCurrentGun() != GunsController.gunType.P && Input.GetButton("Fire1"))
+        else if (guns.GetCurrentGun() != GunsController.gunType.P && Input.GetButton("Fire1") && Time.timeScale!=0)
             guns.fireCurrentGun();
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) //Rifle
@@ -184,6 +189,12 @@ public class PlayerController : MonoBehaviour
         else animator.SetBool("isJumping", false);
 
     }
+
+    public void activateSkinShield(bool value)
+    {
+        marioSkinDefault.SetActive(!value);
+        marioSkinShield.SetActive(value);
+    }
     
     private int turnDirection(float Axis){  //1=Right -1=Left
         if (Axis < 0) return -1;
@@ -203,8 +214,6 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("NextLevel"))
         {
             PlayerPrefs.SetInt("CurrentLevel", (SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
-            if (PlayerPrefs.GetInt("CurrentLevel") == 0)
-                Destroy(this.gameObject);
             SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
 
         }
@@ -212,33 +221,25 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("PrevLevel"))
         {
             PlayerPrefs.SetInt("CurrentLevel", (SceneManager.GetActiveScene().buildIndex - 1) % SceneManager.sceneCountInBuildSettings);
-            if (PlayerPrefs.GetInt("CurrentLevel") == 0)
-                Destroy(this.gameObject);
             SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
 
         }
 
         if (collision.gameObject.CompareTag("Level1"))
         {
-            PlayerPrefs.SetInt("CurrentLevel", 3);
-            if (PlayerPrefs.GetInt("CurrentLevel") == 0)
-                Destroy(this.gameObject);
+            PlayerPrefs.SetInt("CurrentLevel", 2);
             SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
         }
 
         if (collision.gameObject.CompareTag("Level2"))
         {
-            PlayerPrefs.SetInt("CurrentLevel", 4);
-            if (PlayerPrefs.GetInt("CurrentLevel") == 0)
-                Destroy(this.gameObject);
+            PlayerPrefs.SetInt("CurrentLevel", 3);
             SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
         }
 
         if (collision.gameObject.CompareTag("Level3"))
         {
-            PlayerPrefs.SetInt("CurrentLevel", 5);
-            if (PlayerPrefs.GetInt("CurrentLevel") == 0)
-                Destroy(this.gameObject);
+            PlayerPrefs.SetInt("CurrentLevel", 4);
             SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
         }
 

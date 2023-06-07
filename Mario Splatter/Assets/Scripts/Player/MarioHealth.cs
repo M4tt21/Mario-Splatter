@@ -9,18 +9,14 @@ public class MarioHealth : MonoBehaviour
     public float maxHealth = 10f;
     [Range(0f, 10f)]
     public float currentHealth = 0;
-    public float maxShield = 5f;
-    [Range(0f, 5f)]
+    public float maxShield = 50f;
+    [Range(0f, 50f)]
     public float currentShield = 0;
     void Start()
     {
         fullHealth();
     }
 
-    void Update()
-    {
-        
-    }
     public float TakeDamage(float amount)
     {
         currentShield -= amount;
@@ -35,6 +31,7 @@ public class MarioHealth : MonoBehaviour
     public void addShield(float percentageAmount)
     {
         currentShield = math.clamp((maxShield * percentageAmount)+currentShield, 0, maxShield);
+        
     }
 
     public void fullHealth()
