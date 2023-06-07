@@ -9,18 +9,38 @@ public class MarioHealth : MonoBehaviour
     public float maxHealth = 10f;
     [Range(0f, 10f)]
     public float currentHealth = 0;
-    public float maxShield = 5f;
-    [Range(0f, 5f)]
+    public float maxShield = 50f;
+    [Range(0f, 50f)]
     public float currentShield = 0;
+    public float maxStamina = 100f;
+    [Range(0f, 100f)]
+    public float currentStamina = 0;
+    public bool isStaminaConsuming = false;
+    public float staminaConsumeSpeed = 1f;
+    public float staminaReplenishSpeed = 1f;
+
     void Start()
     {
         fullHealth();
+        fullStamina();
     }
 
-    void Update()
+    private void FixedUpdate()
     {
-        
+        consumeStamina(isStaminaConsuming);
     }
+
+
+    //If value is true then the stamina is being consumed, else it's being replanished
+    public float consumeStamina(bool consume)
+    {
+        if(consume)//Consume
+            currentStamina = Mathf.Clamp(currentStamina - (staminaConsumeSpeed), 0f, maxStamina);
+        else
+            currentStamina = Mathf.Clamp(currentStamina + (staminaReplenishSpeed), 0f, maxStamina);
+        return currentStamina;
+    }
+
     public float TakeDamage(float amount)
     {
         currentShield -= amount;
@@ -35,10 +55,15 @@ public class MarioHealth : MonoBehaviour
     public void addShield(float percentageAmount)
     {
         currentShield = math.clamp((maxShield * percentageAmount)+currentShield, 0, maxShield);
+        
     }
 
     public void fullHealth()
     {
         currentHealth = maxHealth;
+    }
+    public void fullStamina()
+    {
+        currentStamina = maxStamina;
     }
 }
