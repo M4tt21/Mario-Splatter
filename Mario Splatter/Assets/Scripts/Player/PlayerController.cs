@@ -213,10 +213,6 @@ public class PlayerController : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("DeathZone"))
-        {
-            death();
-        }
     }
     void OnTriggerEnter(Collider collision)
     {
@@ -274,6 +270,20 @@ public class PlayerController : MonoBehaviour
             
             
             
+        }
+
+        if (collision.gameObject.CompareTag("Trap"))
+        {
+
+            if (isImmune)
+                return;
+
+            if (collision.TryGetComponent(out TrapScript trapScript))
+            {
+                if (marioHealth.TakeDamage(trapScript.damageToPlayer) <= 0)
+                    death();
+                giveImmunity(immunitySec);
+            }
         }
 
     }
