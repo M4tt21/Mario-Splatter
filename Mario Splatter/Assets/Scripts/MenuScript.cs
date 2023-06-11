@@ -22,10 +22,6 @@ public class MenuScript : MonoBehaviour
         PlayerPrefs.SetInt("CurrentLevel", 1);
         SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
     }
-    public void Options()
-    {
-        
-    }
     public void Exit()
     {
         Application.Quit();
