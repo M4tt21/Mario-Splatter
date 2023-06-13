@@ -9,28 +9,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-[System.Serializable]
-public class GameData
-{
-    public SerializableVector3 position;
-}
 
-[System.Serializable]
-public struct SerializableVector3
-{
-    float x, y, z;
-
-    public SerializableVector3(Vector3 v)
-    {
-        x = v.x;
-        y = v.y;
-        z = v.z;
-    }
-    public Vector3 toVector3()
-    {
-        return new Vector3(x, y, z);
-    }
-}
 
 public class PlayerController : MonoBehaviour
 {

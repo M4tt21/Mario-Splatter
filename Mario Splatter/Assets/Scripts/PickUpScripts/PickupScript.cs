@@ -30,6 +30,7 @@ public class PickupScript : MonoBehaviour
         else
             Debug.Log("Pickup Audio Not Found");
         yield return new WaitForSeconds(destroyTime);
+        if (gameObject != null)
         Destroy(gameObject);
     }
 
