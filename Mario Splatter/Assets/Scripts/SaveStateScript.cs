@@ -13,11 +13,14 @@ public class SaveStateScript : MonoBehaviour
     //salvataggio
     private string saveDataPath;
     private GameObject mario = null;
+    private bool marioload = false;
+    private PlayerDataset gameData;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        saveDataPath = Application.persistentDataPath + "/data.vgd";
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -32,8 +35,14 @@ public class SaveStateScript : MonoBehaviour
     {
         Debug.Log("Controller Loaded Into New Scene, checking Mario");
         checkMario();
+        if (marioload)
+        {
+            marioload = false;
+            gameData.loadToPlayer(mario.GetComponent<PlayerController>());
+        }
+        else 
+            save();
     }
-
 
 
     // Update is called once per frame
@@ -84,11 +93,11 @@ public class SaveStateScript : MonoBehaviour
 
     void save()
     {
-        saveDataPath = Application.persistentDataPath + "/data.vgd";
-
+        
+        Debug.Log(saveDataPath);
         //Vector3 position = transform.position; //versione posizione semplice
-        GameData gameData = new GameData();  //versione dati di gioco
-        gameData.position = new SerializableVector3(this.transform.position);
+        PlayerDataset gameData = new PlayerDataset(mario.GetComponent<PlayerController>());  //versione dati di gioco
+        
 
 
         BinaryFormatter formatter = new BinaryFormatter();
@@ -96,18 +105,27 @@ public class SaveStateScript : MonoBehaviour
 
         //formatter.Serialize(fileStream, position); //versione posizione semplice
         formatter.Serialize(fileStream, gameData); //versione dati di gioco
+        fileStream.Close();
     }
 
-    void load()
+    public void load()
     {
+        Debug.Log("load");
         if (File.Exists(saveDataPath))
         {
+            Debug.Log("file cagato");
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream fileStream = File.Open(saveDataPath, FileMode.Open);
 
-            GameData gameData = (GameData)formatter.Deserialize(fileStream);
+            gameData = (PlayerDataset)formatter.Deserialize(fileStream);
 
-            transform.position = gameData.position.toVector3();
+            PlayerPrefs.SetInt("CurrentLevel", gameData.level);
+            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+            marioload = true;
+            
+            
+            fileStream.Close();
+            
         }
     }
 }
