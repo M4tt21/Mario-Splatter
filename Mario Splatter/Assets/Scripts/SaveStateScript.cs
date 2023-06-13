@@ -11,8 +11,10 @@ using UnityEngine.SceneManagement;
 public class SaveStateScript : MonoBehaviour
 {
     //salvataggio
+    public static SaveStateScript instance;
+
     private string saveDataPath;
-    private GameObject mario = null;
+    public GameObject mario = null;
     private bool marioload = false;
     private PlayerDataset gameData;
 
@@ -20,6 +22,8 @@ public class SaveStateScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
+
         saveDataPath = Application.persistentDataPath + "/data.vgd";
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -91,6 +95,8 @@ public class SaveStateScript : MonoBehaviour
                 mario.transform.position = player.transform.position;
                 mario.transform.rotation = player.transform.rotation;
                 mario.GetComponent<PlayerController>().startingPos = player.transform.position;
+                mario.GetComponent<PlayerController>().canvasScript = player.GetComponent<PlayerController>().canvasScript;
+                mario.GetComponent<PlayerController>().isImmune = false;
                 Destroy(player);
             }
         }

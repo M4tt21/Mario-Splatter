@@ -7,5 +7,6 @@ public class StarPickupScript : PickupScript
     protected override void pickUpAction(GameObject player)
     {
         player.GetComponent<PlayerController>().starNextlevel();
+        player.GetComponent<PlayerController>().isImmune = true;
     }
 }

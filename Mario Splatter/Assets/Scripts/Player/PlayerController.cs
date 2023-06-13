@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    private bool isImmune;
+    public bool isImmune;
     public Vector3 startingPos;
     private int startingLives=3;
     private Vector3 desiredCameraPos;
@@ -179,17 +179,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void activateSkinShield(bool value)
-    {
-        marioSkinDefault.SetActive(!value);
-        marioSkinShield.SetActive(value);
-    }
     
-    private int turnDirection(float Axis){  //1=Right -1=Left
-        if (Axis < 0) return -1;
-        else if (Axis > 0) return 1;
-        return 0;
-    }
     void OnCollisionEnter(Collision collision)
     {
     }
@@ -265,6 +255,19 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+    }
+
+    public void activateSkinShield(bool value)
+    {
+        marioSkinDefault.SetActive(!value);
+        marioSkinShield.SetActive(value);
+    }
+
+    private int turnDirection(float Axis)
+    {  //1=Right -1=Left
+        if (Axis < 0) return -1;
+        else if (Axis > 0) return 1;
+        return 0;
     }
 
     private IEnumerator immunityTime(float time)

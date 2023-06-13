@@ -53,14 +53,9 @@ public class CanvasScript : MonoBehaviour
             { GunsController.gunType.SG, ShotgunAim },
             { GunsController.gunType.P, PistolAim }
         };
-
-        if (!GameObject.FindGameObjectWithTag("Player").TryGetComponent<PlayerController>(out player))
-            Debug.Log("Player Controller Not attached to Canvas");
-        if (!GameObject.FindGameObjectWithTag("Player").TryGetComponent<GunsController>(out guns))
-            Debug.Log("Guns Controller Not attached to Canvas");
-        if (!GameObject.FindGameObjectWithTag("Player").TryGetComponent<MarioHealth>(out marioHealth))
-            Debug.Log("Mario Health Not attached to Canvas");
-
+        player = SaveStateScript.instance.mario.GetComponent<PlayerController>();
+        guns = player.guns;
+        marioHealth = player.marioHealth;
     }
 
 
@@ -82,6 +77,8 @@ public class CanvasScript : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (player == null)
+            return;
         ammoCounter.SetText(guns.getAmmoOfCurrentGun() + "|" + guns.getAmmoHeldOfCurrentGun());
         score.SetText("" + player.score);
         livesCounter.SetText("" + player.lives);
@@ -134,6 +131,7 @@ public class CanvasScript : MonoBehaviour
 
     public void showLoseLifeScreen()
     {
+        Debug.Log("Active ? " + gameObject.activeInHierarchy);
         StartCoroutine(loseLifeScreenTime());
     }
 

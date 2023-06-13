@@ -9,8 +9,6 @@ public class GunsController : MonoBehaviour
     public bool isReloading = false;
     public bool isCurrentGunOutOfAmmo = false;
     private float ReEquipCD = 0.5f;
-    [SerializeField]
-    private CanvasScript cs;
     public enum gunType { AR, SG, P }
 
     public static gunType startingGun = gunType.P;
@@ -47,6 +45,8 @@ public class GunsController : MonoBehaviour
 
     //Gun data
     private Dictionary<gunType, GameObject> GunsData;
+    
+    private CanvasScript canvasScript;
 
     void Start()
     {
@@ -126,7 +126,6 @@ public class GunsController : MonoBehaviour
             }
             currentGun = gun;
         }
-        cs.updateCrossAir(currentGun);
     }
 
     public void hideAll(bool value)

@@ -25,8 +25,6 @@ public class DragonBossScript : EnemyController
     }
     private void FixedUpdate()
     {
-        Debug.Log(animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBallStart"));
-        Debug.Log("Is idle : " + animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"));
         if (!isAttacking)
         {
             switch (bossStatus)
