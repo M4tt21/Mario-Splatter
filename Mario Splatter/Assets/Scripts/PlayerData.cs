@@ -17,12 +17,15 @@ public class PlayerDataset
     public int starCount;
     public int score;
     public int level;
-    public int ARammo;
-    public int currentARammo;
-    public int pistolammo;
-    public int currentPistolammo;
-    public int SGammo;
-    public int currentSGammo;
+    public int ARAmmo;
+    public int currentARAmmo;
+    public int PAmmo;
+    public int currentPAmmo;
+    public int SGAmmo;
+    public int currentSGAmmo;
+    public bool isARUnlocked;
+    public bool isSGUnlocked;
+    public bool isPUnlocked;
 
 
     public PlayerDataset(PlayerController player)
@@ -33,8 +36,18 @@ public class PlayerDataset
         lives = player.lives;
         starCount = player.starCount;
         score = player.score;
-        ARammo = player.guns.
-        
+        ARAmmo = player.guns.getAmmoHeldOfGun(GunsController.gunType.AR);
+        PAmmo = player.guns.getAmmoHeldOfGun(GunsController.gunType.P);
+        SGAmmo = player.guns.getAmmoHeldOfGun(GunsController.gunType.SG);
+
+        currentARAmmo = player.guns.getAmmoInGun(GunsController.gunType.AR);
+        currentPAmmo = player.guns.getAmmoInGun(GunsController.gunType.P);
+        currentSGAmmo = player.guns.getAmmoInGun(GunsController.gunType.SG);
+
+        isARUnlocked = player.guns.isARUnlocked;
+        isPUnlocked = player.guns.isPUnlocked;
+        isSGUnlocked = player.guns.isSGUnlocked;
+
         level = PlayerPrefs.GetInt("CurrentLevel");
         
     
@@ -49,6 +62,17 @@ public class PlayerDataset
         player.starCount = starCount;
         player.score = score;
 
+        player.guns.setAmmoHeldOfGun(GunsController.gunType.AR, ARAmmo);
+        player.guns.setAmmoHeldOfGun(GunsController.gunType.P, PAmmo);
+        player.guns.setAmmoHeldOfGun(GunsController.gunType.SG, SGAmmo);
+
+        player.guns.setAmmoInGun(GunsController.gunType.AR, currentARAmmo);
+        player.guns.setAmmoInGun(GunsController.gunType.P, currentPAmmo);
+        player.guns.setAmmoInGun(GunsController.gunType.SG, currentSGAmmo);
+
+        player.guns.isARUnlocked = isARUnlocked;
+        player.guns.isPUnlocked = isPUnlocked;
+        player.guns.isSGUnlocked = isSGUnlocked;
     }
 }
 

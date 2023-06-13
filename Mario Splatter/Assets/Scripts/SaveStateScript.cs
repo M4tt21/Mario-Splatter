@@ -25,12 +25,6 @@ public class SaveStateScript : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    private void Awake()
-    {
-        Debug.Log("Controller Awake, checking Mario");
-        checkMario();
-    }
-
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log("Controller Loaded Into New Scene, checking Mario");
@@ -38,10 +32,21 @@ public class SaveStateScript : MonoBehaviour
         if (marioload)
         {
             marioload = false;
-            gameData.loadToPlayer(mario.GetComponent<PlayerController>());
+            StartCoroutine(waitLoadingAndLoadMario());
         }
-        else 
-            save();
+        else
+            StartCoroutine(waitLoadingAndSave());
+    }
+
+    IEnumerator waitLoadingAndSave()
+    {
+        yield return null;
+        save();
+    }
+    IEnumerator waitLoadingAndLoadMario()
+    {
+        yield return null;
+        gameData.loadToPlayer(mario.GetComponent<PlayerController>());
     }
 
 

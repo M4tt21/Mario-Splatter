@@ -37,11 +37,11 @@ public class GunsController : MonoBehaviour
 
     [Header("Unlocked Guns")]
     [SerializeField]
-    private bool isARUnlocked = false;
+    public bool isARUnlocked = false;
     [SerializeField]
-    private bool isSGUnlocked = false;
+    public bool isSGUnlocked = false;
     [SerializeField]
-    private bool isPUnlocked = false;
+    public bool isPUnlocked = false;
 
     private GameObject DefaultGun;
 
@@ -63,11 +63,6 @@ public class GunsController : MonoBehaviour
         selectGun(currentGun);
 
         DefaultGun = pistolObj;
-    }
-
-    private void Update()
-    {
-        
     }
 
     public bool isGunUnlocked(gunType gun)
@@ -112,7 +107,7 @@ public class GunsController : MonoBehaviour
 
     private GameObject tryGetGunObjFromType(gunType gunT)
     {
-        if (GunsData.TryGetValue(gunT, out GameObject result))
+        if (GunsData!=null && GunsData.TryGetValue(gunT, out GameObject result))
             return result;
         else return DefaultGun;
     }
@@ -202,6 +197,29 @@ public class GunsController : MonoBehaviour
     {
         tryGetGunObjFromType(gun).GetComponent<Gun>().addAmmo(amount);
     }
+
+    public int getAmmoHeldOfGun(gunType gun)
+    {
+        return tryGetGunObjFromType(gun).GetComponent<Gun>().ammoHeld;
+    }
+
+    public int getAmmoInGun(gunType gun)
+    {
+        return tryGetGunObjFromType(gun).GetComponent<Gun>().currentAmmo;
+    }
+
+    public void setAmmoHeldOfGun(gunType gun, int ammount)
+    {
+        tryGetGunObjFromType(gun).GetComponent<Gun>().ammoHeld = ammount;
+    }
+
+    public void setAmmoInGun(gunType gun, int ammount)
+    {
+        tryGetGunObjFromType(gun).GetComponent<Gun>().currentAmmo = ammount;
+    }
+
+    
+
 
 }
 
