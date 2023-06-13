@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,5 +25,18 @@ public class SettingsScript : MonoBehaviour
     void Update()
     {
         
+    }
+    void updateButtonText()
+    {
+
+    }
+    public void setJumpKey ()
+    {   
+        /*foreach (KeyCode kcode in Enum.GetValues ​​(typeof(KeyCode)) )
+        {
+            if (Input.GetKey(kcode))
+                Debug.Log("KeyCode giù: " + kcode);
+        }*/
+        //Jump = Input.GetKey(out KeyCode keyCode);
     }
 }
