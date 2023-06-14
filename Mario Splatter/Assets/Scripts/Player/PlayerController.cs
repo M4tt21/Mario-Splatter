@@ -13,8 +13,6 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-
-    private SettingsScript settings;
     private static float wSpeed = 5f;
     private static float rSpeed = 10f;
     private float currentSpeed = wSpeed;
@@ -45,12 +43,18 @@ public class PlayerController : MonoBehaviour
     private Vector3 desiredCameraPos;
     private GameObject marioSkinDefault;
     private GameObject marioSkinShield;
+    private Transform headPivot;
+    private Transform cameraPivot;
+
+    [Header("Keybinds")] //Default keybinds needed only for debugging
+    public KeyCode reloadKey = KeyCode.R;
+    public KeyCode sprintKey = KeyCode.LeftShift;
+    public KeyCode jumpKey = KeyCode.Space;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
-        settings = gameObject.GetComponent<SettingsScript>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         startingPos = transform.position;
@@ -58,6 +62,8 @@ public class PlayerController : MonoBehaviour
         desiredCameraPos = cameraTransform.localPosition;
         marioSkinDefault = transform.Find("MarioDefault").gameObject;
         marioSkinShield = transform.Find("MarioShield").gameObject;
+        headPivot = transform.Find("Head");
+        cameraPivot = transform.Find("CameraPivot");
         Input.ResetInputAxes();
         rotation = 0;
     }
@@ -65,7 +71,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
         float hzMove = Input.GetAxis("Horizontal") * currentSpeed * Time.deltaTime;
         float vtMove = Input.GetAxis("Vertical") * currentSpeed * Time.deltaTime;
 
@@ -109,14 +114,12 @@ public class PlayerController : MonoBehaviour
         cameraTransform.localRotation = Quaternion.Euler(rotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
 
-        Vector3 moveTo;
         //Collisione Telecamera
-        Debug.DrawLine(transform.Find("Head").position, transform.Find("CameraPivot").position);
-        if (Physics.Linecast(transform.Find("Head").position, transform.Find("CameraPivot").position, out RaycastHit cameraHit) && !cameraHit.transform.CompareTag("Enemy"))
+        Debug.DrawLine(headPivot.position, cameraPivot.position);
+        if (Physics.Linecast(headPivot.position, cameraPivot.position, out RaycastHit cameraHit) && !cameraHit.transform.CompareTag("Enemy"))
         {
-            float distance = Vector3.Distance(transform.Find("CameraPivot").position, cameraHit.point);
-            //moveTo = Mathf.Clamp((hit.distance * 0.87f), minDistance, maxDistance);
-            cameraTransform.localPosition = Vector3.MoveTowards(desiredCameraPos, transform.Find("Head").localPosition, distance*1.15f);
+            float distance = Vector3.Distance(cameraPivot.position, cameraHit.point);
+            cameraTransform.localPosition = Vector3.MoveTowards(desiredCameraPos, headPivot.localPosition, distance*1.15f);
 
         }
         else
@@ -144,38 +147,37 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha3)) //Pistol
             guns.selectGun(GunsController.gunType.P);
 
-        //Can only reload if hes not running !guns.isReEquipping && (guns.isCurrentGunOutOfAmmo || 
-        if (guns.isCurrentGunEnabled && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(settings.reloadKey)))
+        //Can only reload if hes not running 
+        if (guns.isCurrentGunEnabled && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(reloadKey)))
         {
             guns.reloadCurrentGun();
         }
 
 
         //sprint
-        if (marioHealth.currentStamina>0 && Input.GetButton("Fire3") && (Input.GetAxis("Vertical") > 0) && !Input.GetButton("Horizontal"))
+        if (marioHealth.currentStamina>0 && Input.GetKey(sprintKey) && (Input.GetAxis("Vertical") > 0) && !Input.GetButton("Horizontal"))
         {
             marioHealth.isStaminaConsuming = true;
             if (currentSpeed < rSpeed) currentSpeed += rSpeed * Time.deltaTime;
-            //Se corre disabilito l'arma che ha in mano
+            //Disable the gun when running
             guns.disableCurrentGun();
         }
-        else if (!(marioHealth.currentStamina > 0) || !Input.GetButton("Fire3") || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0))
+        else if (!(marioHealth.currentStamina > 0) || !Input.GetKey(sprintKey) || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0))
         {
             if (currentSpeed > wSpeed) currentSpeed -= wSpeed * Time.deltaTime;
         }
 
-        if (Input.GetButtonUp("Fire3"))
+        if (Input.GetKeyUp(sprintKey))
         {
             marioHealth.isStaminaConsuming = false;
             guns.enableCurrentGun();
         }
 
-        if (Input.GetButtonDown("Jump") && controller.isGrounded)
+        if (Input.GetKeyDown(jumpKey) && controller.isGrounded)
         {
             velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
-            animator.SetBool("isJumping", true);
+            animator.SetTrigger("Jump");
         }
-        else animator.SetBool("isJumping", false);
 
     }
 

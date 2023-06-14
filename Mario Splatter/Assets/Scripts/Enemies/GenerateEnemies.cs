@@ -55,7 +55,7 @@ public class GenerateEnemies : MonoBehaviour
         currentEnemy.GetComponent<Rigidbody>().useGravity = true;
         while (currentEnemy.transform.position.y >= moveTo.y) { yield return new WaitForEndOfFrame(); }
         currentEnemy.GetComponent<NavMeshAgent>().enabled = true;
-
+        currentEnemy.GetComponent<Animator>().enabled = true;
     }
 
     IEnumerator moveUp(GameObject currentEnemy, Vector3 moveTo)
@@ -67,8 +67,6 @@ public class GenerateEnemies : MonoBehaviour
             yield return new WaitForEndOfFrame(); 
         }
         currentEnemy.GetComponent<NavMeshAgent>().enabled = true;
-
+        currentEnemy.GetComponent<Animator>().enabled = true;
     }
-
-
 }

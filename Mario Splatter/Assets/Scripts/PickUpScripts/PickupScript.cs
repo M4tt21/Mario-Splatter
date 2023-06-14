@@ -5,7 +5,7 @@ using UnityEngine;
 public class PickupScript : MonoBehaviour
 {
     protected AudioSource audioSource;
-    private float destroyTime = 1f;
+    private float destroyTime = 3f;
     public bool isCollected=false;
 
     private void OnTriggerEnter(Collider other)
@@ -29,9 +29,17 @@ public class PickupScript : MonoBehaviour
             audioSource.Play();
         else
             Debug.Log("Pickup Audio Not Found");
+        //Disable the renderers, cant destroy the object, wait for the sound to play
+        foreach (Renderer renderer in transform.GetComponentsInChildren<Renderer>())
+        {
+            if (renderer != null)
+            {
+                renderer.enabled = false;
+            }
+        }
         yield return new WaitForSeconds(destroyTime);
         if (gameObject != null)
-        Destroy(gameObject);
+            Destroy(gameObject);
     }
 
 }
