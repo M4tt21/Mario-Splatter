@@ -51,6 +51,12 @@ public class PlayerController : MonoBehaviour
     public KeyCode sprintKey = KeyCode.LeftShift;
     public KeyCode jumpKey = KeyCode.Space;
 
+    [Header("Settings")]
+    [Range(0f, 1f)]
+    public float sens;
+    [Range(0f, 1f)]
+    public float volume;
+
 
     // Start is called before the first frame update
     void Start()

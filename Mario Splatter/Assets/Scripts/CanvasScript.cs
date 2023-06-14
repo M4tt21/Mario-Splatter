@@ -42,6 +42,8 @@ public class CanvasScript : MonoBehaviour
     public PlayerController player;
     [SerializeField]
     public MarioHealth marioHealth;
+    [SerializeField]
+    public MenuScript menuScript;
     // Start is called before the first frame update
     void Start()
     {
@@ -61,7 +63,7 @@ public class CanvasScript : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetKeyDown(SettingsScript.instance.escKey))
         {
             if (isPaused)
             {
@@ -99,27 +101,7 @@ public class CanvasScript : MonoBehaviour
         currentCrossair = gun;
     }
 
-    public void PauseGame()
-    {
-        PauseMenu.SetActive(true);
-        UI.SetActive(false);
-        isPaused = true;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-        Time.timeScale = 0;
-    }
-    public void ResumeGame()
-    {
-        Time.timeScale = 1f;
-        PauseMenu.SetActive(false);
-        OptionsMenuPausa.SetActive(false);
-
-        UI.SetActive(true);
-        isPaused = false;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
-    }
+    
 
     private IEnumerator loseLifeScreenTime()
     {
@@ -134,7 +116,25 @@ public class CanvasScript : MonoBehaviour
         Debug.Log("Active ? " + gameObject.activeInHierarchy);
         StartCoroutine(loseLifeScreenTime());
     }
+    public void PauseGame()
+    {
+        PauseMenu.SetActive(true);
+        UI.SetActive(false);
+        isPaused = true;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 0;
+    }
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
+        PauseMenu.SetActive(false);
+        OptionsMenuPausa.SetActive(false);
+        UI.SetActive(true);
+        isPaused = false;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
 
-
+    }
 }
 

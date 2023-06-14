@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class SettingsScript : MonoBehaviour
 {
+
     [Header("Settings")]
-    public float sens;
-    public float volume;
+    public KeyCode escKey = KeyCode.Escape;
     public string reloadKey = "r";
     public string Jump = "space";
     public string Fire3 = "left shift";
@@ -14,17 +16,16 @@ public class SettingsScript : MonoBehaviour
     public string Ar = "1";
     public string Pump = "2";
     public string Pistol = "3";
-    
-    
+    [Range(0f, 1f)]
+    public float sens = 0.5f;
+    [Range(0f, 1f)]
+    public float volume = 0.5f;
+    public static SettingsScript instance;
+
     void Start()
     {
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        instance = this;
     }
     void updateButtonText()
     {
@@ -39,4 +40,13 @@ public class SettingsScript : MonoBehaviour
         }*/
         //Jump = Input.GetKey(out KeyCode keyCode);
     }
+   void ChangeVolume ()
+    {
+        AudioListener.volume = volume;
+    }
+    void ChangeSens(PlayerController playerController)
+    {
+        playerController.mouseSens = sens;
+    }
+    
 }
