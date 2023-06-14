@@ -58,7 +58,7 @@ public class SaveStateScript : MonoBehaviour
     void Update()
     {
         //serve se vogliamo farlo usando degli input tastiera
-        if (Input.GetKeyDown("p"))
+        /*if (Input.GetKeyDown("p"))
         {
             Debug.Log("Quick save");
             save();
@@ -67,7 +67,7 @@ public class SaveStateScript : MonoBehaviour
         {
             load();
             Debug.Log("Quick Load");
-        }
+        }*/
     }
 
 

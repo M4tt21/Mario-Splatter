@@ -10,29 +10,39 @@ public class SettingsScript : MonoBehaviour
     [Header("Settings")]
     public KeyCode escKey = KeyCode.Escape;
     public KeyCode reloadKey = KeyCode.R;
-    public KeyCode jumpKey = KeyCode.Space;
-    public string Fire3 = "left shift";
-    public string Fire1 = "mouse 0";
-    public string Ar = "1";
-    public string Pump = "2";
-    public string Pistol = "3";
+    public KeyCode jumpKey = KeyCode.G;
+    public KeyCode sprintKey = KeyCode.LeftShift;
+    public KeyCode shootKey = KeyCode.Mouse0;
+    public KeyCode ARKey = KeyCode.Alpha1;
+    public KeyCode SGKey = KeyCode.Alpha2;
+    public KeyCode PKey = KeyCode.Alpha3;
     [Range(0f, 1f)]
     public float sens = 0.5f;
     [Range(0f, 1f)]
     public float volume = 0.5f;
+
+
     public static SettingsScript instance;
 
     void Start()
     {
-        //Set volume and sens
-        sens = 0.5f;
-        volume = 0.5f;
+        setAllDefault();
         submitChanges();
         instance = this;
     }
-    void updateButtonText()
-    {
 
+    void setAllDefault()
+    {
+        escKey = KeyCode.Escape;
+        reloadKey = KeyCode.R;
+        jumpKey = KeyCode.Space;
+        sprintKey = KeyCode.LeftShift;
+        shootKey = KeyCode.Mouse0;
+        ARKey = KeyCode.Alpha1;
+        SGKey = KeyCode.Alpha2;
+        PKey = KeyCode.Alpha3;
+        sens = 0.5f;
+        volume = 0.5f;
     }
     public void setJumpKey ()
     {   
@@ -43,18 +53,11 @@ public class SettingsScript : MonoBehaviour
         }*/
         //Jump = Input.GetKey(out KeyCode keyCode);
     }
-   void ChangeVolume ()
-    {
-        AudioListener.volume = volume;
-    }
-    void ChangeSens(PlayerController playerController)
-    {
-        playerController.mouseSens = sens;
-    }
 
     public void submitChanges()
     {
         //Sets the audio listener and the axis settings
+        AudioListener.volume = volume;
     }
     
 }
