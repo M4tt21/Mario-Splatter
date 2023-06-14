@@ -10,7 +10,7 @@ public class PickupScript : MonoBehaviour
 
     /* Parametri di movimento */
     private Vector3 rotation = new Vector3(0f, 1f, 0f); //Velocità di rotazione sull'asse y
-    public float speed = 5f;                            //Velocità di movimento
+    public float speed = 10f;                            //Velocità di movimento
 
     // Start is called before the first frame update
     void Start()
