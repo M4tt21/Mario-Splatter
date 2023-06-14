@@ -9,8 +9,8 @@ public class SettingsScript : MonoBehaviour
 
     [Header("Settings")]
     public KeyCode escKey = KeyCode.Escape;
-    public string reloadKey = "r";
-    public string Jump = "space";
+    public KeyCode reloadKey = KeyCode.R;
+    public KeyCode jumpKey = KeyCode.Space;
     public string Fire3 = "left shift";
     public string Fire1 = "mouse 0";
     public string Ar = "1";
@@ -24,7 +24,10 @@ public class SettingsScript : MonoBehaviour
 
     void Start()
     {
-        
+        //Set volume and sens
+        sens = 0.5f;
+        volume = 0.5f;
+        submitChanges();
         instance = this;
     }
     void updateButtonText()
@@ -47,6 +50,11 @@ public class SettingsScript : MonoBehaviour
     void ChangeSens(PlayerController playerController)
     {
         playerController.mouseSens = sens;
+    }
+
+    public void submitChanges()
+    {
+        //Sets the audio listener and the axis settings
     }
     
 }

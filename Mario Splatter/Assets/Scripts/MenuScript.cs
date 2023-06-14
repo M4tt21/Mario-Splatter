@@ -48,4 +48,9 @@ public class MenuScript : MonoBehaviour
         SettingsScript.instance.sens = sliders.transform.Find("Sens").GetComponent<Slider>().value;
         SettingsScript.instance.volume = sliders.transform.Find("Volume").GetComponent<Slider>().value;
     }
+
+    public void saveAllSettings()
+    {
+        SettingsScript.instance.submitChanges();
+    }
 }

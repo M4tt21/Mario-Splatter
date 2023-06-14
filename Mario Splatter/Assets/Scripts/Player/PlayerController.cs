@@ -50,10 +50,6 @@ public class PlayerController : MonoBehaviour
     public KeyCode reloadKey = KeyCode.R;
     public KeyCode sprintKey = KeyCode.LeftShift;
     public KeyCode jumpKey = KeyCode.Space;
-
-    [Header("Settings")]
-    [Range(0f, 1f)]
-    public float sens;
     [Range(0f, 1f)]
     public float volume;
 
@@ -80,8 +76,8 @@ public class PlayerController : MonoBehaviour
         float hzMove = Input.GetAxis("Horizontal") * currentSpeed * Time.deltaTime;
         float vtMove = Input.GetAxis("Vertical") * currentSpeed * Time.deltaTime;
 
-        float mouseX = Input.GetAxis("Mouse X") * mouseSens * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSens * Time.deltaTime;
+        float mouseX = Input.GetAxis("Mouse X") * (mouseSens*SettingsScript.instance.sens) * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * (mouseSens * SettingsScript.instance.sens) * Time.deltaTime;
 
         Vector3 move = transform.right * hzMove + transform.forward * vtMove;
 
@@ -179,7 +175,7 @@ public class PlayerController : MonoBehaviour
             guns.enableCurrentGun();
         }
 
-        if (Input.GetKeyDown(jumpKey) && controller.isGrounded)
+        if (Input.GetKeyDown(SettingsScript.instance.jumpKey) && controller.isGrounded)
         {
             velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
             animator.SetTrigger("Jump");
