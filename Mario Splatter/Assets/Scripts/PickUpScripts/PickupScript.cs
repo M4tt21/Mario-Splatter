@@ -8,6 +8,27 @@ public class PickupScript : MonoBehaviour
     private float destroyTime = 3f;
     public bool isCollected=false;
 
+    /* Parametri di movimento */
+    private Vector3 rotation = new Vector3(0f, 1f, 0f); //Velocità di rotazione sull'asse y
+    public float speed = 5f;                            //Velocità di movimento
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+        /// Funzione utile per capire dal log quello che sta succedendo
+        Debug.Log("Il pickup sta girando");
+
+    }
+
+    private void FixedUpdate()
+    {
+
+        /// Applichiamo una rotazione costante (perché siamo nella fixed update) al nostro cubo utlizzando il vettore che abbiamo dichiarato prima ///
+        transform.Rotate(rotation);
+
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!isCollected && other.gameObject.CompareTag("Player"))
