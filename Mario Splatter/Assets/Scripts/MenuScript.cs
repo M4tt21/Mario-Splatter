@@ -33,12 +33,19 @@ public class MenuScript : MonoBehaviour
         Application.Quit();
     }
 
-    public void SetSliders()
+    public void updateSliders()
     {
         GameObject sliders = GameObject.FindGameObjectWithTag("SlidersSettings");
         Slider sliderSens = sliders.transform.Find("Sens").GetComponent<Slider>();
         Slider sliderVolume = sliders.transform.Find("Volume").GetComponent<Slider>();
         sliderSens.value = SettingsScript.instance.sens;
         sliderVolume.value = SettingsScript.instance.volume;
+    }
+
+    public void setSlidersSettings()
+    {
+        GameObject sliders = GameObject.FindGameObjectWithTag("SlidersSettings");
+        SettingsScript.instance.sens = sliders.transform.Find("Sens").GetComponent<Slider>().value;
+        SettingsScript.instance.volume = sliders.transform.Find("Volume").GetComponent<Slider>().value;
     }
 }

@@ -23,7 +23,7 @@ public class SaveStateScript : MonoBehaviour
     void Start()
     {
         instance = this;
-
+        mario = null;
         saveDataPath = Application.persistentDataPath + "/data.vgd";
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
