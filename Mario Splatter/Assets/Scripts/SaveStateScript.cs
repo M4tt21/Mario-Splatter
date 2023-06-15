@@ -170,7 +170,7 @@ public class SaveStateScript : MonoBehaviour
         Debug.Log("cREATA COPIA DA SALVARE");
         BinaryFormatter formatter = new BinaryFormatter();
         Debug.Log("CREATO FORMATTER");
-        using(FileStream fileStream = File.Open(settingsDataPath, FileMode.OpenOrCreate))
+        using(FileStream fileStream = File.Open(saveDataPath, FileMode.OpenOrCreate))
         {
             Debug.Log("Sto per salvate!");
             formatter.Serialize(fileStream, settingsData);
