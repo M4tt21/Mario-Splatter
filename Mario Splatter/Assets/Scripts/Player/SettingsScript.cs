@@ -26,11 +26,9 @@ public class SettingsScript : MonoBehaviour
 
     void Start()
     {
-        setAllDefault();
         instance = this;
+        setAllDefault();
         submitChanges();
-        
-        
         SaveStateScript.instance.loadSettings(); //load settings when game first opens
     }
 
