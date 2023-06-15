@@ -28,6 +28,7 @@ public class MenuScript : MonoBehaviour
     public void BackToMenu()
     {
         Time.timeScale = 1f;
+        
         SceneManager.LoadScene(PlayerPrefs.GetInt("menu"));
     }
     public void Exit()

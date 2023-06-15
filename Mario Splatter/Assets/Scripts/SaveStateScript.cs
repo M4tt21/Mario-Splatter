@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,12 +24,18 @@ public class SaveStateScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        Debug.Log("SONO STARTATO;");
+
         if (instance == null)
         {
             instance = this;
         }
         else
+        {
             Destroy(gameObject);
+            return;
+        }
         mario = null;
         marioload = false;
         saveDataPath = Application.persistentDataPath + "/data.vgd";
@@ -37,9 +44,12 @@ public class SaveStateScript : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+
+
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(scene.name == "menu" && mario != null)
+        Debug.Log("Scene is : " + scene.name);
+        if (scene.name == "menu" && mario != null)
         {
             Destroy(mario); 
             mario = null;
@@ -54,7 +64,11 @@ public class SaveStateScript : MonoBehaviour
             StartCoroutine(waitLoadingAndLoadPlayer());
         }
         else
+        {
+            Debug.Log("WOOOW COGLIONE");
             StartCoroutine(waitLoadingAndSave());
+            Debug.Log("WOOOW COGLIONE 2");
+        }
     }
 
     IEnumerator waitLoadingAndSave()
@@ -121,16 +135,17 @@ public class SaveStateScript : MonoBehaviour
         
         Debug.Log(saveDataPath);
         //Vector3 position = transform.position; //versione posizione semplice
-        PlayerDataset gameData = new PlayerDataset(mario.GetComponent<PlayerController>());  //versione dati di gioco
-        
+        PlayerDataset gameData = new PlayerDataset(instance.mario.GetComponent<PlayerController>());  //versione dati di gioco
 
 
+        Debug.Log("WOOOW 1");
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream fileStream = File.Open(saveDataPath, FileMode.OpenOrCreate);
-
+        Debug.Log("WOOOW 2");
         //formatter.Serialize(fileStream, position); //versione posizione semplice
         formatter.Serialize(fileStream, gameData); //versione dati di gioco
         fileStream.Close();
+        Debug.Log("WOOOW 3");
     }
 
     public bool loadPlayer()
@@ -174,17 +189,14 @@ public class SaveStateScript : MonoBehaviour
     {
         Debug.Log("saving settings @ -> " + settingsDataPath);
         SettingsData settingsData = new SettingsData(SettingsScript.instance);
-        Debug.Log("cREATA COPIA DA SALVARE");
+
         BinaryFormatter formatter = new BinaryFormatter();
-        Debug.Log("CREATO FORMATTER");
+
         using(FileStream fileStream = File.Open(settingsDataPath, FileMode.OpenOrCreate))
         {
-            Debug.Log("Sto per salvate!");
             formatter.Serialize(fileStream, settingsData);
-            Debug.Log("CHIUDENDO");
             fileStream.Close();
-        }
-            
+        }   
         
     }
 }
