@@ -43,6 +43,7 @@ public class SaveStateScript : MonoBehaviour
         {
             Destroy(mario); 
             mario = null;
+            return;
         }
 
         Debug.Log("Controller Loaded Into New Scene, checking Mario");
