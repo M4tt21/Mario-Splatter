@@ -29,7 +29,7 @@ public class SettingsScript : MonoBehaviour
         instance = this;
         setAllDefault();
         submitChanges();
-        SaveStateScript.instance.loadSettings();
+        //SaveStateScript.instance.loadSettings();
     }
 
     void setAllDefault()
