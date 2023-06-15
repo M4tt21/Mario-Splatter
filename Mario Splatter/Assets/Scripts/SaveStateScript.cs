@@ -167,9 +167,13 @@ public class SaveStateScript : MonoBehaviour
     {
         Debug.Log("saving settings @ -> " + settingsDataPath);
         SettingsData settingsData = new SettingsData(SettingsScript.instance);
+        Debug.Log("cREATA COPIA DA SALVARE");
         BinaryFormatter formatter = new BinaryFormatter();
+        Debug.Log("CREATO FORMATTER");
         FileStream fileStream = File.Open(settingsDataPath, FileMode.Create);
+        Debug.Log("Sto per salvate!");
         formatter.Serialize(fileStream, settingsData);
+        Debug.Log("CHIUDENDO");
         fileStream.Close();
     }
 }
