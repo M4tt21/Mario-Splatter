@@ -27,7 +27,7 @@ public class SaveStateScript : MonoBehaviour
         mario = null;
         marioload = false;
         saveDataPath = Application.persistentDataPath + "/data.vgd";
-        settingsDataPath = Application.persistentDataPath + "/DIOMERDA.vgd";
+        settingsDataPath = Application.persistentDataPath + "/settings.vgd";
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
