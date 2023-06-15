@@ -9,8 +9,7 @@ using System;
 
 public class MenuScript : MonoBehaviour
 {
-    [SerializeField]
-    public CanvasScript cs;
+    public GameObject PopUp;
     public void NewGame()
     {
         PlayerPrefs.DeleteAll();
@@ -77,19 +76,20 @@ public class MenuScript : MonoBehaviour
 
     public void setKeybind(string keybindName)
     {
+        
         StartCoroutine(waitAndSetKeybind(keybindName));
+        
     }
 
     IEnumerator waitAndSetKeybind(string keybindName)
     {
         KeyCode keyToSet = KeyCode.None;
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSecondsRealtime(0.2f);  
         while (!Input.anyKeyDown || Input.GetKey(KeyCode.Mouse0)) 
         {
-            Debug.Log("sto aspettando");
             yield return null;
         }
-        Debug.Log("uscito da aspettare");
+
 
 
         foreach (KeyCode kcode in Enum.GetValues(typeof(KeyCode)))
@@ -122,6 +122,10 @@ public class MenuScript : MonoBehaviour
                 SettingsScript.instance.PKey = keyToSet;
                 break;
         }
+
+
+
+
         updateKeybinds();
 
     }

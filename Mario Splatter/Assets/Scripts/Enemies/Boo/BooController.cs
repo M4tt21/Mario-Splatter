@@ -34,6 +34,9 @@ public class BooController : EnemyController
         {
             Vector3 origin = transform.position;
             Vector3 target = player.transform.position;
+
+
+
             Vector3 direction = (target - origin).normalized;
 
             if(direction != Vector3.zero) transform.forward = direction;

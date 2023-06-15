@@ -35,6 +35,8 @@ public class CanvasScript : MonoBehaviour
     [SerializeField]
     public GameObject OptionsMenuPausa;
     [SerializeField]
+    public GameObject KeyBindsMenu;
+    [SerializeField]
     public GameObject LoseLifeScreen;
     [SerializeField]
     public GunsController guns;
@@ -129,6 +131,9 @@ public class CanvasScript : MonoBehaviour
     {
         Time.timeScale = 1f;
         PauseMenu.SetActive(false);
+        OptionsMenuPausa.SetActive(false);
+        KeyBindsMenu.SetActive(false);
+        
         OptionsMenuPausa.SetActive(false);
         UI.SetActive(true);
         isPaused = false;
