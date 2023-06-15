@@ -27,7 +27,7 @@ public class SaveStateScript : MonoBehaviour
         mario = null;
         marioload = false;
         saveDataPath = Application.persistentDataPath + "/data.vgd";
-        settingsDataPath = Application.persistentDataPath + "/settings.vgd";
+        settingsDataPath = Application.persistentDataPath + "/DIOMERDA.vgd";
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -170,7 +170,7 @@ public class SaveStateScript : MonoBehaviour
         Debug.Log("cREATA COPIA DA SALVARE");
         BinaryFormatter formatter = new BinaryFormatter();
         Debug.Log("CREATO FORMATTER");
-        using(FileStream fileStream = File.Open(saveDataPath, FileMode.OpenOrCreate))
+        using(FileStream fileStream = File.Open(settingsDataPath, FileMode.OpenOrCreate))
         {
             Debug.Log("Sto per salvate!");
             formatter.Serialize(fileStream, settingsData);
