@@ -289,8 +289,11 @@ public class PlayerController : MonoBehaviour
     public void death()
     {
         lives--;
-        if (lives <= 0)
-            Debug.Log("HAI PERSO");//CAMBIAREEEEEEE RESET LIVELLO
+        if (lives <= 0) 
+        { 
+            gameOver();
+            return;
+        }
 
         marioHealth.fullHealth();
 
@@ -307,18 +310,29 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator starEvent()
     {
-        Debug.Log("L'evento stella e` in esecuzione, teletrasporto al prossimo livello in qualche secondo.");
-
         yield return new WaitForSeconds(4);
         nextLevelTeleport();
     }
-    
+    public IEnumerator gameOverEvent()
+    {
+        yield return new WaitForSecondsRealtime(4);
+        canvasScript.menuScript.BackToMenu();
+    }
+
     public void starNextlevel()
     {
         starCount++;
         StartCoroutine(starEvent());
     }
 
+    public void gameOver()
+    {
+        canvasScript.showGameOverScreen();
+        Time.timeScale = 0.01f;
+        StartCoroutine(gameOverEvent());
+
+
+    }
 
 
 }
