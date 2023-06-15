@@ -28,8 +28,9 @@ public class SettingsScript : MonoBehaviour
     {
         setAllDefault();
         submitChanges();
-        SaveStateScript.instance.loadSettings(); //load settings when game first opens
+        
         instance = this;
+        SaveStateScript.instance.loadSettings(); //load settings when game first opens
     }
 
     void setAllDefault()
@@ -71,6 +72,7 @@ public class SettingsData
 
     public SettingsData(SettingsScript settings) 
     { 
+
         escKey= settings.escKey;
         reloadKey= settings.reloadKey;
         jumpKey= settings.jumpKey;
