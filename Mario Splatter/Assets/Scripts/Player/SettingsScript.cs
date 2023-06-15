@@ -29,7 +29,9 @@ public class SettingsScript : MonoBehaviour
         instance = this;
         if(!SaveStateScript.instance.loadSettings())
             setAllDefault();
-        submitChanges();
+        
+
+        
     }
 
     void setAllDefault()
@@ -44,6 +46,7 @@ public class SettingsScript : MonoBehaviour
         PKey = KeyCode.Alpha3;
         sens = 0.5f;
         volume = 0.5f;
+        submitChanges();
     }
 
     public void submitChanges()
