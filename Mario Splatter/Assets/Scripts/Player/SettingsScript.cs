@@ -27,9 +27,9 @@ public class SettingsScript : MonoBehaviour
     void Start()
     {
         instance = this;
-        setAllDefault();
+        if(!SaveStateScript.instance.loadSettings())
+            setAllDefault();
         submitChanges();
-        //SaveStateScript.instance.loadSettings();
     }
 
     void setAllDefault()

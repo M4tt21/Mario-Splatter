@@ -127,7 +127,7 @@ public class SaveStateScript : MonoBehaviour
         fileStream.Close();
     }
 
-    public void loadPlayer()
+    public bool loadPlayer()
     {
         Debug.Log("load");
         if (File.Exists(saveDataPath))
@@ -143,11 +143,12 @@ public class SaveStateScript : MonoBehaviour
             
             
             fileStream.Close();
-            
+            return true;
         }
+        return false;
     }
 
-    public void loadSettings()
+    public bool loadSettings()
     {
         Debug.Log("loading Settings");
         if (File.Exists(settingsDataPath))
@@ -160,8 +161,9 @@ public class SaveStateScript : MonoBehaviour
             settingsData.loadToGame(SettingsScript.instance);
 
             fileStream.Close();
-
+            return true;
         }
+        return false;
     }
     public void saveSettings()
     {
