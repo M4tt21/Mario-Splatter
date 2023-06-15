@@ -121,7 +121,7 @@ public class SaveStateScript : MonoBehaviour
         
         Debug.Log(saveDataPath);
         //Vector3 position = transform.position; //versione posizione semplice
-        PlayerDataset gameData = new PlayerDataset(mario.GetComponent<PlayerController>());  //versione dati di gioco
+        PlayerDataset gameData = new PlayerDataset(mario.GetComponent<PlayerController>());  //versione dati di giocoaaa
         
 
 

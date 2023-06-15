@@ -28,6 +28,8 @@ public class MenuScript : MonoBehaviour
     public void BackToMenu()
     {
         Time.timeScale = 1f;
+        PlayerPrefs.SetInt("CurrentLevel", 0);
+
         SceneManager.LoadScene(PlayerPrefs.GetInt("menu"));
     }
     public void Exit()
@@ -90,6 +92,13 @@ public class MenuScript : MonoBehaviour
             yield return null;
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PopUp.SetActive(false);
+            yield break;
+        
+        }
+            
 
 
         foreach (KeyCode kcode in Enum.GetValues(typeof(KeyCode)))
@@ -127,7 +136,7 @@ public class MenuScript : MonoBehaviour
 
 
         updateKeybinds();
-
+        PopUp.SetActive(false);
     }
 
 
@@ -141,5 +150,7 @@ public class MenuScript : MonoBehaviour
     public void saveAllSettings()
     {
         SettingsScript.instance.submitChanges();
+
     }
+     
 }

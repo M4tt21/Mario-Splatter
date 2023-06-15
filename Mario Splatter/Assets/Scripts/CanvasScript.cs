@@ -39,6 +39,8 @@ public class CanvasScript : MonoBehaviour
     [SerializeField]
     public GameObject LoseLifeScreen;
     [SerializeField]
+    public GameObject GameOver;
+    [SerializeField]
     public GunsController guns;
     [SerializeField]
     public PlayerController player;
@@ -103,7 +105,10 @@ public class CanvasScript : MonoBehaviour
         currentCrossair = gun;
     }
 
-    
+    public void showGameOverScreen()
+    {
+        GameOver.SetActive(true);
+    }
 
     private IEnumerator loseLifeScreenTime()
     {
@@ -115,7 +120,6 @@ public class CanvasScript : MonoBehaviour
 
     public void showLoseLifeScreen()
     {
-        Debug.Log("Active ? " + gameObject.activeInHierarchy);
         StartCoroutine(loseLifeScreenTime());
     }
     public void PauseGame()
