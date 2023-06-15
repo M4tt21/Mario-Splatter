@@ -28,6 +28,7 @@ public class SettingsScript : MonoBehaviour
     {
         setAllDefault();
         submitChanges();
+        SaveStateScript.instance.loadSettings(); //load settings when game first opens
         instance = this;
     }
 
@@ -93,5 +94,6 @@ public class SettingsData
         settings.PKey = PKey;
         settings.sens = sens;
         settings.volume = volume;
+        settings.submitChanges();
     }
 }

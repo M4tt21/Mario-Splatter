@@ -25,6 +25,7 @@ public class SaveStateScript : MonoBehaviour
     {
         instance = this;
         mario = null;
+        marioload = false;
         saveDataPath = Application.persistentDataPath + "/data.vgd";
         settingsDataPath = Application.persistentDataPath + "/settings.vgd";
         DontDestroyOnLoad(gameObject);
@@ -33,6 +34,12 @@ public class SaveStateScript : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if(scene.name == "menu" && mario != null)
+        {
+            Destroy(mario); 
+            mario = null;
+        }
+
         Debug.Log("Controller Loaded Into New Scene, checking Mario");
         checkMario();
         if (marioload)
@@ -72,11 +79,6 @@ public class SaveStateScript : MonoBehaviour
         }*/
     }
 
-    public void destroyMario()
-    {
-        Destroy(mario);
-        mario = null;
-    }
 
     public void checkMario()
     {
@@ -92,7 +94,7 @@ public class SaveStateScript : MonoBehaviour
                 Debug.Log("Mario Not Attached, Coundn't find object with tag Player");
             return;
         }
-        foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))//When moving into new scene delete the Mario of that scene
+        foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))//When moving into new scene delete the Mario of that scene if mario is already set
         {
             
             if (player != null && player != mario)
@@ -157,13 +159,17 @@ public class SaveStateScript : MonoBehaviour
 
             settingsData.loadToGame(SettingsScript.instance);
 
-            PlayerPrefs.SetInt("CurrentLevel", gameData.level);
-            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
-            marioload = true;
-
-
             fileStream.Close();
 
         }
+    }
+    void saveSettings()
+    {
+        Debug.Log("saving settings @ -> " + settingsDataPath);
+        SettingsData settingsData = new SettingsData(SettingsScript.instance);
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream fileStream = File.Open(settingsDataPath, FileMode.Create);
+        formatter.Serialize(fileStream, settingsData);
+        fileStream.Close();
     }
 }
