@@ -58,35 +58,35 @@ public class SettingsScript : MonoBehaviour
 [System.Serializable]
 public class SettingsData
 {
-    public KeyCode escKey;
+    /*public KeyCode escKey;
     public KeyCode reloadKey;
     public KeyCode jumpKey;
     public KeyCode sprintKey;
     public KeyCode shootKey;
     public KeyCode ARKey;
     public KeyCode SGKey;
-    public KeyCode PKey;
+    public KeyCode PKey;*/
     public float sens;
     public float volume;
 
     public SettingsData(SettingsScript settings) 
     { 
 
-        escKey= settings.escKey;
+        /*escKey= settings.escKey;
         reloadKey= settings.reloadKey;
         jumpKey= settings.jumpKey;
         sprintKey= settings.sprintKey;
         shootKey= settings.shootKey;
         ARKey = settings.ARKey;
         SGKey = settings.SGKey;
-        PKey = settings.PKey;
+        PKey = settings.PKey;*/
         sens = settings.sens;
         volume = settings.volume;
     }
 
     public void loadToGame(SettingsScript settings)
     {
-        settings.escKey = escKey;
+        /*settings.escKey = escKey;
         settings.reloadKey = reloadKey;
         settings.jumpKey = jumpKey;
         settings.sprintKey = sprintKey;
@@ -94,7 +94,7 @@ public class SettingsData
         settings.ARKey = ARKey;
         settings.SGKey = SGKey;
         settings.PKey = PKey;
-        settings.sens = sens;
+        settings.sens = sens;*/
         settings.volume = volume;
         settings.submitChanges();
     }
