@@ -158,9 +158,8 @@ public class SaveStateScript : MonoBehaviour
 
             SettingsData settingsData = (SettingsData)formatter.Deserialize(fileStream);
 
-            settingsData.loadToGame(SettingsScript.instance);
-
             fileStream.Close();
+            settingsData.loadToGame(SettingsScript.instance);
             return true;
         }
         return false;
