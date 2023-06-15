@@ -163,7 +163,7 @@ public class SaveStateScript : MonoBehaviour
 
         }
     }
-    void saveSettings()
+    public void saveSettings()
     {
         Debug.Log("saving settings @ -> " + settingsDataPath);
         SettingsData settingsData = new SettingsData(SettingsScript.instance);

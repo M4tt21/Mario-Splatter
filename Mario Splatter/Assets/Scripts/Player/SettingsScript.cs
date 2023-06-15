@@ -50,6 +50,7 @@ public class SettingsScript : MonoBehaviour
     {
         //Sets the audio listener and the axis settings
         AudioListener.volume = volume;
+        SaveStateScript.instance.saveSettings();
     }
     
 }
