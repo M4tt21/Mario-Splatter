@@ -28,8 +28,8 @@ public class SettingsScript : MonoBehaviour
     {
         instance = this;
         setAllDefault();
-        /*submitChanges();
-        SaveStateScript.instance.loadSettings();*/
+        submitChanges();
+        SaveStateScript.instance.loadSettings();
     }
 
     void setAllDefault()
