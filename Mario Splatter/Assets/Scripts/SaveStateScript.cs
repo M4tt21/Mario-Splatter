@@ -23,7 +23,12 @@ public class SaveStateScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+            Destroy(gameObject);
         mario = null;
         marioload = false;
         saveDataPath = Application.persistentDataPath + "/data.vgd";
