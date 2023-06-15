@@ -14,6 +14,7 @@ public class SaveStateScript : MonoBehaviour
     public static SaveStateScript instance;
 
     private string saveDataPath;
+    private string settingsDataPath;
     public GameObject mario = null;
     private bool marioload = false;
     private PlayerDataset gameData;
@@ -25,6 +26,7 @@ public class SaveStateScript : MonoBehaviour
         instance = this;
         mario = null;
         saveDataPath = Application.persistentDataPath + "/data.vgd";
+        settingsDataPath = Application.persistentDataPath + "/settings.vgd";
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -36,7 +38,7 @@ public class SaveStateScript : MonoBehaviour
         if (marioload)
         {
             marioload = false;
-            StartCoroutine(waitLoadingAndLoadMario());
+            StartCoroutine(waitLoadingAndLoadPlayer());
         }
         else
             StartCoroutine(waitLoadingAndSave());
@@ -45,9 +47,9 @@ public class SaveStateScript : MonoBehaviour
     IEnumerator waitLoadingAndSave()
     {
         yield return null;
-        save();
+        savePlayer();
     }
-    IEnumerator waitLoadingAndLoadMario()
+    IEnumerator waitLoadingAndLoadPlayer()
     {
         yield return null;
         gameData.loadToPlayer(mario.GetComponent<PlayerController>());
@@ -70,7 +72,11 @@ public class SaveStateScript : MonoBehaviour
         }*/
     }
 
-
+    public void destroyMario()
+    {
+        Destroy(mario);
+        mario = null;
+    }
 
     public void checkMario()
     {
@@ -102,7 +108,7 @@ public class SaveStateScript : MonoBehaviour
         }
     }
 
-    void save()
+    void savePlayer()
     {
         
         Debug.Log(saveDataPath);
@@ -119,12 +125,11 @@ public class SaveStateScript : MonoBehaviour
         fileStream.Close();
     }
 
-    public void load()
+    public void loadPlayer()
     {
         Debug.Log("load");
         if (File.Exists(saveDataPath))
         {
-            Debug.Log("file cagato");
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream fileStream = File.Open(saveDataPath, FileMode.Open);
 
@@ -137,6 +142,28 @@ public class SaveStateScript : MonoBehaviour
             
             fileStream.Close();
             
+        }
+    }
+
+    public void loadSettings()
+    {
+        Debug.Log("loading Settings");
+        if (File.Exists(settingsDataPath))
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fileStream = File.Open(settingsDataPath, FileMode.Open);
+
+            SettingsData settingsData = (SettingsData)formatter.Deserialize(fileStream);
+
+            settingsData.loadToGame(SettingsScript.instance);
+
+            PlayerPrefs.SetInt("CurrentLevel", gameData.level);
+            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+            marioload = true;
+
+
+            fileStream.Close();
+
         }
     }
 }

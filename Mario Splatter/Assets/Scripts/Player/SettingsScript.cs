@@ -44,15 +44,6 @@ public class SettingsScript : MonoBehaviour
         sens = 0.5f;
         volume = 0.5f;
     }
-    public void setJumpKey ()
-    {   
-        /*foreach (KeyCode kcode in Enum.GetValues ​​(typeof(KeyCode)) )
-        {
-            if (Input.GetKey(kcode))
-                Debug.Log("KeyCode giù: " + kcode);
-        }*/
-        //Jump = Input.GetKey(out KeyCode keyCode);
-    }
 
     public void submitChanges()
     {
@@ -60,4 +51,47 @@ public class SettingsScript : MonoBehaviour
         AudioListener.volume = volume;
     }
     
+}
+
+[System.Serializable]
+public class SettingsData
+{
+    public KeyCode escKey;
+    public KeyCode reloadKey;
+    public KeyCode jumpKey;
+    public KeyCode sprintKey;
+    public KeyCode shootKey;
+    public KeyCode ARKey;
+    public KeyCode SGKey;
+    public KeyCode PKey;
+    public float sens;
+    public float volume;
+
+    public SettingsData(SettingsScript settings) 
+    { 
+        escKey= settings.escKey;
+        reloadKey= settings.reloadKey;
+        jumpKey= settings.jumpKey;
+        sprintKey= settings.sprintKey;
+        shootKey= settings.shootKey;
+        ARKey = settings.ARKey;
+        SGKey = settings.SGKey;
+        PKey = settings.PKey;
+        sens = settings.sens;
+        volume = settings.volume;
+    }
+
+    public void loadToGame(SettingsScript settings)
+    {
+        settings.escKey = escKey;
+        settings.reloadKey = reloadKey;
+        settings.jumpKey = jumpKey;
+        settings.sprintKey = sprintKey;
+        settings.shootKey = shootKey;
+        settings.ARKey = ARKey;
+        settings.SGKey = SGKey;
+        settings.PKey = PKey;
+        settings.sens = sens;
+        settings.volume = volume;
+    }
 }
