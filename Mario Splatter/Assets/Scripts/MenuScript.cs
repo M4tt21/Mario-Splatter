@@ -124,10 +124,9 @@ public class MenuScript : MonoBehaviour
                 break;
         }
 
-
-
-
         updateKeybinds();
+
+        PopUp.SetActive(false);
 
     }
 
