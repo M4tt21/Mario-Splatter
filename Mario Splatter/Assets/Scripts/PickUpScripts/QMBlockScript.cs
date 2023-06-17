@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class QMBlockScript : MonoBehaviour
 {
+    public GameObject pickUp;
     public bool isCollected = false;
     private AudioSource audio;
     // Start is called before the first frame update
@@ -23,12 +24,17 @@ public class QMBlockScript : MonoBehaviour
         {
             audio.Play();
             StartCoroutine(DisapearWaitTime());
+            DropPickUp();
 
             isCollected = true;
             
         }
     }
-
+    public void DropPickUp()
+    {
+        GameObject drop = Instantiate(pickUp).gameObject;
+        drop.transform.position = transform.position;
+    }
     IEnumerator DisapearWaitTime()
     {
 
