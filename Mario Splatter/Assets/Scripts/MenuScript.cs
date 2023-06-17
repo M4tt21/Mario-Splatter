@@ -25,6 +25,12 @@ public class MenuScript : MonoBehaviour
         PlayerPrefs.SetInt("CurrentLevel", 1);
         SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
     }
+
+    public void Tutorial()
+    {
+        PlayerPrefs.SetInt("CurrentLevel", 5);
+        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+    }
     public void BackToMenu()
     {
         Time.timeScale = 1f;
