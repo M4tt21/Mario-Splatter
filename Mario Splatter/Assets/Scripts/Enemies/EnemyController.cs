@@ -16,6 +16,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] public float ragdollTime = 60f;
     [SerializeField] public float damageToPlayer = 10f;
     [SerializeField] public int enemyScore = 1;
+    public GameObject ammoDrop;
     public bool isDead=false;
     public Animator animator;
     public NavMeshAgent navMeshAgent;
@@ -44,11 +45,16 @@ public class EnemyController : MonoBehaviour
         //morte
         activateRagdoll();
         isDead = true;
+        DropAmmo();
         enabled=false;
         //Destroy(gameObject);
 
     }
-
+    public void DropAmmo()
+    {
+        GameObject drop = Instantiate(ammoDrop).gameObject;
+        drop.transform.position = new Vector3(transform.position.x, transform.position.y + 1,transform.position.z); 
+    }
     public void damage(float ammount, EnemyHit.hitType ht)
     {
         switch (ht){
