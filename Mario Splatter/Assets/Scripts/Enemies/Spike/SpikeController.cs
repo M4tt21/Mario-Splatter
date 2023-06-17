@@ -54,6 +54,7 @@ public class SpikeController : EnemyController
         
         yield return new WaitForSeconds(spawnTime/2);
         GameObject currentThrowable = Instantiate(throwable);
+        currentThrowable.transform.forward = transform.forward;
         currentThrowable.GetComponent<Rigidbody>().useGravity = false;
         currentThrowable.transform.position = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
         yield return new WaitForSeconds(spawnTime / 2);

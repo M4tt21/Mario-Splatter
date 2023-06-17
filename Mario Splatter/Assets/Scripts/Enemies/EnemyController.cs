@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        initHealth(health);
+        initHealth(maxHealth);
         navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         animator = gameObject.GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
