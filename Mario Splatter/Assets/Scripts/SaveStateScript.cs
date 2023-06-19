@@ -105,6 +105,15 @@ public class SaveStateScript : MonoBehaviour
         isLoading = false;
     }
 
+    public void resetToMenu()
+    {
+        PlayerPrefs.SetInt("CurrentLevel", 0);
+        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
     public void prevLevel()
     {
         loadLevel(PlayerPrefs.GetInt("CurrentLevel") - 1);
