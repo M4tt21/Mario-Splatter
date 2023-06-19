@@ -17,8 +17,7 @@ public class StatusBarsScript : MonoBehaviour
     }
     public void updateStatus(MarioHealth marioHealth)
     {
-        Debug.Log(marioHealth);
-        Debug.Log(sliderHealth);
+   
         
         float fillHealthValue = marioHealth.currentHealth / marioHealth.maxHealth;
         sliderHealth.value = fillHealthValue;

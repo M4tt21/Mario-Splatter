@@ -12,15 +12,6 @@ public class PickupScript : MonoBehaviour
     private Vector3 rotation = new Vector3(0f, 1f, 0f); //Velocità di rotazione sull'asse y
     public float speed = 10f;                            //Velocità di movimento
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-        /// Funzione utile per capire dal log quello che sta succedendo
-        Debug.Log("Il pickup sta girando");
-
-    }
-
     private void FixedUpdate()
     {
 

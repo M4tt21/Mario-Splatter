@@ -25,8 +25,6 @@ public class SaveStateScript : MonoBehaviour
     void Start()
     {
 
-        Debug.Log("SONO STARTATO;");
-
         if (instance == null)
         {
             instance = this;
@@ -65,9 +63,9 @@ public class SaveStateScript : MonoBehaviour
         }
         else
         {
-            Debug.Log("WOOOW COGLIONE");
+            
             StartCoroutine(waitLoadingAndSave());
-            Debug.Log("WOOOW COGLIONE 2");
+           
         }
     }
 
@@ -83,23 +81,6 @@ public class SaveStateScript : MonoBehaviour
     }
 
 
-    // Update is called once per frame
-    void Update()
-    {
-        //serve se vogliamo farlo usando degli input tastiera
-        /*if (Input.GetKeyDown("p"))
-        {
-            Debug.Log("Quick save");
-            save();
-        }
-        if (Input.GetKeyDown("o"))
-        {
-            load();
-            Debug.Log("Quick Load");
-        }*/
-    }
-
-
     public void checkMario()
     {
         if (mario==null)//Get the Mario that will stay alive
@@ -107,7 +88,7 @@ public class SaveStateScript : MonoBehaviour
             mario = GameObject.FindGameObjectWithTag("Player");
             if (mario != null)
             {
-                Debug.Log("Mario Attached");
+               
                 DontDestroyOnLoad(mario);
             }
             else
@@ -138,14 +119,14 @@ public class SaveStateScript : MonoBehaviour
         PlayerDataset gameData = new PlayerDataset(instance.mario.GetComponent<PlayerController>());  //versione dati di gioco
 
 
-        Debug.Log("WOOOW 1");
+       
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream fileStream = File.Open(saveDataPath, FileMode.OpenOrCreate);
-        Debug.Log("WOOOW 2");
+        
         //formatter.Serialize(fileStream, position); //versione posizione semplice
         formatter.Serialize(fileStream, gameData); //versione dati di gioco
         fileStream.Close();
-        Debug.Log("WOOOW 3");
+        
     }
 
     public bool loadPlayer()

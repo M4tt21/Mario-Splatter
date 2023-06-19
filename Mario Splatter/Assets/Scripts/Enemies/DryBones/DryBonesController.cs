@@ -58,6 +58,7 @@ public class DryBonesController : EnemyController
         navMeshAgent.isStopped=true;
         isDead = true;
         animator.SetBool("isDead", isDead);
+        DropAmmo();
         StartCoroutine(resurrectTimer());
         
         
