@@ -124,6 +124,7 @@ public class CanvasScript : MonoBehaviour
     }
     public void PauseGame()
     {
+        gameObject.GetComponent<AudioSource>().Play();
         PauseMenu.SetActive(true);
         UI.SetActive(false);
         isPaused = true;
@@ -133,6 +134,7 @@ public class CanvasScript : MonoBehaviour
     }
     public void ResumeGame()
     {
+        gameObject.GetComponent<AudioSource>().Play();
         Time.timeScale = 1f;
         PauseMenu.SetActive(false);
         OptionsMenuPausa.SetActive(false);
