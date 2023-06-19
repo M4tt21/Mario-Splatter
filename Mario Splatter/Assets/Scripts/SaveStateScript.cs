@@ -47,7 +47,7 @@ public class SaveStateScript : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log("Scene is : " + scene.name);
-        if (scene.name == "menu" && mario != null)
+        if (scene.name == "Menu" && mario != null)
         {
             Destroy(mario); 
             mario = null;

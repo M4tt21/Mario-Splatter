@@ -10,6 +10,8 @@ using System;
 public class MenuScript : MonoBehaviour
 {
     public GameObject PopUp;
+    public Slider sens;
+    public Slider volume;
     public void NewGame()
     {
         PlayerPrefs.DeleteAll();
@@ -44,11 +46,9 @@ public class MenuScript : MonoBehaviour
 
     public void updateSliders()
     {
-        GameObject sliders = GameObject.FindGameObjectWithTag("SlidersSettings");
-        Slider sliderSens = sliders.transform.Find("Sens").GetComponent<Slider>();
-        Slider sliderVolume = sliders.transform.Find("Volume").GetComponent<Slider>();
-        sliderSens.value = SettingsScript.instance.sens;
-        sliderVolume.value = SettingsScript.instance.volume;
+        
+        sens.value = SettingsScript.instance.sens;
+        volume.value = SettingsScript.instance.volume;
     }
 
     public void updateKeybinds()
@@ -139,9 +139,9 @@ public class MenuScript : MonoBehaviour
 
     public void setSlidersSettings()
     {
-        GameObject sliders = GameObject.FindGameObjectWithTag("SlidersSettings");
-        SettingsScript.instance.sens = sliders.transform.Find("Sens").GetComponent<Slider>().value;
-        SettingsScript.instance.volume = sliders.transform.Find("Volume").GetComponent<Slider>().value;
+
+        SettingsScript.instance.sens =  sens.value;
+        SettingsScript.instance.volume = volume.value;
     }
 
     public void saveAllSettings()

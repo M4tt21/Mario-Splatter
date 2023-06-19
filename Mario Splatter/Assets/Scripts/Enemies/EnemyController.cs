@@ -96,9 +96,8 @@ public class EnemyController : MonoBehaviour
             {
                 collider.gameObject.layer = 2; //Set Layer to ignore raycast
                 collider.enabled = true;
-                Debug.Log(collider.gameObject + " disattivato trigger | Status trigger : " + collider.isTrigger);
                 collider.isTrigger = false;
-                Debug.Log(collider.gameObject + " disattivato trigger | Status trigger : " + collider.isTrigger);
+                
             }
         }
         if (navMeshAgent != null) navMeshAgent.enabled = false;
