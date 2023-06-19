@@ -17,6 +17,7 @@ public class SaveStateScript : MonoBehaviour
     private string saveDataPath;
     private string settingsDataPath;
     public GameObject mario = null;
+    public bool isLoading=false;
     private bool marioload = false;
     private PlayerDataset gameData;
 
@@ -80,7 +81,34 @@ public class SaveStateScript : MonoBehaviour
         gameData.loadToPlayer(mario.GetComponent<PlayerController>());
     }
 
+    public void loadLevel(int level)
+    {
+        if (mario != null) { mario.transform.position = new Vector3(mario.transform.position.x, mario.transform.position.y + 1000f, mario.transform.position.z); }
+        
+        StartCoroutine(loadingTimer());
+        
+        PlayerPrefs.SetInt("CurrentLevel", (level) % SceneManager.sceneCountInBuildSettings);
+        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
 
+        
+    }
+    public void nextLevel()
+    {
+        loadLevel(PlayerPrefs.GetInt("CurrentLevel") + 1);
+    }
+
+    IEnumerator loadingTimer()
+    {
+        isLoading = true;
+        
+        yield return new WaitForSecondsRealtime(3);
+        isLoading = false;
+    }
+
+    public void prevLevel()
+    {
+        loadLevel(PlayerPrefs.GetInt("CurrentLevel") - 1);
+    }
     public void checkMario()
     {
         if (mario==null)//Get the Mario that will stay alive

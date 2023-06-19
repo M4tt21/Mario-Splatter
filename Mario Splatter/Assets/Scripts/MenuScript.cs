@@ -14,9 +14,7 @@ public class MenuScript : MonoBehaviour
     public Slider volume;
     public void NewGame()
     {
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.SetInt("CurrentLevel", 2);
-        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+        SaveStateScript.instance.loadLevel(2);
     }
     public void LoadGame()
     {
@@ -24,20 +22,18 @@ public class MenuScript : MonoBehaviour
     }
     public void SelectLevel()
     {
-        PlayerPrefs.SetInt("CurrentLevel", 1);
-        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+        SaveStateScript.instance.loadLevel(1);
     }
 
     public void Tutorial()
     {
-        PlayerPrefs.SetInt("CurrentLevel", 5);
-        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+        SaveStateScript.instance.loadLevel(5);
     }
     public void BackToMenu()
     {
         Time.timeScale = 1f;
-        
-        SceneManager.LoadScene(PlayerPrefs.GetInt("menu"));
+
+        SaveStateScript.instance.loadLevel(0);
     }
     public void Exit()
     {
@@ -107,6 +103,13 @@ public class MenuScript : MonoBehaviour
                 keyToSet = kcode;
             }
         }
+
+        if(keyToSet == KeyCode.Escape)
+        {
+            PopUp.SetActive(false);
+            yield break;
+        }
+            
 
         switch (keybindName)
         {

@@ -73,6 +73,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (SaveStateScript.instance.isLoading)
+        { //If loading into scene disable all mario actions
+            controller.Move(Vector3.zero);
+            return;
+        }
+
         float hzMove = Input.GetAxis("Horizontal") * currentSpeed * Time.deltaTime;
         float vtMove = Input.GetAxis("Vertical") * currentSpeed * Time.deltaTime;
 
@@ -87,10 +93,13 @@ public class PlayerController : MonoBehaviour
         }
 
         // Changes the height position of the player..
+
         
 
         velocity.y += gravity*2 * Time.deltaTime;
         controller.Move((velocity * Time.deltaTime) + move);
+
+        
 
 
         float dotPF = Vector3.Dot(transform.forward, controller.velocity);
@@ -183,43 +192,32 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    
-    void OnCollisionEnter(Collision collision)
-    {
-    }
     void OnTriggerEnter(Collider collision)
     {
         
         if (collision.gameObject.CompareTag("NextLevel"))
         {
-            PlayerPrefs.SetInt("CurrentLevel", (SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
-            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
-
+            SaveStateScript.instance.nextLevel();
         }
 
         if (collision.gameObject.CompareTag("PrevLevel"))
         {
-            PlayerPrefs.SetInt("CurrentLevel", (SceneManager.GetActiveScene().buildIndex - 1) % SceneManager.sceneCountInBuildSettings);
-            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
-
+            SaveStateScript.instance.prevLevel();
         }
 
         if (collision.gameObject.CompareTag("Level1"))
         {
-            PlayerPrefs.SetInt("CurrentLevel", 2);
-            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+            SaveStateScript.instance.loadLevel(2);
         }
 
         if (collision.gameObject.CompareTag("Level2"))
         {
-            PlayerPrefs.SetInt("CurrentLevel", 3);
-            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+            SaveStateScript.instance.loadLevel(3);
         }
 
         if (collision.gameObject.CompareTag("Level3"))
         {
-            PlayerPrefs.SetInt("CurrentLevel", 4);
-            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+            SaveStateScript.instance.loadLevel(4);
         }
 
         if (collision.gameObject.CompareTag("DeathZone"))
@@ -302,21 +300,20 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void nextLevelTeleport()
-    {
-        PlayerPrefs.SetInt("CurrentLevel", (SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
-        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
-    }
-
     public IEnumerator starEvent()
     {
-        yield return new WaitForSeconds(4);
-        nextLevelTeleport();
+        Time.timeScale = 0.05f;
+        yield return new WaitForSecondsRealtime(4);
+        Time.timeScale = 1f;
+        SaveStateScript.instance.nextLevel();
     }
     public IEnumerator gameOverEvent()
     {
-        yield return new WaitForSecondsRealtime(4);
-        canvasScript.menuScript.BackToMenu();
+        canvasScript.showGameOverScreen();
+        Time.timeScale = 0.05f;
+        yield return new WaitForSecondsRealtime(2);
+        Time.timeScale = 1f;
+        SaveStateScript.instance.loadLevel(0);
     }
 
     public void starNextlevel()
@@ -327,11 +324,7 @@ public class PlayerController : MonoBehaviour
 
     public void gameOver()
     {
-        canvasScript.showGameOverScreen();
-        Time.timeScale = 0.01f;
         StartCoroutine(gameOverEvent());
-
-
     }
 
 
