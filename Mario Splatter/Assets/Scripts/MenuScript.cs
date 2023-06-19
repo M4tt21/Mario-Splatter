@@ -31,9 +31,7 @@ public class MenuScript : MonoBehaviour
     }
     public void BackToMenu()
     {
-        Time.timeScale = 1f;
-
-        SaveStateScript.instance.loadLevel(0);
+        SaveStateScript.instance.resetToMenu();
     }
     public void Exit()
     {
