@@ -6,12 +6,16 @@ using UnityEngine;
 public class TrapScript : MonoBehaviour
 {
     [Header("General Trap Stats")]
+    [SerializeField] public bool isPermanent = false;
     [SerializeField] public float despawnTime = 5f;
     [SerializeField] public float damageToPlayer = 10f;
 
     private void Awake()
     {
-        StartCoroutine(despawnTimer());
+        if (!isPermanent)
+        {
+            StartCoroutine(despawnTimer());
+        }
     }
 
     private IEnumerator despawnTimer()

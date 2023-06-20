@@ -83,7 +83,11 @@ public class SaveStateScript : MonoBehaviour
 
     public void loadLevel(int level)
     {
-        if (mario != null) { mario.transform.position = new Vector3(mario.transform.position.x, mario.transform.position.y + 1000f, mario.transform.position.z); }
+        if (mario != null) 
+        { 
+            mario.transform.position = new Vector3(mario.transform.position.x, mario.transform.position.y + 1000f, mario.transform.position.z); 
+            mario.GetComponent<PlayerController>().isImmune = true;
+        }
         
         StartCoroutine(loadingTimer());
         
@@ -137,10 +141,11 @@ public class SaveStateScript : MonoBehaviour
             
             if (player != null && player != mario)
             {
+                mario.GetComponent<PlayerController>().isImmune = true;
                 Debug.Log("Found Scene Mario To Destroy, Replacing Coords");
-                mario.transform.position = player.transform.position;
                 mario.transform.rotation = player.transform.rotation;
                 mario.GetComponent<PlayerController>().startingPos = player.transform.position;
+                mario.transform.position = mario.GetComponent<PlayerController>().startingPos;
                 mario.GetComponent<PlayerController>().canvasScript = player.GetComponent<PlayerController>().canvasScript;
                 mario.GetComponent<PlayerController>().isImmune = false;
                 Destroy(player);
