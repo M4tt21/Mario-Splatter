@@ -16,6 +16,7 @@ public class Gun : MonoBehaviour
     public int currentAmmo;
 
     public bool isOutOfAmmo;
+    [SerializeField] public GameObject gunFX;
     protected ParticleSystem ps;
 
     //CD states
@@ -60,5 +61,19 @@ public class Gun : MonoBehaviour
     public void addAmmo(int amount)
     {
         ammoHeld += amount;
+    }
+
+    public void playFX(Vector3 position, Vector3 forwardDirection)
+    {
+        if (gunFX != null)
+        {
+            GameObject currentFX = Instantiate(gunFX);
+            currentFX.transform.position = position;
+            currentFX.transform.forward = forwardDirection;
+
+
+        }
+        else
+            Debug.Log("No FX Found.");
     }
 }

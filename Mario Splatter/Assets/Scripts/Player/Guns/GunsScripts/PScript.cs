@@ -51,13 +51,17 @@ public class PScript : Gun
 
             bool isValid = Physics.Raycast(origin, direction, out (hitLine));
 
-
-            if (isValid && hitLine.transform.CompareTag("Enemy"))
+            if ((isValid && hitLine.transform.CompareTag("Enemy")) )//If the line detects an enemy in between then damage that enemy
             {
                 hitLine.collider.gameObject.GetComponent<EnemyHit>().Hit(bulletDMG);
+                playFX(hitLine.point, direction);
+                Debug.Log("Colpito il nemico" + hitLine.collider + "" + hitLine.collider.gameObject.GetComponent<EnemyHit>());
 
-                Debug.Log("Colpito il nemico" + hitPoint.collider + "" + hitPoint.collider.gameObject.GetComponent<EnemyHit>());
-
+            }
+            else if (!isValid)//else if there was nothing standing in between hit the original enemy hit by the raycast
+            {
+                hitPoint.collider.gameObject.GetComponent<EnemyHit>().Hit(bulletDMG);
+                playFX(hitPoint.point, direction);
             }
         }
         StartCoroutine(gunCooldownTime());
