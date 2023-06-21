@@ -18,7 +18,7 @@ public class MenuScript : MonoBehaviour
     }
     public void LoadGame()
     {
-        SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+        SaveStateScript.instance.loadPlayer();
     }
     public void SelectLevel()
     {
