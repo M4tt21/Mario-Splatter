@@ -25,7 +25,8 @@ public class SGScript : Gun
             return;
         }
 
-        currentAmmo--;
+        if(!CheatsScript.instance.infiniteAmmo)
+            currentAmmo--;
 
         //Find what the player is shooting at
         RaycastHit hitPoint;
@@ -54,11 +55,11 @@ public class SGScript : Gun
                 Debug.DrawRay(origin, getRNGShotDirection(direction), Color.cyan, 2f);
                 bool isValid = Physics.Raycast(origin, getRNGShotDirection(direction), out (hitLine));
 
-                if (isValid && hitLine.transform.CompareTag("Enemy"))
+                if ((isValid && hitLine.transform.CompareTag("Enemy")))//If the line detects an enemy in between then damage that enemy
                 {
-                    hitLine.collider.gameObject.GetComponent<EnemyHit>().Hit(bulletDMG);
-
-                    Debug.Log("Colpito il nemico" + hitPoint.collider + "" + hitPoint.collider.gameObject.GetComponent<EnemyHit>());
+                    hitLine.collider.gameObject.GetComponent<EnemyHit>().Hit(bulletDMG * (CheatsScript.instance.instaKill ? 1000 : 1));
+                    playFX(hitLine.point, direction);
+                    Debug.Log("Colpito il nemico" + hitLine.collider + "" + hitLine.collider.gameObject.GetComponent<EnemyHit>());
                 }
             }
         }
