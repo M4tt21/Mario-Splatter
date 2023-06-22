@@ -19,6 +19,7 @@ public class DragonBossScript : EnemyController
     public float turnSpeed = 50f;
     public bool isAttacking = false;
     public bossActions bossStatus = bossActions.SPAWN;
+    public float fireBallForceMul = 10f;
 
     [Header("Boss Attacks Chances Rolled on Fixed Update")]
     public float fireballChance = .001f;
@@ -64,10 +65,10 @@ public class DragonBossScript : EnemyController
                     rollForAttack();
                     break;
                 case bossActions.SPIN:
-                    StartCoroutine(spinAttack(turnSpeed/5));
+                    StartCoroutine(spinAttack(turnSpeed/10));
                     break;
                 case bossActions.FIREBALL:
-                    StartCoroutine(fireBallAttack(10, 36, turnSpeed));
+                    StartCoroutine(fireBallAttack(10, 36, turnSpeed*2));
                     break;
             }
         }
@@ -126,7 +127,8 @@ public class DragonBossScript : EnemyController
     {
         GameObject currentFireball = Instantiate(FireBall);
         currentFireball.transform.position = fireBallSpawnPosition.position;
-        currentFireball.GetComponent<Rigidbody>().AddForce(transform.forward * 10, ForceMode.Impulse);
+        currentFireball.transform.forward = fireBallSpawnPosition.forward;
+        currentFireball.GetComponent<Rigidbody>().AddForce(fireBallSpawnPosition.forward * fireBallForceMul, ForceMode.Impulse);
     }
 
 
