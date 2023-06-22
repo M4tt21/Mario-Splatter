@@ -52,7 +52,7 @@ public class BossArenaControllerScript : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player") && bossInstantiated!=null)
         {
-            if(!bossInstantiated.GetComponent<EnemyController>().isDead) //If 
+            if(!bossInstantiated.GetComponent<EnemyController>().isDead) 
             { 
                 Destroy(bossInstantiated);
                 arenaDoor.SetActive(false);
