@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class MarioHealth : MonoBehaviour
@@ -54,7 +53,7 @@ public class MarioHealth : MonoBehaviour
 
     public void addShield(float percentageAmount)
     {
-        currentShield = math.clamp((maxShield * percentageAmount)+currentShield, 0, maxShield);
+        currentShield = Mathf.Clamp((maxShield * percentageAmount)+currentShield, 0, maxShield);
         
     }
 
