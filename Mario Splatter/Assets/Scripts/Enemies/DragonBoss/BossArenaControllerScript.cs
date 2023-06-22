@@ -37,7 +37,7 @@ public class BossArenaControllerScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") && bossInstantiated==null)
         {   
             //CLOSE THE ARENA DOOR
             arenaDoor.SetActive(true);
@@ -48,11 +48,11 @@ public class BossArenaControllerScript : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public void despawnBoss(Collider other)
     {
         if (other.gameObject.CompareTag("Player") && bossInstantiated!=null)
         {
-            if(!bossInstantiated.GetComponent<EnemyController>().isDead) //If 
+            if(!bossInstantiated.GetComponent<EnemyController>().isDead) 
             { 
                 Destroy(bossInstantiated);
                 arenaDoor.SetActive(false);
