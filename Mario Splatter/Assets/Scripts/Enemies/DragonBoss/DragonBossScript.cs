@@ -21,9 +21,10 @@ public class DragonBossScript : EnemyController
     public bossActions bossStatus = bossActions.SPAWN;
     public float fireBallForceMul = 10f;
 
-    [Header("Boss Attacks Chances Rolled on Fixed Update")]
-    public float fireballChance = .001f;
-    public float spinChance = .004f;
+    [Header("Boss Attacks Chances")]
+    public float rollCD = 1f;
+    public float fireballChance = 1f;
+    public float spinChance = 1f;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +39,7 @@ public class DragonBossScript : EnemyController
 
     private void Awake()
     {
+
         animator = gameObject.GetComponent<Animator>();
         bossStatus = bossActions.SPAWN;
         if(SaveStateScript.instance != null)
@@ -46,23 +48,28 @@ public class DragonBossScript : EnemyController
             player = GameObject.FindGameObjectWithTag("Player");
         initHealth(maxHealth);
         StartCoroutine(waitForSpawn());
+        StartCoroutine(rollForAttack());
     }
     private void FixedUpdate()
     {
+        Coroutine currentCoroutine = null;
         if (health <= 0 && !isDead)
         {
+            if (currentCoroutine != null)
+                StopCoroutine(currentCoroutine);
             death();
             return;
         }
         if (!isAttacking && !isDead)
         {
+            
+            
             switch (bossStatus)
             {
                 case bossActions.SPAWN:
                     return;
                 case bossActions.IDLE://When idle turn towards player
                     turnTowardsPlayer(turnSpeed);
-                    rollForAttack();
                     break;
                 case bossActions.SPIN:
                     StartCoroutine(spinAttack(turnSpeed/10));
@@ -76,7 +83,9 @@ public class DragonBossScript : EnemyController
 
     IEnumerator waitForSpawn()
     {
+        setCollidersHittable(false);
         while(animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn") || animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn -> Idle")) yield return null;
+        setCollidersHittable(true);
         Debug.Log("Boss Finished Spawn animation");
         bossStatus = bossActions.IDLE;
     }
@@ -161,23 +170,26 @@ public class DragonBossScript : EnemyController
         isAttacking = false;
     }
     //Function that rolls numbers to decide if to attack and what attack to do, it only modifies the bossStatus directly
-    public void rollForAttack()
+    IEnumerator rollForAttack()
     {
-        float randomN = Random.Range(0f, 1f);
-        Debug.Log("Rolled a <" + randomN + "> for the Boss.");
-        if(randomN < fireballChance)
+        while (!isDead)
         {
-            Debug.Log(randomN + " < " + "" + fireballChance);
-            bossStatus = bossActions.FIREBALL;
-        }
-        else if(randomN < fireballChance + spinChance)
-        {
-            Debug.Log(randomN + " < " + fireballChance + " + " + spinChance);
-            bossStatus = bossActions.SPIN;
-        }
-        else
-        {
-            return;
+            if (bossStatus == bossActions.IDLE)
+            {
+                float randomN = Random.Range(0f, 1f);
+                Debug.Log("Rolled a <" + randomN + "> for the Boss.");
+                if (randomN < fireballChance)
+                {
+                    Debug.Log(randomN + " < " + "" + fireballChance);
+                    bossStatus = bossActions.FIREBALL;
+                }
+                else if (randomN < fireballChance + spinChance)
+                {
+                    Debug.Log(randomN + " < " + fireballChance + " + " + spinChance);
+                    bossStatus = bossActions.SPIN;
+                }
+            }
+            yield return new WaitForSeconds(rollCD);
         }
     }
 
@@ -186,5 +198,16 @@ public class DragonBossScript : EnemyController
         Debug.Log("BOSS SCONFITTO");
         animator.SetTrigger("death");
         isDead = true;
+    }
+
+    void setCollidersHittable(bool value)
+    {
+        foreach (Collider collider in transform.GetComponentsInChildren<Collider>())
+        {
+            if (collider != null)
+            {
+                collider.enabled = value;
+            }
+        }
     }
 }

@@ -14,15 +14,23 @@ public class BossArenaControllerScript : MonoBehaviour
     [SerializeField]
     GameObject winDescend;
     [SerializeField]
-    bool isDescended=false;
+    GameObject[] winToDeactivate;
     [SerializeField]
-    float descendAmmount = -10f;
+    bool isDescended = false;
     [SerializeField]
     GameObject bossInstantiated = null;
     // Start is called before the first frame update
+    [Header("Pickups Info")]
+    public GameObject[] spawnablePickups;
+    
+    public Transform[] spawnPositions;
+    public float pickUpSpawnCD = 10f;
+
+    
+    private bool isInside = false;
     void Start()
     {
-        
+        winDescend.GetComponent<Rigidbody>().useGravity = false;
     }
 
     // Update is called once per frame
@@ -30,7 +38,12 @@ public class BossArenaControllerScript : MonoBehaviour
     {
         if(bossInstantiated != null && bossInstantiated.GetComponent<EnemyController>().isDead && !isDescended) //Check when the boss dies
         {
-            winDescend.transform.position = new Vector3 (winDescend.transform.position.x, winDescend.transform.position.y + descendAmmount, winDescend.transform.position.z);
+            winDescend.GetComponent<Rigidbody>().useGravity = true;
+            foreach(GameObject obj in winToDeactivate)
+            {
+                obj.SetActive(false);
+            }
+
             isDescended = true;
         }
     }
@@ -41,7 +54,10 @@ public class BossArenaControllerScript : MonoBehaviour
         {   
             //CLOSE THE ARENA DOOR
             arenaDoor.SetActive(true);
-            
+
+            isInside = true;
+            StartCoroutine(pickUpsCoroutine());
+
             bossInstantiated = Instantiate(bossToInstantiate);
             bossInstantiated.transform.position = bossSpawnPosition.position;
             bossInstantiated.transform.rotation = bossSpawnPosition.rotation;
@@ -56,8 +72,37 @@ public class BossArenaControllerScript : MonoBehaviour
             { 
                 Destroy(bossInstantiated);
                 arenaDoor.SetActive(false);
+                isInside = false;
                 bossInstantiated =null;
             }
+        }
+    }
+
+    IEnumerator pickUpsCoroutine()
+    {
+        GameObject[] spawnedPickups = new GameObject[spawnPositions.Length];
+        while (isInside)
+        {
+            yield return new WaitForSeconds(pickUpSpawnCD);
+
+            if(spawnedPickups != null)
+                foreach (GameObject pickup in spawnedPickups)
+                {
+                    if (pickup != null)
+                        Destroy(pickup);
+                }
+
+            for (int i=0; i<spawnPositions.Length; i++) 
+            {
+                spawnedPickups[i] = Instantiate(spawnablePickups[Random.Range(0, spawnablePickups.Length)]);
+                spawnedPickups[i].transform.position = new Vector3(spawnPositions[i].transform.position.x, spawnPositions[i].transform.position.y + 1, spawnPositions[i].transform.position.z);
+            }
+        }
+
+        foreach(GameObject pickUp in spawnedPickups)
+        {
+            if (pickUp != null)
+                Destroy(pickUp);
         }
     }
 }
