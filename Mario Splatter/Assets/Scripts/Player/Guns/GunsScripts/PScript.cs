@@ -24,7 +24,8 @@ public class PScript : Gun
             return;
         }
 
-        currentAmmo--;
+        if (!CheatsScript.instance.infiniteAmmo)
+            currentAmmo--;
 
         //Find what the player is shooting at
         RaycastHit hitPoint;
@@ -53,15 +54,10 @@ public class PScript : Gun
 
             if ((isValid && hitLine.transform.CompareTag("Enemy")) )//If the line detects an enemy in between then damage that enemy
             {
-                hitLine.collider.gameObject.GetComponent<EnemyHit>().Hit(bulletDMG);
+                hitLine.collider.gameObject.GetComponent<EnemyHit>().Hit(bulletDMG * (CheatsScript.instance.instaKill ? 1000 : 1));
                 playFX(hitLine.point, direction);
                 Debug.Log("Colpito il nemico" + hitLine.collider + "" + hitLine.collider.gameObject.GetComponent<EnemyHit>());
 
-            }
-            else if (!isValid)//else if there was nothing standing in between hit the original enemy hit by the raycast
-            {
-                hitPoint.collider.gameObject.GetComponent<EnemyHit>().Hit(bulletDMG);
-                playFX(hitPoint.point, direction);
             }
         }
         StartCoroutine(gunCooldownTime());
