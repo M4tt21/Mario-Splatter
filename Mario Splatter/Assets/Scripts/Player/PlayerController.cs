@@ -43,15 +43,13 @@ public class PlayerController : MonoBehaviour
     private Vector3 desiredCameraPos;
     private GameObject marioSkinDefault;
     private GameObject marioSkinShield;
+    private AudioSource audioSource;
     private Transform headPivot;
     private Transform cameraPivot;
 
-    [Header("Keybinds")] //Default keybinds needed only for debugging
-    public KeyCode reloadKey = KeyCode.R;
-    public KeyCode sprintKey = KeyCode.LeftShift;
-    public KeyCode jumpKey = KeyCode.Space;
-    [Range(0f, 1f)]
-    public float volume;
+    [Header("Sounds")] //Default keybinds needed only for debugging
+    public AudioClip jumpSound;
+
 
 
     // Start is called before the first frame update
@@ -66,6 +64,7 @@ public class PlayerController : MonoBehaviour
         marioSkinShield = transform.Find("MarioShield").gameObject;
         headPivot = transform.Find("Head");
         cameraPivot = transform.Find("CameraPivot");
+        audioSource = transform.GetComponent<AudioSource>();
         Input.ResetInputAxes();
         rotation = 0;
     }
@@ -159,26 +158,26 @@ public class PlayerController : MonoBehaviour
             guns.selectGun(GunsController.gunType.P);
 
         //Can only reload if hes not running 
-        if (guns.isCurrentGunEnabled && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(reloadKey)))
+        if (guns.isCurrentGunEnabled && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(SettingsScript.instance.reloadKey)))
         {
             guns.reloadCurrentGun();
         }
 
 
         //sprint
-        if (marioHealth.currentStamina>0 && Input.GetKey(sprintKey) && (Input.GetAxis("Vertical") > 0) && !Input.GetButton("Horizontal"))
+        if (marioHealth.currentStamina>0 && Input.GetKey(SettingsScript.instance.sprintKey) && (Input.GetAxis("Vertical") > 0) && !Input.GetButton("Horizontal"))
         {
             marioHealth.isStaminaConsuming = true && !CheatsScript.instance.infiniteStamina;
             if (currentSpeed < rSpeed) currentSpeed += rSpeed * Time.deltaTime;
             //Disable the gun when running
             guns.disableCurrentGun();
         }
-        else if (!(marioHealth.currentStamina > 0) || !Input.GetKey(sprintKey) || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0))
+        else if (!(marioHealth.currentStamina > 0) || !Input.GetKey(SettingsScript.instance.sprintKey) || Input.GetButton("Horizontal") || (Input.GetAxis("Vertical") < 0))
         {
             if (currentSpeed > wSpeed) currentSpeed -= wSpeed * Time.deltaTime;
         }
 
-        if (Input.GetKeyUp(sprintKey))
+        if (Input.GetKeyUp(SettingsScript.instance.sprintKey))
         {
             marioHealth.isStaminaConsuming = false;
             guns.enableCurrentGun();
@@ -188,6 +187,7 @@ public class PlayerController : MonoBehaviour
         {
             velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
             animator.SetTrigger("Jump");
+            audioSource.PlayOneShot(jumpSound);
         }
 
     }
