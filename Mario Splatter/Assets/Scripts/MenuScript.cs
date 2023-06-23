@@ -149,4 +149,24 @@ public class MenuScript : MonoBehaviour
     {
         SettingsScript.instance.submitChanges();
     }
+
+    public void give99Lives()
+    {
+        CheatsScript.instance.give99Lives();
+    }
+
+    public void skipLevel()
+    {
+        CheatsScript.instance.skipLevel();
+    }
+
+    public void unlockAllWeapons()
+    {
+        CheatsScript.instance.unlockAllWeapons();
+    }
+
+    public void setImmunityTrue()
+    {
+        CheatsScript.instance.immunity = true;
+    }
 }
