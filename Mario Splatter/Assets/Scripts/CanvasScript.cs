@@ -33,6 +33,8 @@ public class CanvasScript : MonoBehaviour
     [SerializeField]
     public GameObject PauseMenu;
     [SerializeField]
+    public GameObject CheatMenu;
+    [SerializeField]
     public GameObject OptionsMenuPausa;
     [SerializeField]
     public GameObject KeyBindsMenu;
@@ -139,6 +141,8 @@ public class CanvasScript : MonoBehaviour
         PauseMenu.SetActive(false);
         OptionsMenuPausa.SetActive(false);
         KeyBindsMenu.SetActive(false);
+        CheatMenu.SetActive(false);
+        
         
         OptionsMenuPausa.SetActive(false);
         UI.SetActive(true);
