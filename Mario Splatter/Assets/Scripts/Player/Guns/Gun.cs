@@ -70,10 +70,17 @@ public class Gun : MonoBehaviour
             GameObject currentFX = Instantiate(gunFX);
             currentFX.transform.position = position;
             currentFX.transform.forward = forwardDirection;
+            StartCoroutine(despawnFX(currentFX));
 
 
         }
         else
             Debug.Log("No FX Found.");
+    }
+
+    IEnumerator despawnFX(GameObject fx)
+    {
+        yield return new WaitForSeconds(1);
+        Destroy(fx);
     }
 }
