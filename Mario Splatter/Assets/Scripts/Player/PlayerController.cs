@@ -226,8 +226,12 @@ public class PlayerController : MonoBehaviour
             giveImmunity(immunitySec);
         }
 
+        Debug.Log(CheatsScript.instance.immunity);
         if (CheatsScript.instance.immunity)
+        {
+            Debug.Log("Immunita` attiva");
             return;
+        }
 
         //Danneggiamenti del player
         if (collision.gameObject.CompareTag( "Enemy"))
