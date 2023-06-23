@@ -9,6 +9,11 @@ using System;
 
 public class MenuScript : MonoBehaviour
 {
+    public Toggle toggleImmunity;
+    public Toggle toggleInfStam;
+    public Toggle toggleInfAmmo;
+    public Toggle toggleInstaKill;
+
     public GameObject PopUp;
     public Slider sens;
     public Slider volume;
@@ -165,8 +170,28 @@ public class MenuScript : MonoBehaviour
         CheatsScript.instance.unlockAllWeapons();
     }
 
-    public void setImmunityTrue()
+    public void setImmunity()
     {
-        CheatsScript.instance.immunity = true;
+        CheatsScript.instance.immunity = toggleImmunity.isOn;
+    }
+    public void setInfStam()
+    {
+        CheatsScript.instance.infiniteStamina = toggleInfStam.isOn;
+    }
+    public void setInfAmmo()
+    {
+        CheatsScript.instance.infiniteAmmo = toggleInfAmmo.isOn;
+    }
+    public void setInstaKill()
+    {
+        CheatsScript.instance.instaKill = toggleInstaKill.isOn;
+    }
+
+    public void updateCheckboxes()
+    {
+        toggleImmunity.isOn = CheatsScript.instance.immunity;
+        toggleInfStam.isOn = CheatsScript.instance.infiniteStamina;
+        toggleInfAmmo.isOn = CheatsScript.instance.infiniteAmmo;
+        toggleInstaKill.isOn = CheatsScript.instance.instaKill;
     }
 }
