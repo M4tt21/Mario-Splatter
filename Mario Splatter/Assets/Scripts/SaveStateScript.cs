@@ -57,6 +57,11 @@ public class SaveStateScript : MonoBehaviour
             return;
         }
 
+        if(scene.name == "Tutorial")
+        {
+            return;
+        }
+
         Debug.Log("Controller Loaded Into New Scene, checking Mario");
         checkMario();
         if (marioload)
