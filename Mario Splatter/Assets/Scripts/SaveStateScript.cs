@@ -59,6 +59,7 @@ public class SaveStateScript : MonoBehaviour
 
         if(scene.name == "Tutorial")
         {
+            checkMario();
             return;
         }
 

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class StarPickupScript : PickupScript
 {
+
+
     protected override void pickUpAction(GameObject player)
     {
         player.GetComponent<PlayerController>().starNextlevel();

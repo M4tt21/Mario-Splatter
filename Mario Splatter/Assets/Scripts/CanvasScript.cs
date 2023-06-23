@@ -69,7 +69,7 @@ public class CanvasScript : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(SettingsScript.instance.escKey))
+        if (Input.GetKeyDown(SettingsScript.instance.escKey) && !SaveStateScript.instance.isLoading)
         {
             if (isPaused)
             {

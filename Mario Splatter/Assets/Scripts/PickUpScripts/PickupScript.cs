@@ -5,7 +5,7 @@ using UnityEngine;
 public class PickupScript : MonoBehaviour
 {
     protected AudioSource audioSource;
-    private float destroyTime = 3f;
+    private float destroyTime = 4f;
     public bool isCollected=false;
 
     /* Parametri di movimento */

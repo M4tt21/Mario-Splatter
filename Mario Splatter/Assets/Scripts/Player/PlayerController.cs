@@ -49,6 +49,14 @@ public class PlayerController : MonoBehaviour
 
     [Header("Sounds")] //Default keybinds needed only for debugging
     public AudioClip jumpSound;
+    public AudioClip damageSound;
+
+    public AudioClip winMusic;
+    public AudioClip winMarioHappy1;
+
+    public AudioClip winMarioHappy2;
+
+
 
 
 
@@ -236,9 +244,10 @@ public class PlayerController : MonoBehaviour
         {
             
             if (isImmune)
-                return;    
+                return;
 
-            if(collision.TryGetComponent(out EnemyHit enemyHit))
+            audioSource.PlayOneShot(damageSound);
+            if (collision.TryGetComponent(out EnemyHit enemyHit))
             {
                 if (marioHealth.TakeDamage(enemyHit.controller.damageToPlayer)<=0)
                     death();
@@ -252,6 +261,7 @@ public class PlayerController : MonoBehaviour
             if (isImmune)
                 return;
 
+            audioSource.PlayOneShot(damageSound);
             if (collision.TryGetComponent(out TrapScript trapScript))
             {
                 if (marioHealth.TakeDamage(trapScript.damageToPlayer) <= 0)
@@ -305,9 +315,24 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator starEvent()
     {
+        SaveStateScript.instance.isLoading = true;
         Time.timeScale = 0.05f;
-        yield return new WaitForSecondsRealtime(4);
+        audioSource.PlayOneShot(winMusic);
+
+        yield return new WaitForSecondsRealtime(winMusic.length);
+
+        switch (UnityEngine.Random.Range(1, 2))
+        {
+            case 1:
+                audioSource.PlayOneShot(winMarioHappy1);
+                break;
+            case 2:
+                audioSource.PlayOneShot(winMarioHappy2);
+                break;
+        }
+        yield return new WaitForSecondsRealtime(3f);
         Time.timeScale = 1f;
+        SaveStateScript.instance.isLoading = false;
         SaveStateScript.instance.nextLevel();
     }
     public IEnumerator gameOverEvent()

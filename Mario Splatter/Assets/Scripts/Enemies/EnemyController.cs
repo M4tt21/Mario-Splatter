@@ -20,6 +20,7 @@ public class EnemyController : MonoBehaviour
     public bool isDead=false;
     public Animator animator;
     public NavMeshAgent navMeshAgent;
+    public AudioSource audioSource;
     [Header("NavMeshData")]
     public GameObject player;
 
@@ -32,6 +33,7 @@ public class EnemyController : MonoBehaviour
         navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         animator = gameObject.GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
     
 
