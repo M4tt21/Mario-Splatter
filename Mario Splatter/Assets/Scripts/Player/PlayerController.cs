@@ -168,7 +168,7 @@ public class PlayerController : MonoBehaviour
         //sprint
         if (marioHealth.currentStamina>0 && Input.GetKey(sprintKey) && (Input.GetAxis("Vertical") > 0) && !Input.GetButton("Horizontal"))
         {
-            marioHealth.isStaminaConsuming = true && !CheatsScript.instance.infiniteStamina;
+            marioHealth.isStaminaConsuming = true; //&& !CheatsScript.instance.infiniteStamina;
             if (currentSpeed < rSpeed) currentSpeed += rSpeed * Time.deltaTime;
             //Disable the gun when running
             guns.disableCurrentGun();
@@ -226,8 +226,8 @@ public class PlayerController : MonoBehaviour
             giveImmunity(immunitySec);
         }
 
-        if (CheatsScript.instance.immunity)
-            return;
+        //if (CheatsScript.instance.immunity)
+           // return;
 
         //Danneggiamenti del player
         if (collision.gameObject.CompareTag( "Enemy"))
