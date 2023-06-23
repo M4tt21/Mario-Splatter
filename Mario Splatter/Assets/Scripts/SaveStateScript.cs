@@ -50,6 +50,8 @@ public class SaveStateScript : MonoBehaviour
         Debug.Log("Scene is : " + scene.name);
         if (scene.name == "Menu" && mario != null)
         {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             Destroy(mario); 
             mario = null;
             return;
@@ -83,6 +85,7 @@ public class SaveStateScript : MonoBehaviour
 
     public void loadLevel(int level)
     {
+        Time.timeScale = 1f;
         if (mario != null) 
         { 
             mario.transform.position = new Vector3(mario.transform.position.x, mario.transform.position.y + 1000f, mario.transform.position.z); 
