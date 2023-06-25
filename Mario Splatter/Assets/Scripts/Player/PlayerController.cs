@@ -60,6 +60,8 @@ public class PlayerController : MonoBehaviour
     public AudioClip jumpSound;
     public AudioClip noAmmoSound;
     public AudioClip damageSound;
+    public AudioClip loseLifeSound;
+    public AudioClip gameOverSound;
     public AudioClip winMusic;
     public AudioClip winMarioHappy1;
     public AudioClip winMarioHappy2;
@@ -227,6 +229,14 @@ public class PlayerController : MonoBehaviour
         infStamina = value;
     }
 
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.gameObject.CompareTag("DeathZone"))
+        {
+            death();
+        }
+    }
+
     void OnTriggerEnter(Collider collision)
     {
         
@@ -258,27 +268,29 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("DeathZone"))
         {
             death();
-            giveImmunity(immunitySec);
         }
 
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
         if (CheatsScript.instance.immunity)
         {
             return;
         }
 
         //Danneggiamenti del player
-        if (collision.gameObject.CompareTag( "Enemy"))
+        if (other.gameObject.CompareTag("Enemy"))
         {
-            collision.TryGetComponent(out EnemyHit enemyHit);
+            other.TryGetComponent(out EnemyHit enemyHit);
             takeDamage(enemyHit.controller.damageToPlayer);
         }
 
-        if (collision.gameObject.CompareTag("Trap"))
+        if (other.gameObject.CompareTag("Trap"))
         {
-            collision.TryGetComponent(out TrapScript trapScript);
+            other.TryGetComponent(out TrapScript trapScript);
             takeDamage(trapScript.damageToPlayer);
         }
-
     }
 
     public void takeDamage(float value)
@@ -286,10 +298,14 @@ public class PlayerController : MonoBehaviour
         if (isImmune)
             return;
 
-        audioSource.PlayOneShot(damageSound);
+        
         setActiveInfiniteStamina(false);
         if (marioHealth.TakeDamage(value) <= 0)
+        {
             death();
+            return;
+        }
+        audioSource.PlayOneShot(damageSound);
         giveImmunity(immunitySec);
     }
 
@@ -332,8 +348,29 @@ public class PlayerController : MonoBehaviour
     private IEnumerator immunityTime(float time)
     {
         isImmune = true;
-        yield return new WaitForSeconds(time);
+
+        //Immunity Effect
+        float blinkDuration = 0.2f;
+        int timesToBlink = (int)Math.Round((time / blinkDuration), 0)/2;
+        for (int i = 0; i < timesToBlink; i++)
+        {
+            setActiveRenderers(false);
+            yield return new WaitForSeconds(blinkDuration);
+            setActiveRenderers(true);
+            yield return new WaitForSeconds(blinkDuration);
+        }
         isImmune = false;
+    }
+
+    private void setActiveRenderers(bool value)
+    {
+        foreach (Renderer renderer in transform.GetComponentsInChildren<Renderer>())
+        {
+            if (renderer != null)
+            {
+                renderer.enabled = value;
+            }
+        }
     }
 
     private void giveImmunity(float time)
@@ -343,18 +380,34 @@ public class PlayerController : MonoBehaviour
 
     public void death()
     {
+        StartCoroutine(deathEvent());
+    }
+
+    private IEnumerator deathEvent()
+    {
+        
+        SaveStateScript.instance.isLoading = true;
+        Time.timeScale = 0.1f;
+        audioSource.PlayOneShot(loseLifeSound);
+        yield return new WaitForSecondsRealtime(loseLifeSound.length);
+
+
+
+        Time.timeScale = 1f;
+        SaveStateScript.instance.isLoading = false;
+
         lives--;
-        if (lives <= 0) 
-        { 
+        if (lives <= 0)
+        {
             gameOver();
-            return;
+            yield break;
         }
 
+        giveImmunity(immunitySec);
         marioHealth.fullHealth();
 
         canvasScript.showLoseLifeScreen();
         transform.position = startingPos;
-
     }
 
     public IEnumerator starEvent()
@@ -382,9 +435,12 @@ public class PlayerController : MonoBehaviour
     public IEnumerator gameOverEvent()
     {
         canvasScript.showGameOverScreen();
-        Time.timeScale = 0.05f;
-        yield return new WaitForSecondsRealtime(2);
+        SaveStateScript.instance.isLoading = true;
+        Time.timeScale = 0.1f;
+        audioSource.PlayOneShot(gameOverSound);
+        yield return new WaitForSecondsRealtime(gameOverSound.length);
         Time.timeScale = 1f;
+        SaveStateScript.instance.isLoading = false;
         SaveStateScript.instance.loadLevel(0);
     }
 
