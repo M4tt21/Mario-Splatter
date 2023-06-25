@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LeafPickUpScript : PickupScript
+public class FakeStarPickUpScript : PickupScript
 {
     protected override void pickUpAction(GameObject player)
     {
-
-        player.GetComponent<PlayerController>().setActiveInfiniteStamina(true);
+        //Fake does nothing...
     }
 }

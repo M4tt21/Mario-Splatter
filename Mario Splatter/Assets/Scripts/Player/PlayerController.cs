@@ -13,7 +13,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-    GameObject GunScript;
+
+    public enum marioSkin {DEFAULT, SHIELD, STAM}
     
     private static float wSpeed = 5f;
     private static float rSpeed = 10f;
@@ -27,6 +28,7 @@ public class PlayerController : MonoBehaviour
     public GunsController guns;
     public CanvasScript canvasScript;
     public MarioHealth marioHealth;
+    public marioSkin currentSkin = marioSkin.DEFAULT;
 
     [Header("Player Stats")]
     public float jumpspeed = 2;
@@ -39,9 +41,8 @@ public class PlayerController : MonoBehaviour
 
 
 
-    bool infStamina = false;
-    bool shieldSkin = false;
-    bool defaultSkin = true;
+    public bool infStamina = false;
+    public bool isShielded = false;
 
 
     public bool isImmune;
@@ -59,10 +60,8 @@ public class PlayerController : MonoBehaviour
     public AudioClip jumpSound;
     public AudioClip noAmmoSound;
     public AudioClip damageSound;
-
     public AudioClip winMusic;
     public AudioClip winMarioHappy1;
-
     public AudioClip winMarioHappy2;
 
 
@@ -131,10 +130,24 @@ public class PlayerController : MonoBehaviour
 
         if (dotPF == 0 && dotPH == 0 && dotPV == 0) animator.SetBool("isStill", true);
 
-        setPower();
+        if(infStamina && currentSkin != marioSkin.STAM)
+        {
+            deactivateAllSkins();
+            setActiveSkin(marioSkin.STAM, true);
+        }
+        else if(marioHealth.currentShield>0 && currentSkin != marioSkin.SHIELD)
+        {
+            deactivateAllSkins();
+            setActiveSkin(marioSkin.SHIELD, true);
+        }
+        else if(currentSkin != marioSkin.DEFAULT)
+        {
+            deactivateAllSkins();
+            setActiveSkin(marioSkin.DEFAULT, true);
+        }
         
-            //Movimento Telecamera
-            rotation -= mouseY;
+        //Movimento Telecamera
+        rotation -= mouseY;
         rotation = Mathf.Clamp(rotation, -80f, 80f);
 
 
@@ -156,7 +169,7 @@ public class PlayerController : MonoBehaviour
 
 
         /*All Actions Below are unaccessible while reloading*/
-        if (guns.isReloading && guns.isReEquipping)
+        if (guns.isReloading || guns.isReEquipping)
         {
             marioHealth.isStaminaConsuming=false;
             return;
@@ -177,17 +190,14 @@ public class PlayerController : MonoBehaviour
         //Can only reload if hes not running 
         if (guns.isCurrentGunEnabled && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(SettingsScript.instance.reloadKey)))
         {
-            
-            //if (//non trovo il commando risolvilo)
-                guns.reloadCurrentGun();
-            //else audioSource.PlayOneShot(noAmmoSound);
+            guns.reloadCurrentGun();
         }
 
 
         //sprint
         if (marioHealth.currentStamina>0 && Input.GetKey(SettingsScript.instance.sprintKey) && (Input.GetAxis("Vertical") > 0) && !Input.GetButton("Horizontal"))
         {
-            marioHealth.isStaminaConsuming = true && !CheatsScript.instance.infiniteStamina && !infStamina;
+            marioHealth.isStaminaConsuming = !CheatsScript.instance.infiniteStamina && !infStamina;
             if (currentSpeed < rSpeed) currentSpeed += rSpeed * Time.deltaTime;
             //Disable the gun when running
             guns.disableCurrentGun();
@@ -212,26 +222,9 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    void setPower ()
+    public void setActiveInfiniteStamina(bool value)
     {
-        //Change Mario Skin if he has shield
-        if (marioHealth.currentShield > 0)
-        {
-            activateSkin(false, true, false);
-
-        }
-
-        else if (infStamina)
-            activateSkin(true,false,false);
-            
-        else activateSkin(false, false, true);
-
-
-
-    }
-    public void activateInfiniteStamina()
-    {
-        infStamina = true;
+        infStamina = value;
     }
 
     void OnTriggerEnter(Collider collision)
@@ -276,45 +269,55 @@ public class PlayerController : MonoBehaviour
         //Danneggiamenti del player
         if (collision.gameObject.CompareTag( "Enemy"))
         {
-            
-            if (isImmune)
-                return;
-
-            audioSource.PlayOneShot(damageSound);
-            if (collision.TryGetComponent(out EnemyHit enemyHit))
-            {
-                infStamina = false;
-                if (marioHealth.TakeDamage(enemyHit.controller.damageToPlayer)<=0)
-                    death();
-                giveImmunity(immunitySec);
-            }
+            collision.TryGetComponent(out EnemyHit enemyHit);
+            takeDamage(enemyHit.controller.damageToPlayer);
         }
 
         if (collision.gameObject.CompareTag("Trap"))
         {
-
-            if (isImmune)
-                return;
-
-            audioSource.PlayOneShot(damageSound);
-            if (collision.TryGetComponent(out TrapScript trapScript))
-            {
-                if (marioHealth.TakeDamage(trapScript.damageToPlayer) <= 0)
-                    death();
-                giveImmunity(immunitySec);
-            }
+            collision.TryGetComponent(out TrapScript trapScript);
+            takeDamage(trapScript.damageToPlayer);
         }
 
     }
 
-    public void activateSkin(bool stamina,bool shield,bool defaultS)
+    public void takeDamage(float value)
     {
-        Debug.Log("skin attivata");
-        marioSkinDefault.SetActive(defaultS);
-        marioSkinShield.SetActive(shield);
-        marioSkinStamina.SetActive(stamina);
+        if (isImmune)
+            return;
 
+        audioSource.PlayOneShot(damageSound);
+        setActiveInfiniteStamina(false);
+        if (marioHealth.TakeDamage(value) <= 0)
+            death();
+        giveImmunity(immunitySec);
     }
+
+
+
+    public void setActiveSkin(marioSkin skin, bool value)
+    {
+        switch(skin)
+        {
+            case marioSkin.DEFAULT:
+                marioSkinDefault.SetActive(value);
+                break;
+            case marioSkin.SHIELD:
+                marioSkinShield.SetActive(value);
+                break;
+            case marioSkin.STAM:
+                marioSkinStamina.SetActive(value);
+                break;
+        }
+    }
+
+    public void deactivateAllSkins()
+    {
+        setActiveSkin(marioSkin.DEFAULT, false);
+        setActiveSkin(marioSkin.SHIELD, false);
+        setActiveSkin(marioSkin.STAM, false);
+    }
+
 
 
 

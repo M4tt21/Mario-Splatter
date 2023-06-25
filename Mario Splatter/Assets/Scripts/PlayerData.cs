@@ -13,6 +13,7 @@ public class PlayerDataset
     public float currentHealth;
     public float currentShield;  
     public float currentStamina;
+    bool infStamina;
     public int lives;
     public int starCount;
     public int score;
@@ -36,6 +37,8 @@ public class PlayerDataset
         lives = player.lives;
         starCount = player.starCount;
         score = player.score;
+        infStamina = player.infStamina;
+
         ARAmmo = player.guns.getAmmoHeldOfGun(GunsController.gunType.AR);
         PAmmo = player.guns.getAmmoHeldOfGun(GunsController.gunType.P);
         SGAmmo = player.guns.getAmmoHeldOfGun(GunsController.gunType.SG);
@@ -61,6 +64,7 @@ public class PlayerDataset
         player.lives = lives;
         player.starCount = starCount;
         player.score = score;
+        player.infStamina = infStamina;
 
         player.guns.setAmmoHeldOfGun(GunsController.gunType.AR, ARAmmo);
         player.guns.setAmmoHeldOfGun(GunsController.gunType.P, PAmmo);
