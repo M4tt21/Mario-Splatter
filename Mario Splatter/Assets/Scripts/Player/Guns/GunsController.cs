@@ -172,15 +172,15 @@ public class GunsController : MonoBehaviour
         {
             case gunType.AR:
                 audioSource.PlayOneShot(ArReloadSound);
-                yield return new WaitForSeconds(tryGetGunObjFromType(currentGun).GetComponent<Gun>().reloadTime);
+                yield return new WaitForSeconds(ArReloadSound.length);
                 break;
             case gunType.SG:
                 audioSource.PlayOneShot(SgReloadSound);
-                yield return new WaitForSeconds(tryGetGunObjFromType(currentGun).GetComponent<Gun>().reloadTime);
+                yield return new WaitForSeconds(SgReloadSound.length);
                 break;
             case gunType.P:
                 audioSource.PlayOneShot(PReloadSound);
-                yield return new WaitForSeconds(tryGetGunObjFromType(currentGun).GetComponent<Gun>().reloadTime);
+                yield return new WaitForSeconds(PReloadSound.length);
                 break;
         }
         tryGetGunObjFromType(currentGun).GetComponent<Gun>().reload();

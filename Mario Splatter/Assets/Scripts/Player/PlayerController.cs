@@ -13,6 +13,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+    GameObject GunScript;
+    
     private static float wSpeed = 5f;
     private static float rSpeed = 10f;
     private float currentSpeed = wSpeed;
@@ -55,6 +57,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Sounds")] //Default keybinds needed only for debugging
     public AudioClip jumpSound;
+    public AudioClip noAmmoSound;
     public AudioClip damageSound;
 
     public AudioClip winMusic;
@@ -174,7 +177,10 @@ public class PlayerController : MonoBehaviour
         //Can only reload if hes not running 
         if (guns.isCurrentGunEnabled && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(SettingsScript.instance.reloadKey)))
         {
-            guns.reloadCurrentGun();
+            
+            //if (//non trovo il commando risolvilo)
+                guns.reloadCurrentGun();
+            //else audioSource.PlayOneShot(noAmmoSound);
         }
 
 
