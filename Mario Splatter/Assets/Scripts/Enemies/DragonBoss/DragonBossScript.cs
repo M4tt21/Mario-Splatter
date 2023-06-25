@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DragonBossScript : EnemyController
 {
     public enum bossActions { SPAWN, IDLE, SPIN, FIREBALL}
+    public Slider bossHealth;
     
     
     
@@ -26,16 +28,7 @@ public class DragonBossScript : EnemyController
     public float fireballChance = 1f;
     public float spinChance = 1f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
+   
 
     private void Awake()
     {
@@ -52,6 +45,8 @@ public class DragonBossScript : EnemyController
     }
     private void FixedUpdate()
     {
+        float fillBossHealthValue = health / maxHealth;
+        bossHealth.value = fillBossHealthValue;
         Coroutine currentCoroutine = null;
         if (health <= 0 && !isDead)
         {

@@ -27,12 +27,6 @@ public class CheatsScript : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void give99Lives()
     {
         SaveStateScript.instance.mario.GetComponent<PlayerController>().lives += 99;

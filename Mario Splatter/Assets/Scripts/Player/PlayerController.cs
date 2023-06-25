@@ -37,12 +37,18 @@ public class PlayerController : MonoBehaviour
 
 
 
+    bool infStamina = false;
+    bool shieldSkin = false;
+    bool defaultSkin = true;
+
+
     public bool isImmune;
     public Vector3 startingPos;
     private int startingLives=3;
     private Vector3 desiredCameraPos;
     private GameObject marioSkinDefault;
     private GameObject marioSkinShield;
+    private GameObject marioSkinStamina;
     private AudioSource audioSource;
     private Transform headPivot;
     private Transform cameraPivot;
@@ -70,6 +76,7 @@ public class PlayerController : MonoBehaviour
         desiredCameraPos = cameraTransform.localPosition;
         marioSkinDefault = transform.Find("MarioDefault").gameObject;
         marioSkinShield = transform.Find("MarioShield").gameObject;
+        marioSkinStamina = transform.Find("MarioStamina").gameObject;
         headPivot = transform.Find("Head");
         cameraPivot = transform.Find("CameraPivot");
         audioSource = transform.GetComponent<AudioSource>();
@@ -121,9 +128,8 @@ public class PlayerController : MonoBehaviour
 
         if (dotPF == 0 && dotPH == 0 && dotPV == 0) animator.SetBool("isStill", true);
 
-        //Change Mario Skin if he has shield
-        activateSkinShield(marioHealth.currentShield > 0);
-
+        setPower();
+        
             //Movimento Telecamera
             rotation -= mouseY;
         rotation = Mathf.Clamp(rotation, -80f, 80f);
@@ -175,7 +181,7 @@ public class PlayerController : MonoBehaviour
         //sprint
         if (marioHealth.currentStamina>0 && Input.GetKey(SettingsScript.instance.sprintKey) && (Input.GetAxis("Vertical") > 0) && !Input.GetButton("Horizontal"))
         {
-            marioHealth.isStaminaConsuming = true && !CheatsScript.instance.infiniteStamina;
+            marioHealth.isStaminaConsuming = true && !CheatsScript.instance.infiniteStamina && !infStamina;
             if (currentSpeed < rSpeed) currentSpeed += rSpeed * Time.deltaTime;
             //Disable the gun when running
             guns.disableCurrentGun();
@@ -198,6 +204,28 @@ public class PlayerController : MonoBehaviour
             audioSource.PlayOneShot(jumpSound);
         }
 
+    }
+
+    void setPower ()
+    {
+        //Change Mario Skin if he has shield
+        if (marioHealth.currentShield > 0)
+        {
+            activateSkin(false, true, false);
+
+        }
+
+        else if (infStamina)
+            activateSkin(true,false,false);
+            
+        else activateSkin(false, false, true);
+
+
+
+    }
+    public void activateInfiniteStamina()
+    {
+        infStamina = true;
     }
 
     void OnTriggerEnter(Collider collision)
@@ -249,6 +277,7 @@ public class PlayerController : MonoBehaviour
             audioSource.PlayOneShot(damageSound);
             if (collision.TryGetComponent(out EnemyHit enemyHit))
             {
+                infStamina = false;
                 if (marioHealth.TakeDamage(enemyHit.controller.damageToPlayer)<=0)
                     death();
                 giveImmunity(immunitySec);
@@ -272,11 +301,17 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void activateSkinShield(bool value)
+    public void activateSkin(bool stamina,bool shield,bool defaultS)
     {
-        marioSkinDefault.SetActive(!value);
-        marioSkinShield.SetActive(value);
+        Debug.Log("skin attivata");
+        marioSkinDefault.SetActive(defaultS);
+        marioSkinShield.SetActive(shield);
+        marioSkinStamina.SetActive(stamina);
+
     }
+
+
+
 
     private int turnDirection(float Axis)
     {  //1=Right -1=Left
@@ -344,6 +379,15 @@ public class PlayerController : MonoBehaviour
         SaveStateScript.instance.loadLevel(0);
     }
 
+    public IEnumerator youWinEvent()
+    {
+        canvasScript.showYouWinScreen();
+        Time.timeScale = 0.05f;
+        yield return new WaitForSecondsRealtime(5);
+        Time.timeScale = 1f;
+        SaveStateScript.instance.loadLevel(0);
+    }
+
     public void starNextlevel()
     {
         starCount++;
@@ -355,5 +399,9 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(gameOverEvent());
     }
 
+    public void youWin()
+    {
+        StartCoroutine(youWinEvent());
+    }
 
 }

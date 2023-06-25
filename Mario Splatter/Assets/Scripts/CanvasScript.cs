@@ -43,6 +43,8 @@ public class CanvasScript : MonoBehaviour
     [SerializeField]
     public GameObject GameOver;
     [SerializeField]
+    public GameObject YouWin;
+    [SerializeField]
     public GunsController guns;
     [SerializeField]
     public PlayerController player;
@@ -110,6 +112,11 @@ public class CanvasScript : MonoBehaviour
     public void showGameOverScreen()
     {
         GameOver.SetActive(true);
+    }
+
+    public void showYouWinScreen()
+    {
+       YouWin.SetActive(true);
     }
 
     private IEnumerator loseLifeScreenTime()

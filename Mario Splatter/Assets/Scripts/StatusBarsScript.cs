@@ -8,17 +8,15 @@ public class StatusBarsScript : MonoBehaviour
     private Slider sliderHealth;
     private Slider sliderShield;
     private Slider sliderStamina;
+
     void Start()
     {
         sliderHealth = transform.Find("SliderHealth").GetComponent<Slider>();
         sliderShield = transform.Find("SliderShield").GetComponent<Slider>();
         sliderStamina = transform.Find("SliderStamina").GetComponent<Slider>();
-
     }
     public void updateStatus(MarioHealth marioHealth)
     {
-   
-        
         float fillHealthValue = marioHealth.currentHealth / marioHealth.maxHealth;
         sliderHealth.value = fillHealthValue;
         

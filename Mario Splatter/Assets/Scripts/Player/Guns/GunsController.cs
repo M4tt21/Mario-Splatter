@@ -48,9 +48,14 @@ public class GunsController : MonoBehaviour
     
     private CanvasScript canvasScript;
 
+    private AudioSource audioSource;
+    public AudioClip ArReloadSound;
+    public AudioClip SgReloadSound;
+    public AudioClip PReloadSound;
+
     void Start()
     {
-
+        audioSource = transform.GetComponent<AudioSource>();
         //Starting Guns
         currentGun = startingGun;
         unlockGun(startingGun);
@@ -163,9 +168,21 @@ public class GunsController : MonoBehaviour
     public IEnumerator reloadTime()
     {
         isReloading = true;
-
-        yield return new WaitForSeconds(tryGetGunObjFromType(currentGun).GetComponent<Gun>().reloadTime);
-
+        switch (currentGun)
+        {
+            case gunType.AR:
+                audioSource.PlayOneShot(ArReloadSound);
+                yield return new WaitForSeconds(tryGetGunObjFromType(currentGun).GetComponent<Gun>().reloadTime);
+                break;
+            case gunType.SG:
+                audioSource.PlayOneShot(SgReloadSound);
+                yield return new WaitForSeconds(tryGetGunObjFromType(currentGun).GetComponent<Gun>().reloadTime);
+                break;
+            case gunType.P:
+                audioSource.PlayOneShot(PReloadSound);
+                yield return new WaitForSeconds(tryGetGunObjFromType(currentGun).GetComponent<Gun>().reloadTime);
+                break;
+        }
         tryGetGunObjFromType(currentGun).GetComponent<Gun>().reload();
         isCurrentGunOutOfAmmo = false;
         isReloading = false;
@@ -173,6 +190,7 @@ public class GunsController : MonoBehaviour
 
     public void reloadCurrentGun()
     {
+        Debug.Log("" + currentGun);
         if (isReloading)
             return;
         StartCoroutine(reloadTime());
