@@ -70,10 +70,10 @@ public class DragonBossScript : EnemyController
                     turnTowardsPlayer(turnSpeed);
                     break;
                 case bossActions.SPIN:
-                    StartCoroutine(spinAttack(turnSpeed/10));
+                    StartCoroutine(spinAttack(turnSpeed/5));
                     break;
                 case bossActions.FIREBALL:
-                    StartCoroutine(fireBallAttack(10, 36, turnSpeed*2));
+                    StartCoroutine(fireBallAttack());
                     break;
             }
         }
@@ -139,7 +139,7 @@ public class DragonBossScript : EnemyController
     }
 
 
-    IEnumerator fireBallAttack(int nBalls, float spinDgrsBtwBalls, float speed)
+    IEnumerator fireBallAttack()
     {
         isAttacking = true;
         animator.SetTrigger("spitFireBallStart");//Play the starting animation
