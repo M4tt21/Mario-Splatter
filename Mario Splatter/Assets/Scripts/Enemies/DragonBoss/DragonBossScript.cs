@@ -83,8 +83,10 @@ public class DragonBossScript : EnemyController
     IEnumerator waitForSpawn()
     {
         setCollidersHittable(false);
+        
+        while (animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 0.6) yield return null;
         audioSource.PlayOneShot(spawnSound);
-        while(animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn") || animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn -> Idle")) yield return null;
+        while (animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn") || animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn -> Idle")) yield return null;
         setCollidersHittable(true);
         Debug.Log("Boss Finished Spawn animation");
         bossStatus = bossActions.IDLE;
