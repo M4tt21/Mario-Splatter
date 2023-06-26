@@ -83,7 +83,6 @@ public class DragonBossScript : EnemyController
     IEnumerator waitForSpawn()
     {
         setCollidersHittable(false);
-        Debug.Log("" + audioSource + spawnSound);
         audioSource.PlayOneShot(spawnSound);
         while(animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn") || animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn -> Idle")) yield return null;
         setCollidersHittable(true);
@@ -103,12 +102,13 @@ public class DragonBossScript : EnemyController
     {
         isAttacking = true;
         animator.SetTrigger("spinAttackStart");//Play the starting animation
-        audioSource.PlayOneShot(lavaPillarSound);
+        
         while (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") || //Animarot needs to Sync Up
             animator.GetCurrentAnimatorStateInfo(0).IsName("Idle -> SpinAttackStart") || 
             animator.GetCurrentAnimatorStateInfo(0).IsName("SpinAttackStart") ||
             animator.GetCurrentAnimatorStateInfo(0).IsName("SpinAttackStart -> SpinAttack")) yield return null; //Wait for the starting animation to end
         //Activate the Lava Pillar 
+        audioSource.PlayOneShot(lavaPillarSound);
         lavaPillar.SetActive(true);
         //Spin Around
         float startRotation = transform.eulerAngles.y;
