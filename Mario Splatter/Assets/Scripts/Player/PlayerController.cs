@@ -194,9 +194,9 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (guns.GetCurrentGun()==GunsController.gunType.P && Input.GetButtonDown("Fire1") && Time.timeScale!=0 && !animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
+        if (guns.GetCurrentGun()==GunsController.gunType.P && Input.GetButtonDown("Fire1") && Time.timeScale!=0 && !animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && !guns.isReEquipping)
             guns.fireCurrentGun();
-        else if (guns.GetCurrentGun() != GunsController.gunType.P && Input.GetButton("Fire1") && Time.timeScale!=0 && !animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
+        else if (guns.GetCurrentGun() != GunsController.gunType.P && Input.GetButton("Fire1") && Time.timeScale!=0 && !animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && !guns.isReEquipping)
             guns.fireCurrentGun();
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) //Rifle

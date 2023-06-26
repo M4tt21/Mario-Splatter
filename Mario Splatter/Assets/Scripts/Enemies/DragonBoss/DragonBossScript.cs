@@ -71,7 +71,7 @@ public class DragonBossScript : EnemyController
                     turnTowardsPlayer(turnSpeed);
                     break;
                 case bossActions.SPIN:
-                    StartCoroutine(spinAttack(turnSpeed/15));
+                    StartCoroutine(spinAttack(turnSpeed/20));
                     break;
                 case bossActions.FIREBALL:
                     StartCoroutine(fireBallAttack());
@@ -113,16 +113,20 @@ public class DragonBossScript : EnemyController
         audioSource.PlayOneShot(lavaPillarSound);
         lavaPillar.SetActive(true);
         //Spin Around
-        float startRotation = transform.eulerAngles.y;
-        float endRotation = startRotation + 360.0f;
-        float t = 0.0f;
-        while (t < speed)
+        for (int i = 0; i < 2; i++)
         {
-            t += Time.deltaTime;
-            float yRotation = Mathf.Lerp(startRotation, endRotation, t / speed) % 360.0f;
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, yRotation, transform.eulerAngles.z);
-            yield return null;
+            float startRotation = transform.eulerAngles.y;
+            float endRotation = startRotation + 360.0f;
+            float t = 0.0f;
+            while (t < speed)
+            {
+                t += Time.deltaTime;
+                float yRotation = Mathf.Lerp(startRotation, endRotation, t / speed) % 360.0f;
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, yRotation, transform.eulerAngles.z);
+                yield return null;
+            }
         }
+        
         //Deactivate the pillar
         lavaPillar.SetActive(false);
         //Play the Ending Animation
