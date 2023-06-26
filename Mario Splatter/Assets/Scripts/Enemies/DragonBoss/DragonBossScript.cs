@@ -70,7 +70,7 @@ public class DragonBossScript : EnemyController
                     turnTowardsPlayer(turnSpeed);
                     break;
                 case bossActions.SPIN:
-                    StartCoroutine(spinAttack(turnSpeed/5));
+                    StartCoroutine(spinAttack(turnSpeed/200));
                     break;
                 case bossActions.FIREBALL:
                     StartCoroutine(fireBallAttack());
