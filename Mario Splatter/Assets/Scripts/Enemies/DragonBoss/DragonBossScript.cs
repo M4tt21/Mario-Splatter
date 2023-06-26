@@ -54,11 +54,8 @@ public class DragonBossScript : EnemyController
     {
         float fillBossHealthValue = health / maxHealth;
         bossHealth.value = fillBossHealthValue;
-        Coroutine currentCoroutine = null;
         if (health <= 0 && !isDead)
         {
-            if (currentCoroutine != null)
-                StopCoroutine(currentCoroutine);
             death();
             return;
         }
