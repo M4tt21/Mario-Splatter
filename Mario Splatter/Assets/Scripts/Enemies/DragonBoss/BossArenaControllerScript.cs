@@ -59,6 +59,7 @@ public class BossArenaControllerScript : MonoBehaviour
             StartCoroutine(pickUpsCoroutine());
 
             bossInstantiated = Instantiate(bossToInstantiate);
+            
             bossInstantiated.transform.position = bossSpawnPosition.position;
             bossInstantiated.transform.forward = bossSpawnPosition.forward;
         }

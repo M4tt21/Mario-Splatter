@@ -39,7 +39,7 @@ public class DragonBossScript : EnemyController
 
     private void Awake()
     {
-
+        audioSource = gameObject.GetComponent<AudioSource>();
         animator = gameObject.GetComponent<Animator>();
         bossStatus = bossActions.SPAWN;
         if(SaveStateScript.instance != null)
@@ -83,6 +83,7 @@ public class DragonBossScript : EnemyController
     IEnumerator waitForSpawn()
     {
         setCollidersHittable(false);
+        Debug.Log("" + audioSource + spawnSound);
         audioSource.PlayOneShot(spawnSound);
         while(animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn") || animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn -> Idle")) yield return null;
         setCollidersHittable(true);
