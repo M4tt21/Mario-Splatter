@@ -314,7 +314,7 @@ public class PlayerController : MonoBehaviour
         if (isImmune)
             return;
 
-        
+        isImmune = true;
         setActiveInfiniteStamina(false);
         if (marioHealth.TakeDamage(value) <= 0)
         {
@@ -366,7 +366,7 @@ public class PlayerController : MonoBehaviour
         isImmune = true;
 
         //Immunity Effect
-        float blinkDuration = 0.2f;
+        float blinkDuration = 0.1f;
         int timesToBlink = (int)Math.Round((time / blinkDuration), 0)/2;
         for (int i = 0; i < timesToBlink; i++)
         {
@@ -426,7 +426,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator deathEvent()
     {
-        
+        isImmune = true;
         SaveStateScript.instance.isLoading = true;
         Time.timeScale = 0.1f;
         audioSource.PlayOneShot(loseLifeSound);
@@ -455,7 +455,7 @@ public class PlayerController : MonoBehaviour
     public IEnumerator starEvent()
     {
         SaveStateScript.instance.isLoading = true;
-        Time.timeScale = 0.05f;
+        Time.timeScale = 0.1f;
         audioSource.PlayOneShot(winMusic);
 
         yield return new WaitForSecondsRealtime(winMusic.length);
