@@ -60,7 +60,7 @@ public class BossArenaControllerScript : MonoBehaviour
 
             bossInstantiated = Instantiate(bossToInstantiate);
             bossInstantiated.transform.position = bossSpawnPosition.position;
-            bossInstantiated.transform.rotation = bossSpawnPosition.rotation;
+            bossInstantiated.transform.forward = bossSpawnPosition.forward;
         }
     }
 
