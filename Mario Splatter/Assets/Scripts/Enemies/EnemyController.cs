@@ -34,6 +34,7 @@ public class EnemyController : MonoBehaviour
         animator = gameObject.GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
         audioSource = gameObject.GetComponent<AudioSource>();
+
     }
     
 
