@@ -31,11 +31,15 @@ public class DragonBossScript : EnemyController
     [Range(0f, 1f)]
     public float spinChance = 0.1f;
 
-   
+    [Header("Boss Sounds")]
+    public AudioClip spawnSound;
+    public AudioClip fireballSpitSound;
+    public AudioClip lavaPillarSound;
+
 
     private void Awake()
     {
-
+        audioSource = gameObject.GetComponent<AudioSource>();
         animator = gameObject.GetComponent<Animator>();
         bossStatus = bossActions.SPAWN;
         if(SaveStateScript.instance != null)
@@ -50,11 +54,8 @@ public class DragonBossScript : EnemyController
     {
         float fillBossHealthValue = health / maxHealth;
         bossHealth.value = fillBossHealthValue;
-        Coroutine currentCoroutine = null;
         if (health <= 0 && !isDead)
         {
-            if (currentCoroutine != null)
-                StopCoroutine(currentCoroutine);
             death();
             return;
         }
@@ -70,7 +71,7 @@ public class DragonBossScript : EnemyController
                     turnTowardsPlayer(turnSpeed);
                     break;
                 case bossActions.SPIN:
-                    StartCoroutine(spinAttack(turnSpeed/200));
+                    StartCoroutine(spinAttack(turnSpeed/15));
                     break;
                 case bossActions.FIREBALL:
                     StartCoroutine(fireBallAttack());
@@ -82,6 +83,8 @@ public class DragonBossScript : EnemyController
     IEnumerator waitForSpawn()
     {
         setCollidersHittable(false);
+        Debug.Log("" + audioSource + spawnSound);
+        audioSource.PlayOneShot(spawnSound);
         while(animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn") || animator.GetCurrentAnimatorStateInfo(0).IsName("Spawn -> Idle")) yield return null;
         setCollidersHittable(true);
         Debug.Log("Boss Finished Spawn animation");
@@ -100,6 +103,7 @@ public class DragonBossScript : EnemyController
     {
         isAttacking = true;
         animator.SetTrigger("spinAttackStart");//Play the starting animation
+        audioSource.PlayOneShot(lavaPillarSound);
         while (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") || //Animarot needs to Sync Up
             animator.GetCurrentAnimatorStateInfo(0).IsName("Idle -> SpinAttackStart") || 
             animator.GetCurrentAnimatorStateInfo(0).IsName("SpinAttackStart") ||
@@ -147,6 +151,7 @@ public class DragonBossScript : EnemyController
             animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBallStart") ||
             animator.GetCurrentAnimatorStateInfo(0).IsName("Idle -> SpitFireBallStart") ||
             animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBallStart -> SpitFireBall")) yield return null; //Wait for the starting animation to end
+        audioSource.PlayOneShot(fireballSpitSound);
         spitFireBall();
         while (animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBall") ||
             animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBall -> SpitFireBallEnd") ||
@@ -183,6 +188,8 @@ public class DragonBossScript : EnemyController
     public override void death()
     {
         Debug.Log("BOSS SCONFITTO");
+        StopAllCoroutines();
+        lavaPillar.SetActive(false);
         animator.SetTrigger("death");
         isDead = true;
     }
