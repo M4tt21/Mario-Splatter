@@ -12,6 +12,8 @@ public class BossArenaControllerScript : MonoBehaviour
     [SerializeField]
     GameObject arenaDoor;
     [SerializeField]
+    GameObject fakeStar;
+    [SerializeField]
     GameObject winDescend;
     [SerializeField]
     GameObject[] winToDeactivate;
@@ -19,6 +21,10 @@ public class BossArenaControllerScript : MonoBehaviour
     bool isDescended = false;
     [SerializeField]
     GameObject bossInstantiated = null;
+    [SerializeField]
+    AudioSource audioSource;
+    [SerializeField]
+    AudioClip gateCloseSound;
     // Start is called before the first frame update
     [Header("Pickups Info")]
     public GameObject[] spawnablePickups;
@@ -51,9 +57,12 @@ public class BossArenaControllerScript : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player") && bossInstantiated==null)
-        {   
+        {
+
             //CLOSE THE ARENA DOOR
+            audioSource.PlayOneShot(gateCloseSound);
             arenaDoor.SetActive(true);
+            fakeStar.SetActive(false);
 
             isInside = true;
             StartCoroutine(pickUpsCoroutine());
