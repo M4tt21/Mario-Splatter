@@ -10,6 +10,7 @@ public class ARScript : Gun
         currentAmmo = magazineSize;
         isOutOfAmmo = false;
         ps = transform.Find("muzzle").Find("Particle System").GetComponent<ParticleSystem>();
+        audioSource = GetComponent<AudioSource>();
     }
 
 
@@ -18,7 +19,9 @@ public class ARScript : Gun
         if (isOnCooldown)
             return;
 
-        if (currentAmmo == 0) { 
+        if (currentAmmo<=0) {
+            if (ammoHeld <= 0)
+                audioSource.PlayOneShot(noAmmoSound);
             isOutOfAmmo = true;
             return;
         }
@@ -32,13 +35,12 @@ public class ARScript : Gun
         RaycastHit hitLine;
 
 
-        AudioSource a = gameObject.GetComponent<AudioSource>();
-        a.Play();
+        audioSource.PlayOneShot(shotSound);
         ps.Play();
 
         bool raycastResCamera = Physics.Raycast(camera.transform.position, camera.transform.forward, out (hitPoint), Mathf.Infinity);
 
-        if (raycastResCamera && hitPoint.transform.CompareTag("Enemy"))
+        if (raycastResCamera)
         {
 
             Vector3 origin = transform.Find("muzzle").transform.position;
@@ -57,6 +59,10 @@ public class ARScript : Gun
                 playFX(hitLine.point, direction);
                 Debug.Log("Colpito il nemico" + hitLine.collider + "" + hitLine.collider.gameObject.GetComponent<EnemyHit>());
 
+            }
+            else if (isValid)
+            {
+                playGroundFX(hitLine.point, direction, hitLine.normal);
             }
         }
         StartCoroutine(gunCooldownTime());

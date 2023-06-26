@@ -45,17 +45,10 @@ public class GunsController : MonoBehaviour
 
     //Gun data
     private Dictionary<gunType, GameObject> GunsData;
-    
-    private CanvasScript canvasScript;
 
-    private AudioSource audioSource;
-    public AudioClip ArReloadSound;
-    public AudioClip SgReloadSound;
-    public AudioClip PReloadSound;
 
     void Start()
     {
-        audioSource = transform.GetComponent<AudioSource>();
         //Starting Guns
         currentGun = startingGun;
         unlockGun(startingGun);
@@ -168,22 +161,13 @@ public class GunsController : MonoBehaviour
     public IEnumerator reloadTime()
     {
         isReloading = true;
-        switch (currentGun)
-        {
-            case gunType.AR:
-                audioSource.PlayOneShot(ArReloadSound);
-                yield return new WaitForSeconds(tryGetGunObjFromType(currentGun).GetComponent<Gun>().reloadTime);
-                break;
-            case gunType.SG:
-                audioSource.PlayOneShot(SgReloadSound);
-                yield return new WaitForSeconds(tryGetGunObjFromType(currentGun).GetComponent<Gun>().reloadTime);
-                break;
-            case gunType.P:
-                audioSource.PlayOneShot(PReloadSound);
-                yield return new WaitForSeconds(tryGetGunObjFromType(currentGun).GetComponent<Gun>().reloadTime);
-                break;
-        }
-        tryGetGunObjFromType(currentGun).GetComponent<Gun>().reload();
+
+        Gun gunScript = tryGetGunObjFromType(currentGun).GetComponent<Gun>();
+
+        gunScript.playReloadSound();
+        yield return new WaitForSeconds(gunScript.reloadSound.length);
+
+        gunScript.reload();
         isCurrentGunOutOfAmmo = false;
         isReloading = false;
     }

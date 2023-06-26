@@ -7,6 +7,6 @@ public class LeafPickUpScript : PickupScript
     protected override void pickUpAction(GameObject player)
     {
 
-        player.GetComponent<PlayerController>().activateInfiniteStamina();
+        player.GetComponent<PlayerController>().setActiveInfiniteStamina(true);
     }
 }

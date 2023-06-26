@@ -65,4 +65,9 @@ public class MarioHealth : MonoBehaviour
     {
         currentStamina = maxStamina;
     }
+
+    public void heal(float amountPerc)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + (maxHealth * amountPerc), 0, maxHealth);
+    }
 }

@@ -13,6 +13,9 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+
+    public enum marioSkin {DEFAULT, SHIELD, STAM}
+    
     private static float wSpeed = 5f;
     private static float rSpeed = 10f;
     private float currentSpeed = wSpeed;
@@ -25,6 +28,7 @@ public class PlayerController : MonoBehaviour
     public GunsController guns;
     public CanvasScript canvasScript;
     public MarioHealth marioHealth;
+    public marioSkin currentSkin = marioSkin.DEFAULT;
 
     [Header("Player Stats")]
     public float jumpspeed = 2;
@@ -37,9 +41,8 @@ public class PlayerController : MonoBehaviour
 
 
 
-    bool infStamina = false;
-    bool shieldSkin = false;
-    bool defaultSkin = true;
+    public bool infStamina = false;
+    public bool isShielded = false;
 
 
     public bool isImmune;
@@ -55,11 +58,12 @@ public class PlayerController : MonoBehaviour
 
     [Header("Sounds")] //Default keybinds needed only for debugging
     public AudioClip jumpSound;
+    public AudioClip noAmmoSound;
     public AudioClip damageSound;
-
+    public AudioClip loseLifeSound;
+    public AudioClip gameOverSound;
     public AudioClip winMusic;
     public AudioClip winMarioHappy1;
-
     public AudioClip winMarioHappy2;
 
 
@@ -128,10 +132,40 @@ public class PlayerController : MonoBehaviour
 
         if (dotPF == 0 && dotPH == 0 && dotPV == 0) animator.SetBool("isStill", true);
 
-        setPower();
         
-            //Movimento Telecamera
-            rotation -= mouseY;
+        if(infStamina)
+        {
+            if (currentSkin != marioSkin.STAM)
+            {
+                Debug.Log("Current skin " + currentSkin + " into STAM");
+                deactivateAllSkins();
+                setActiveSkin(marioSkin.STAM, true);
+                currentSkin = marioSkin.STAM;
+            }
+        }
+        else if(marioHealth.currentShield>0)
+        {
+            if (currentSkin != marioSkin.SHIELD)
+            {
+                Debug.Log("perche sono qua SHIELD");
+                deactivateAllSkins();
+                setActiveSkin(marioSkin.SHIELD, true);
+                currentSkin = marioSkin.SHIELD;
+            }
+        }
+        else
+        {
+            if (currentSkin != marioSkin.DEFAULT)
+            {
+                Debug.Log("perche sono qua DEFAULT");
+                deactivateAllSkins();
+                setActiveSkin(marioSkin.DEFAULT, true);
+                currentSkin = marioSkin.DEFAULT;
+            }
+        }
+        
+        //Movimento Telecamera
+        rotation -= mouseY;
         rotation = Mathf.Clamp(rotation, -80f, 80f);
 
 
@@ -153,7 +187,7 @@ public class PlayerController : MonoBehaviour
 
 
         /*All Actions Below are unaccessible while reloading*/
-        if (guns.isReloading && guns.isReEquipping)
+        if (guns.isReloading || guns.isReEquipping)
         {
             marioHealth.isStaminaConsuming=false;
             return;
@@ -181,7 +215,7 @@ public class PlayerController : MonoBehaviour
         //sprint
         if (marioHealth.currentStamina>0 && Input.GetKey(SettingsScript.instance.sprintKey) && (Input.GetAxis("Vertical") > 0) && !Input.GetButton("Horizontal"))
         {
-            marioHealth.isStaminaConsuming = true && !CheatsScript.instance.infiniteStamina && !infStamina;
+            marioHealth.isStaminaConsuming = !CheatsScript.instance.infiniteStamina && !infStamina;
             if (currentSpeed < rSpeed) currentSpeed += rSpeed * Time.deltaTime;
             //Disable the gun when running
             guns.disableCurrentGun();
@@ -206,26 +240,17 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    void setPower ()
+    public void setActiveInfiniteStamina(bool value)
     {
-        //Change Mario Skin if he has shield
-        if (marioHealth.currentShield > 0)
-        {
-            activateSkin(false, true, false);
-
-        }
-
-        else if (infStamina)
-            activateSkin(true,false,false);
-            
-        else activateSkin(false, false, true);
-
-
-
+        infStamina = value;
     }
-    public void activateInfiniteStamina()
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        infStamina = true;
+        if (hit.gameObject.CompareTag("DeathZone"))
+        {
+            death();
+        }
     }
 
     void OnTriggerEnter(Collider collision)
@@ -259,56 +284,72 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("DeathZone"))
         {
             death();
-            giveImmunity(immunitySec);
         }
 
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
         if (CheatsScript.instance.immunity)
         {
             return;
         }
 
         //Danneggiamenti del player
-        if (collision.gameObject.CompareTag( "Enemy"))
+        if (other.gameObject.CompareTag("Enemy"))
         {
-            
-            if (isImmune)
-                return;
-
-            audioSource.PlayOneShot(damageSound);
-            if (collision.TryGetComponent(out EnemyHit enemyHit))
-            {
-                infStamina = false;
-                if (marioHealth.TakeDamage(enemyHit.controller.damageToPlayer)<=0)
-                    death();
-                giveImmunity(immunitySec);
-            }
+            other.TryGetComponent(out EnemyHit enemyHit);
+            takeDamage(enemyHit.controller.damageToPlayer);
         }
 
-        if (collision.gameObject.CompareTag("Trap"))
+        if (other.gameObject.CompareTag("Trap"))
         {
-
-            if (isImmune)
-                return;
-
-            audioSource.PlayOneShot(damageSound);
-            if (collision.TryGetComponent(out TrapScript trapScript))
-            {
-                if (marioHealth.TakeDamage(trapScript.damageToPlayer) <= 0)
-                    death();
-                giveImmunity(immunitySec);
-            }
+            other.TryGetComponent(out TrapScript trapScript);
+            takeDamage(trapScript.damageToPlayer);
         }
-
     }
 
-    public void activateSkin(bool stamina,bool shield,bool defaultS)
+    public void takeDamage(float value)
     {
-        Debug.Log("skin attivata");
-        marioSkinDefault.SetActive(defaultS);
-        marioSkinShield.SetActive(shield);
-        marioSkinStamina.SetActive(stamina);
+        if (isImmune)
+            return;
 
+        
+        setActiveInfiniteStamina(false);
+        if (marioHealth.TakeDamage(value) <= 0)
+        {
+            death();
+            return;
+        }
+        audioSource.PlayOneShot(damageSound);
+        giveImmunity(immunitySec);
     }
+
+
+
+    public void setActiveSkin(marioSkin skin, bool value)
+    {
+        switch(skin)
+        {
+            case marioSkin.DEFAULT:
+                marioSkinDefault.SetActive(value);
+                break;
+            case marioSkin.SHIELD:
+                marioSkinShield.SetActive(value);
+                break;
+            case marioSkin.STAM:
+                marioSkinStamina.SetActive(value);
+                break;
+        }
+    }
+
+    public void deactivateAllSkins()
+    {
+        setActiveSkin(marioSkin.DEFAULT, false);
+        setActiveSkin(marioSkin.SHIELD, false);
+        setActiveSkin(marioSkin.STAM, false);
+    }
+
 
 
 
@@ -323,8 +364,54 @@ public class PlayerController : MonoBehaviour
     private IEnumerator immunityTime(float time)
     {
         isImmune = true;
-        yield return new WaitForSeconds(time);
+
+        //Immunity Effect
+        float blinkDuration = 0.2f;
+        int timesToBlink = (int)Math.Round((time / blinkDuration), 0)/2;
+        for (int i = 0; i < timesToBlink; i++)
+        {
+            Renderer[] currentRenderers = getActiveRenderers();
+            setActiveRenderers(currentRenderers, false);
+            yield return new WaitForSeconds(blinkDuration);
+            setActiveRenderers(currentRenderers, true);
+            yield return new WaitForSeconds(blinkDuration);
+        }
         isImmune = false;
+    }
+
+    private Renderer[] getActiveRenderers()
+    {
+        List<Renderer> activeRenderers = new List<Renderer>();
+        foreach (Renderer renderer in transform.GetComponentsInChildren<Renderer>())
+        {
+            if (renderer != null && renderer.enabled)
+            {
+                activeRenderers.Add(renderer);
+            }
+        }
+        return activeRenderers.ToArray();
+    }
+
+    private void setActiveRenderers(bool value)
+    {
+        foreach (Renderer renderer in transform.GetComponentsInChildren<Renderer>())
+        {
+            if (renderer != null)
+            {
+                renderer.enabled = value;
+            }
+        }
+    }
+
+    private void setActiveRenderers(Renderer[] renderers, bool value)
+    {
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer != null)
+            {
+                renderer.enabled = value;
+            }
+        }
     }
 
     private void giveImmunity(float time)
@@ -334,18 +421,35 @@ public class PlayerController : MonoBehaviour
 
     public void death()
     {
+        StartCoroutine(deathEvent());
+    }
+
+    private IEnumerator deathEvent()
+    {
+        
+        SaveStateScript.instance.isLoading = true;
+        Time.timeScale = 0.1f;
+        audioSource.PlayOneShot(loseLifeSound);
+        yield return new WaitForSecondsRealtime(loseLifeSound.length);
+
+
+
+        Time.timeScale = 1f;
+        SaveStateScript.instance.isLoading = false;
+
         lives--;
-        if (lives <= 0) 
-        { 
+        if (lives <= 0)
+        {
             gameOver();
-            return;
+            yield break;
         }
 
+        setActiveInfiniteStamina(false);
+        giveImmunity(immunitySec);
         marioHealth.fullHealth();
 
         canvasScript.showLoseLifeScreen();
         transform.position = startingPos;
-
     }
 
     public IEnumerator starEvent()
@@ -373,9 +477,12 @@ public class PlayerController : MonoBehaviour
     public IEnumerator gameOverEvent()
     {
         canvasScript.showGameOverScreen();
-        Time.timeScale = 0.05f;
-        yield return new WaitForSecondsRealtime(2);
+        SaveStateScript.instance.isLoading = true;
+        Time.timeScale = 0.1f;
+        audioSource.PlayOneShot(gameOverSound);
+        yield return new WaitForSecondsRealtime(gameOverSound.length);
         Time.timeScale = 1f;
+        SaveStateScript.instance.isLoading = false;
         SaveStateScript.instance.loadLevel(0);
     }
 
