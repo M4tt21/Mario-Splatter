@@ -157,6 +157,7 @@ public class MenuScript : MonoBehaviour
 
     public void give99Lives()
     {
+        Debug.Log("pulsantePremuto");
         CheatsScript.instance.give99Lives();
     }
 
