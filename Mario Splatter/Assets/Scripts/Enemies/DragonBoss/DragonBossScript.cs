@@ -21,12 +21,15 @@ public class DragonBossScript : EnemyController
     public float turnSpeed = 50f;
     public bool isAttacking = false;
     public bossActions bossStatus = bossActions.SPAWN;
-    public float fireBallForceMul = 10f;
+    public float minFireBallForceMul = 8f;
+    public float maxFireBallForceMul = 20f;
 
     [Header("Boss Attacks Chances")]
     public float rollCD = 1f;
-    public float fireballChance = 1f;
-    public float spinChance = 1f;
+    [Range(0f, 1f)]
+    public float fireballChance = 0.3f;
+    [Range(0f, 1f)]
+    public float spinChance = 0.1f;
 
    
 
@@ -132,34 +135,23 @@ public class DragonBossScript : EnemyController
         GameObject currentFireball = Instantiate(FireBall);
         currentFireball.transform.position = fireBallSpawnPosition.position;
         currentFireball.transform.forward = fireBallSpawnPosition.forward;
-        currentFireball.GetComponent<Rigidbody>().AddForce(fireBallSpawnPosition.forward * fireBallForceMul, ForceMode.Impulse);
+        currentFireball.GetComponent<Rigidbody>().AddForce(fireBallSpawnPosition.forward * Random.Range(minFireBallForceMul, maxFireBallForceMul), ForceMode.Impulse);
     }
 
 
     IEnumerator fireBallAttack(int nBalls, float spinDgrsBtwBalls, float speed)
     {
         isAttacking = true;
-        for (int i = 0; i < nBalls; i++)
-        {
-            animator.SetTrigger("spitFireBallStart");//Play the starting animation
-            while (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") || //Wait a bit for the animator to Sync Up
-                animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBallStart") ||
-                animator.GetCurrentAnimatorStateInfo(0).IsName("Idle -> SpitFireBallStart") ||
-                animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBallStart -> SpitFireBall")) yield return null; //Wait for the starting animation to end
-            spitFireBall();
-            while (animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBall") ||
-                animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBall -> SpitFireBallEnd") ||
-                animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBallEnd") ||
-                animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBallEnd -> Idle")) yield return null;
-
-            //Spin Around
-            Quaternion desiredRot = transform.rotation * Quaternion.Euler(Vector3.up * spinDgrsBtwBalls);
-            while (transform.rotation != desiredRot)
-            {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, desiredRot, speed * Time.deltaTime);
-                yield return new WaitForFixedUpdate();
-            }
-        }
+        animator.SetTrigger("spitFireBallStart");//Play the starting animation
+        while (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") || //Wait a bit for the animator to Sync Up
+            animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBallStart") ||
+            animator.GetCurrentAnimatorStateInfo(0).IsName("Idle -> SpitFireBallStart") ||
+            animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBallStart -> SpitFireBall")) yield return null; //Wait for the starting animation to end
+        spitFireBall();
+        while (animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBall") ||
+            animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBall -> SpitFireBallEnd") ||
+            animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBallEnd") ||
+            animator.GetCurrentAnimatorStateInfo(0).IsName("SpitFireBallEnd -> Idle")) yield return null;
         //Reset the status
         bossStatus = bossActions.IDLE;
         isAttacking = false;

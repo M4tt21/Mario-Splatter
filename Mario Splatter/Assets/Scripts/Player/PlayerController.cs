@@ -132,20 +132,36 @@ public class PlayerController : MonoBehaviour
 
         if (dotPF == 0 && dotPH == 0 && dotPV == 0) animator.SetBool("isStill", true);
 
-        if(infStamina && currentSkin != marioSkin.STAM)
+        
+        if(infStamina)
         {
-            deactivateAllSkins();
-            setActiveSkin(marioSkin.STAM, true);
+            if (currentSkin != marioSkin.STAM)
+            {
+                Debug.Log("Current skin " + currentSkin + " into STAM");
+                deactivateAllSkins();
+                setActiveSkin(marioSkin.STAM, true);
+                currentSkin = marioSkin.STAM;
+            }
         }
-        else if(marioHealth.currentShield>0 && currentSkin != marioSkin.SHIELD)
+        else if(marioHealth.currentShield>0)
         {
-            deactivateAllSkins();
-            setActiveSkin(marioSkin.SHIELD, true);
+            if (currentSkin != marioSkin.SHIELD)
+            {
+                Debug.Log("perche sono qua SHIELD");
+                deactivateAllSkins();
+                setActiveSkin(marioSkin.SHIELD, true);
+                currentSkin = marioSkin.SHIELD;
+            }
         }
-        else if(currentSkin != marioSkin.DEFAULT)
+        else
         {
-            deactivateAllSkins();
-            setActiveSkin(marioSkin.DEFAULT, true);
+            if (currentSkin != marioSkin.DEFAULT)
+            {
+                Debug.Log("perche sono qua DEFAULT");
+                deactivateAllSkins();
+                setActiveSkin(marioSkin.DEFAULT, true);
+                currentSkin = marioSkin.DEFAULT;
+            }
         }
         
         //Movimento Telecamera
@@ -354,17 +370,42 @@ public class PlayerController : MonoBehaviour
         int timesToBlink = (int)Math.Round((time / blinkDuration), 0)/2;
         for (int i = 0; i < timesToBlink; i++)
         {
-            setActiveRenderers(false);
+            Renderer[] currentRenderers = getActiveRenderers();
+            setActiveRenderers(currentRenderers, false);
             yield return new WaitForSeconds(blinkDuration);
-            setActiveRenderers(true);
+            setActiveRenderers(currentRenderers, true);
             yield return new WaitForSeconds(blinkDuration);
         }
         isImmune = false;
     }
 
+    private Renderer[] getActiveRenderers()
+    {
+        List<Renderer> activeRenderers = new List<Renderer>();
+        foreach (Renderer renderer in transform.GetComponentsInChildren<Renderer>())
+        {
+            if (renderer != null && renderer.enabled)
+            {
+                activeRenderers.Add(renderer);
+            }
+        }
+        return activeRenderers.ToArray();
+    }
+
     private void setActiveRenderers(bool value)
     {
         foreach (Renderer renderer in transform.GetComponentsInChildren<Renderer>())
+        {
+            if (renderer != null)
+            {
+                renderer.enabled = value;
+            }
+        }
+    }
+
+    private void setActiveRenderers(Renderer[] renderers, bool value)
+    {
+        foreach (Renderer renderer in renderers)
         {
             if (renderer != null)
             {
@@ -403,6 +444,7 @@ public class PlayerController : MonoBehaviour
             yield break;
         }
 
+        setActiveInfiniteStamina(false);
         giveImmunity(immunitySec);
         marioHealth.fullHealth();
 
