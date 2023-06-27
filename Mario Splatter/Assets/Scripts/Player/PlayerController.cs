@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private static float wSpeed = 5f;
     private static float rSpeed = 10f;
     private float currentSpeed = wSpeed;
+    private Coroutine currentJumpCoroutine = null;
     private Vector3 velocity;
     private float gravity = -9.81f;
     [Header("Player Data")]
@@ -199,13 +200,15 @@ public class PlayerController : MonoBehaviour
         else if (guns.GetCurrentGun() != GunsController.gunType.P && Input.GetButton("Fire1") && Time.timeScale!=0 && !animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && !guns.isReEquipping)
             guns.fireCurrentGun();
 
-        if (Input.GetKeyDown(KeyCode.Alpha1)) //Rifle
-            guns.selectGun(GunsController.gunType.AR);
-        else if (Input.GetKeyDown(KeyCode.Alpha2)) //Shotgun
-            guns.selectGun(GunsController.gunType.SG);
-        else if (Input.GetKeyDown(KeyCode.Alpha3)) //Pistol
-            guns.selectGun(GunsController.gunType.P);
-
+        if (!guns.isReEquipping) 
+        { 
+            if (Input.GetKeyDown(SettingsScript.instance.ARKey)) //Rifle
+                guns.selectGun(GunsController.gunType.AR);
+            else if (Input.GetKeyDown(SettingsScript.instance.SGKey)) //Shotgun
+                guns.selectGun(GunsController.gunType.SG);
+            else if (Input.GetKeyDown(SettingsScript.instance.PKey)) //Pistol
+                guns.selectGun(GunsController.gunType.P);
+        }
         //Can only reload if hes not running 
         if (guns.isCurrentGunEnabled && (guns.isCurrentGunOutOfAmmo || Input.GetKeyDown(SettingsScript.instance.reloadKey)))
         {
@@ -233,24 +236,24 @@ public class PlayerController : MonoBehaviour
             guns.enableCurrentGun();
         }
 
-        if (Input.GetKeyDown(SettingsScript.instance.jumpKey) && controller.isGrounded && !animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
+        if (Input.GetKeyDown(SettingsScript.instance.jumpKey) && controller.isGrounded && !animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && !animator.GetCurrentAnimatorStateInfo(0).IsName("Walking&Running Rifle -> Jump"))
         {
             guns.disableCurrentGun();
             velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
             animator.SetTrigger("Jump");
             audioSource.PlayOneShot(jumpSound);
-            StopCoroutine("enableCoroutine");
-            StartCoroutine("enableCoroutine", reEnableGunFromJump());
+            StopCoroutine("jumpCoroutine");
+            StartCoroutine("jumpCoroutine", jumpCoroutine());
         }
-        
-
     }
-
-    IEnumerator reEnableGunFromJump()
+    IEnumerator jumpCoroutine()
     {
-        while(animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && animator.GetCurrentAnimatorStateInfo(0).IsName("Jump -> Idle"))yield return null;
+        Debug.Log("STARTO");
+        yield return new WaitForSeconds(1.2f);
         guns.enableCurrentGun();
+        Debug.Log("STOPPO");
     }
+
 
     IEnumerator restoreStamCoroutine()
     {
