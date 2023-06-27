@@ -323,13 +323,15 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             other.TryGetComponent(out EnemyHit enemyHit);
-            takeDamage(enemyHit.controller.damageToPlayer);
+            if(!enemyHit.controller.isDead)
+                takeDamage(enemyHit.controller.damageToPlayer);
         }
 
         if (other.gameObject.CompareTag("Trap"))
         {
             other.TryGetComponent(out TrapScript trapScript);
-            takeDamage(trapScript.damageToPlayer);
+            if (!enemyHit.controller.isDead)
+                takeDamage(trapScript.damageToPlayer);
         }
     }
 
