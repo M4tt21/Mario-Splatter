@@ -98,7 +98,6 @@ public class SaveStateScript : MonoBehaviour
             mario.GetComponent<PlayerController>().isImmune = true;
         }
         
-        StartCoroutine(loadingTimer());
         
         PlayerPrefs.SetInt("CurrentLevel", (level) % SceneManager.sceneCountInBuildSettings);
         SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
