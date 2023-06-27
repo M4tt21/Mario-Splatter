@@ -17,6 +17,7 @@ public class Gun : MonoBehaviour
 
     public bool isOutOfAmmo;
     [SerializeField] public GameObject gunFX;
+    [SerializeField] public GameObject groundFX;
     protected ParticleSystem ps;
     public AudioSource audioSource;
 
@@ -88,9 +89,9 @@ public class Gun : MonoBehaviour
 
     public void playGroundFX(Vector3 position, Vector3 forwardDirection, Vector3 inNormal)
     {
-        if (gunFX != null)
+        if (groundFX != null)
         {
-            GameObject currentFX = Instantiate(gunFX);
+            GameObject currentFX = Instantiate(groundFX);
             currentFX.transform.position = position;
             currentFX.transform.forward = Vector3.Reflect(forwardDirection, inNormal);
             currentFX.SetActive(true);
