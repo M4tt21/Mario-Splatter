@@ -248,10 +248,13 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator jumpCoroutine()
     {
-        Debug.Log("STARTO");
-        yield return new WaitForSeconds(1.2f);
+        for (int i = 0; i < 10; i++)
+        {
+            guns.disableCurrentGun();
+            yield return new WaitForSeconds(.1f);
+        }
+        
         guns.enableCurrentGun();
-        Debug.Log("STOPPO");
     }
 
 
