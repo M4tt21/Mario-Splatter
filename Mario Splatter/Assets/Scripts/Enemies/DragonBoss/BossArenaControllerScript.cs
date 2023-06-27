@@ -25,6 +25,13 @@ public class BossArenaControllerScript : MonoBehaviour
     AudioSource audioSource;
     [SerializeField]
     AudioClip gateCloseSound;
+    [SerializeField]
+    AudioSource musicAudioSource;
+    
+    [SerializeField]
+    AudioClip defaultSoundtrack;
+    [SerializeField]
+    AudioClip bossSoundtrack;
     // Start is called before the first frame update
     [Header("Pickups Info")]
     public GameObject[] spawnablePickups;
@@ -56,15 +63,17 @@ public class BossArenaControllerScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && bossInstantiated==null)
+        if (other.gameObject.CompareTag("Player") && bossInstantiated==null && !isInside)
         {
-
+            isInside = true;
             //CLOSE THE ARENA DOOR
             audioSource.PlayOneShot(gateCloseSound);
             arenaDoor.SetActive(true);
             fakeStar.SetActive(false);
 
-            isInside = true;
+            musicAudioSource.clip = bossSoundtrack;
+            musicAudioSource.Play();
+            
             StartCoroutine(pickUpsCoroutine());
 
             bossInstantiated = Instantiate(bossToInstantiate);
@@ -81,6 +90,8 @@ public class BossArenaControllerScript : MonoBehaviour
             if(!bossInstantiated.GetComponent<EnemyController>().isDead) 
             { 
                 Destroy(bossInstantiated);
+                musicAudioSource.clip = defaultSoundtrack;
+                musicAudioSource.Play();
                 arenaDoor.SetActive(false);
                 isInside = false;
                 bossInstantiated =null;
@@ -114,5 +125,6 @@ public class BossArenaControllerScript : MonoBehaviour
             if (pickUp != null)
                 Destroy(pickUp);
         }
+        
     }
 }

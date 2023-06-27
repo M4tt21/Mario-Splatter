@@ -434,6 +434,8 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator deathEvent()
     {
+        if (SaveStateScript.instance.isLoading)
+            yield break;
         isImmune = true;
         SaveStateScript.instance.isLoading = true;
         Time.timeScale = 0.1f;

@@ -19,16 +19,19 @@ public class PScript : Gun
         if (isOnCooldown)
             return;
 
-        if (currentAmmo <= 0)
-        {
-            if (ammoHeld <= 0)
-                audioSource.PlayOneShot(noAmmoSound);
-            isOutOfAmmo = true;
-            return;
-        }
-
         if (!CheatsScript.instance.infiniteAmmo)
+        {
+            if (currentAmmo <= 0)
+            {
+                if (ammoHeld <= 0)
+                    audioSource.PlayOneShot(noAmmoSound);
+                isOutOfAmmo = true;
+                return;
+            }
+
+
             currentAmmo--;
+        }
 
         //Find what the player is shooting at
         RaycastHit hitPoint;
