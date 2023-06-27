@@ -453,6 +453,7 @@ public class PlayerController : MonoBehaviour
         SaveStateScript.instance.isLoading = true;
         Time.timeScale = 0.1f;
         audioSource.PlayOneShot(loseLifeSound);
+        animator.SetTrigger("Die");
         yield return new WaitForSecondsRealtime(loseLifeSound.length);
 
 
@@ -468,10 +469,12 @@ public class PlayerController : MonoBehaviour
         }
 
         setActiveInfiniteStamina(false);
+        marioHealth.currentShield = 0;
         giveImmunity(immunitySec);
         marioHealth.fullHealth();
 
         canvasScript.showLoseLifeScreen();
+        animator.SetTrigger("StopDeath");
         transform.position = startingPos;
     }
 
