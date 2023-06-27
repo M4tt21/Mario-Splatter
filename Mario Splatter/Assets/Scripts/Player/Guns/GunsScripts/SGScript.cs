@@ -21,13 +21,15 @@ public class SGScript : Gun
     {
         if (isOnCooldown)
             return;
-
         if (!CheatsScript.instance.infiniteAmmo)
         {
             if (currentAmmo <= 0)
             {
                 if (ammoHeld <= 0)
+                {
                     audioSource.PlayOneShot(noAmmoSound);
+                    StartCoroutine(gunCooldownTime());
+                }
                 isOutOfAmmo = true;
                 return;
             }
