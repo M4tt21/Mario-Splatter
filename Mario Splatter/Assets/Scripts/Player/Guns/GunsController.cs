@@ -160,6 +160,8 @@ public class GunsController : MonoBehaviour
 
     public IEnumerator reloadTime()
     {
+        if (tryGetGunObjFromType(currentGun).GetComponent<Gun>().ammoHeld <= 0)
+            yield break;
         isReloading = true;
 
         Gun gunScript = tryGetGunObjFromType(currentGun).GetComponent<Gun>();

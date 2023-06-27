@@ -97,7 +97,6 @@ public class EnemyController : MonoBehaviour
         {
             if(collider!=null)
             {
-                collider.gameObject.layer = 2; //Set Layer to ignore raycast
                 collider.enabled = true;
                 collider.isTrigger = false;
                 

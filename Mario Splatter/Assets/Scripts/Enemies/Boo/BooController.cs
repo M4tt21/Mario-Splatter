@@ -6,12 +6,17 @@ using UnityEngine.AI;
 
 public class BooController : EnemyController
 {
+    private Coroutine currentCoroutine = null;
 
     [Header("Boo Stats")]
 
     [SerializeField] public float booSpeed = 0.1f;
     [SerializeField] public float revisibleTime = 0.5f;
     [SerializeField] public bool isVisible = false;
+
+    [Header("Boo Sounds")]
+    [SerializeField] AudioClip booFollowSound;
+    [SerializeField] AudioClip booStopSound;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +25,7 @@ public class BooController : EnemyController
         navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         animator = gameObject.GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player");
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -56,21 +62,62 @@ public class BooController : EnemyController
 
     private IEnumerator revisibleTimer()
     {
-        yield return new WaitForSeconds(revisibleTime);
-        Debug.Log("Mi vedi");
-        isVisible = true;
-        setSkinIsCover(true);
+        
+        yield return new WaitForSeconds(booStopSound.length);
+        
+
+    }
+
+    private IEnumerator invisibleTimer()
+    {
+        Debug.Log("Non mi vedi");
+        setSkinIsCover(false);
+        audioSource.PlayOneShot(booFollowSound);
+        
+        yield return new WaitForSeconds(booFollowSound.length);
+        if (isVisible)
+            isVisible = false;
+
+    }
+
+    public IEnumerator SetFollowing(bool value)
+    {
+        
+        Debug.Log("coroutine started");
+        if (value)
+        {
+            
+            setSkinIsCover(false);
+            audioSource.PlayOneShot(booFollowSound);
+            yield return new WaitForSeconds(booFollowSound.length);
+            Debug.Log("Non mi vedi");
+            isVisible = false;
+        }
+        else
+        {
+            Debug.Log("Setting visible");
+            isVisible = true;
+            setSkinIsCover(true);
+            audioSource.PlayOneShot(booStopSound);
+        }
     }
 
     private void OnBecameVisible()
     {
-        StartCoroutine(revisibleTimer());
+        if(currentCoroutine!=null)
+            StopCoroutine(currentCoroutine);
+        if (gameObject.activeInHierarchy)
+            currentCoroutine = StartCoroutine(SetFollowing(false));
     }
+
+
+
     private void OnBecameInvisible()
     {
-        Debug.Log("Non mi vedi");
-        isVisible = false;
-        setSkinIsCover(false);
+        if (currentCoroutine != null)
+            StopCoroutine(currentCoroutine);
+        if(gameObject.activeInHierarchy)
+            currentCoroutine = StartCoroutine(SetFollowing(true));
     }
 
 }

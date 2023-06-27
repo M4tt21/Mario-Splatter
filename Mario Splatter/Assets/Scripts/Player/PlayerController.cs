@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     public marioSkin currentSkin = marioSkin.DEFAULT;
 
     [Header("Player Stats")]
-    public float jumpspeed = 2;
+    public float jumpspeed = 3f;
     public float mouseSens = 100f;
     private float rotation = 0;
     public int lives;
@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
 
         if (dotPF == 0 && dotPH == 0 && dotPV == 0) animator.SetBool("isStill", true);
 
-        
+        //Skin Handler
         if(infStamina)
         {
             if (currentSkin != marioSkin.STAM)
@@ -187,15 +187,16 @@ public class PlayerController : MonoBehaviour
 
 
         /*All Actions Below are unaccessible while reloading*/
-        if (guns.isReloading || guns.isReEquipping)
+        if (guns.isReloading)
         {
-            marioHealth.isStaminaConsuming=false;
+            StopCoroutine("restoreStamCoroutine");
+            StartCoroutine("restoreStamCoroutine", restoreStamCoroutine());
             return;
         }
 
-        if(guns.GetCurrentGun()==GunsController.gunType.P && Input.GetButtonDown("Fire1") && Time.timeScale!=0)
+        if (guns.GetCurrentGun()==GunsController.gunType.P && Input.GetButtonDown("Fire1") && Time.timeScale!=0 && !animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && !guns.isReEquipping)
             guns.fireCurrentGun();
-        else if (guns.GetCurrentGun() != GunsController.gunType.P && Input.GetButton("Fire1") && Time.timeScale!=0)
+        else if (guns.GetCurrentGun() != GunsController.gunType.P && Input.GetButton("Fire1") && Time.timeScale!=0 && !animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && !guns.isReEquipping)
             guns.fireCurrentGun();
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) //Rifle
@@ -227,17 +228,24 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyUp(SettingsScript.instance.sprintKey))
         {
-            marioHealth.isStaminaConsuming = false;
+            StopCoroutine("restoreStamCoroutine");
+            StartCoroutine("restoreStamCoroutine", restoreStamCoroutine());
             guns.enableCurrentGun();
         }
 
-        if (Input.GetKeyDown(SettingsScript.instance.jumpKey) && controller.isGrounded)
+        if (Input.GetKeyDown(SettingsScript.instance.jumpKey) && controller.isGrounded && !animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
         {
             velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
             animator.SetTrigger("Jump");
             audioSource.PlayOneShot(jumpSound);
         }
 
+    }
+
+    IEnumerator restoreStamCoroutine()
+    {
+        yield return new WaitForSeconds(0.3f);
+        marioHealth.isStaminaConsuming = false;
     }
 
     public void setActiveInfiniteStamina(bool value)
