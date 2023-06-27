@@ -239,7 +239,8 @@ public class PlayerController : MonoBehaviour
             velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
             animator.SetTrigger("Jump");
             audioSource.PlayOneShot(jumpSound);
-            StartCoroutine(reEnableGunFromJump());
+            StopCoroutine("enableCoroutine");
+            StartCoroutine("enableCoroutine", reEnableGunFromJump());
         }
         
 
