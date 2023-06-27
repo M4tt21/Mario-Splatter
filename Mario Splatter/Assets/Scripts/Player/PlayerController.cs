@@ -451,7 +451,7 @@ public class PlayerController : MonoBehaviour
             yield break;
         isImmune = true;
         SaveStateScript.instance.isLoading = true;
-        Time.timeScale = 0.1f;
+        Time.timeScale = 0.2f;
         audioSource.PlayOneShot(loseLifeSound);
         animator.SetTrigger("Die");
         yield return new WaitForSecondsRealtime(loseLifeSound.length);
@@ -481,7 +481,7 @@ public class PlayerController : MonoBehaviour
     public IEnumerator starEvent()
     {
         SaveStateScript.instance.isLoading = true;
-        Time.timeScale = 0.1f;
+        Time.timeScale = 0.2f;
         audioSource.PlayOneShot(winMusic);
 
         yield return new WaitForSecondsRealtime(winMusic.length);
@@ -504,7 +504,7 @@ public class PlayerController : MonoBehaviour
     {
         canvasScript.showGameOverScreen();
         SaveStateScript.instance.isLoading = true;
-        Time.timeScale = 0.1f;
+        Time.timeScale = 0.2f;
         audioSource.PlayOneShot(gameOverSound);
         yield return new WaitForSecondsRealtime(gameOverSound.length);
         Time.timeScale = 1f;
@@ -515,7 +515,7 @@ public class PlayerController : MonoBehaviour
     public IEnumerator youWinEvent()
     {
         canvasScript.showYouWinScreen();
-        Time.timeScale = 0.05f;
+        Time.timeScale = 0.2f;
         yield return new WaitForSecondsRealtime(5);
         Time.timeScale = 1f;
         SaveStateScript.instance.loadLevel(0);
