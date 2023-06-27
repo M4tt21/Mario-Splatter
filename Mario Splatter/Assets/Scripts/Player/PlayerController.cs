@@ -235,11 +235,20 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(SettingsScript.instance.jumpKey) && controller.isGrounded && !animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
         {
+            guns.disableCurrentGun();
             velocity.y += Mathf.Sqrt(jumpspeed * -3.0f * gravity);
             animator.SetTrigger("Jump");
             audioSource.PlayOneShot(jumpSound);
+            StartCoroutine(reEnableGunFromJump());
         }
+        
 
+    }
+
+    IEnumerator reEnableGunFromJump()
+    {
+        while(animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && animator.GetCurrentAnimatorStateInfo(0).IsName("Jump -> Idle"))yield return null;
+        guns.enableCurrentGun();
     }
 
     IEnumerator restoreStamCoroutine()
